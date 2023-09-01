@@ -1,0 +1,21 @@
+server:
+  port: 8095
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_famousRestaurant?createDatabaseIfNotExist=true # [] 안에 본인 db이름 써주세요 []는 지우세요
+    username: user_famousRestaurant # 설정했던 user 명
+    password: 1234 # 설정했던 password
+  sql:
+    init:
+      mode: always # spring.sql.init.mode = always로 줘야 data.sql이 실행됨
+
+  jpa:
+    show-sql: true # SQL 로그 출력
+    properties:
+      hibernate:
+        format_sql: true # SQL 로그 출력
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
