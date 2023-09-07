@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.List;
 
 @SpringBootTest
 class RestaurantRepositoryTest {
@@ -20,9 +21,9 @@ class RestaurantRepositoryTest {
 
     @Test
     public void test() {
-        for (RestaurantEntity restaurantEntity : restaurantRepository.findAll()) {
-            System.out.println(restaurantEntity);
-        }
+        List<RestaurantEntity> all = restaurantRepository.findAll();
+        all.stream().forEach(System.out::println);
+
     }
 
     @Test

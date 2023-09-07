@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+    <style>
+        table{
+            border: 1px solid black;
+        }
+
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <td>사진</td>
+        <td>음식점 이름</td>
+        <td>음식점 주소</td>
+        <td>음식점 도로명</td>
+        <td>음식점 종류</td>
+    </tr>
+
+    <tr>
+        <td><img th:src="${image}" alt="" width="300px" height="300px"></td>
+        <td th:text="${restaurant.restaurantName}"></td>
+        <td th:text="${restaurant.restaurantAddress}"></td>
+        <td th:text="${restaurant.restaurantRoadAddress}"></td>
+        <td th:text="${restaurant.category}"></td>
+    </tr>
+</table>
+</body>
+</html>
