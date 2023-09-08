@@ -7,11 +7,12 @@ import lombok.ToString;
 import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "reviewEntity")
 @Table(name = "restaurant_table")
 public class RestaurantEntity {
     @Id
@@ -29,6 +30,9 @@ public class RestaurantEntity {
     private double yCoordinate;
     @Column
     private String category;
+
+    @OneToMany(mappedBy = "restaurantEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ReviewEntity> reviewEntity;
 
 
 }

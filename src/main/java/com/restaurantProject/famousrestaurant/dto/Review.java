@@ -1,8 +1,13 @@
 package com.restaurantProject.famousrestaurant.dto;
 
+import com.restaurantProject.famousrestaurant.entity.ReviewEntity;
+import com.restaurantProject.famousrestaurant.entity.ReviewFileEntity;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,9 +16,44 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Review {
     private String memberId;
-    private String restaurantName;
-    private String reviewImage;
     private String reviewText;
     private LocalDateTime createdAt;
+    private Long restaurantId;
 
+    private List<MultipartFile> fileList; // 파일 담는 용도
+    private List<String> originalName; // 원본 파일 이름
+    private List<String> storedName; // 서버 저장 파일이름
+    private int fileAttached; // 파일 첨부 여부
+
+    public Review(String memberId, String reviewText, LocalDateTime createdAt, Long restaurantId) {
+        this.memberId = memberId;
+        this.reviewText = reviewText;
+        this.createdAt = createdAt;
+        this.restaurantId = restaurantId;
+    }
+
+    public static Review toReview(ReviewEntity reviewEntity, Long restaurantId) {
+        Review review = new Review();
+        review.setMemberId(reviewEntity.getMemberId());
+        review.setReviewText(reviewEntity.getReviewText());
+        review.setCreatedAt(reviewEntity.getCreatedAt());
+        review.setRestaurantId(restaurantId);
+        if(reviewEntity.getFileAttached() == 0){
+            review.setFileAttached(reviewEntity.getFileAttached());
+        } else {
+            List<String> originalFileNameList = new ArrayList<>();
+            List<String> storedFileNameList = new ArrayList<>();
+
+            review.setFileAttached(reviewEntity.getFileAttached());
+
+            for(ReviewFileEntity reviewFileEntity : reviewEntity.getReviewFileEntity()) {
+                originalFileNameList.add(reviewFileEntity.getOriginalName());
+                storedFileNameList.add(reviewFileEntity.getStoredName());
+            }
+
+            review.setOriginalName(originalFileNameList);
+            review.setStoredName(storedFileNameList);
+        }
+        return review;
+    }
 }
