@@ -1,9 +1,7 @@
 package com.restaurantProject.famousrestaurant.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jdk.jshell.Snippet;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,6 +9,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "member_table")
 public class MemberEntity {
 
@@ -19,6 +20,8 @@ public class MemberEntity {
     private Long id;
     @Column
     private String memberId;
+    @Column
+    private String memberNaverId;
     @Column
     private String memberPass;
     @Column

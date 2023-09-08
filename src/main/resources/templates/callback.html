@@ -1,0 +1,26 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    var naver_id_login = new naver_id_login("FqZT48fbncyE6lF33fIA", "http://localhost:8080/callback");
+    $(document).ready(function() {
+        // Ajax 요청 보내기
+        $.ajax({
+            url: "./callback", // 요청할 URL
+            type: "GET", // HTTP 요청 메서드 (GET, POST 등)
+            dataType: "text", // 응답 데이터 형식 (JSON, XML 등)
+            data : { "token" : naver_id_login.oauthParams.access_token },
+            success: function(data) {
+                window.location.href = "./home";
+            },
+            error: function(xhr, status, error) {
+            }
+        });
+    });
+</script>
+</body>
+</html>

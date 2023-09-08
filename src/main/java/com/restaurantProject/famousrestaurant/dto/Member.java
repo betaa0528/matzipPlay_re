@@ -9,8 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 public class Member {
     private String memberId;
+    private String memberNaverId;
     private String memberPass;
     private String memberPhoneNumber;
     private String memberAddress;
+    private String memberDetailAddr;
 
 }
