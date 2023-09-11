@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,21 +59,85 @@
             background-color: #0056b3;
         }
     </style>
+    <script>
+        $(document).ready(function () {
+            const phoneNumberInput = $('[name="memberPhoneNumber"]');
+
+            phoneNumberInput.on("input", function () {
+                let phoneNumber = phoneNumberInput.val();
+
+                // '-' 및 숫자 이외의 문자 제거
+                phoneNumber = phoneNumber.replace(/[^\d-]/g, "");
+
+                // 형식에 맞게 '-' 추가
+                if (phoneNumber.length >= 4 && phoneNumber.charAt(3) !== '-') {
+                    phoneNumber = phoneNumber.substring(0, 3) + '-' + phoneNumber.substring(3);
+                }
+                if (phoneNumber.length >= 9 && phoneNumber.charAt(8) !== '-') {
+                    phoneNumber = phoneNumber.substring(0, 8) + '-' + phoneNumber.substring(8);
+                }
+
+                phoneNumberInput.val(phoneNumber);
+            });
+        });
+
+
+
+        function reg(){
+            const phoneNumberPattern = /^010-\d{4}-\d{4}$/;
+
+            let memberId = $('[name="memberId"]').val();
+            let memberPass = $('[name="memberPass"]').val();
+            let memberPhoneNumber = $('[name="memberPhoneNumber"]').val();
+            let sample6_postcode = $('#sample6_postcode').val();
+            let memberAddress = $('[name="memberAddress').val();
+
+            if(memberId.length<4||memberId.length>10) alert("4이상 10이하");
+            else if(memberPass.length<8||memberId.length>16) alert("8이상 16이하");
+            else if(memberPhoneNumber.length<13||!phoneNumberPattern.test(memberPhoneNumber)) alert("전화번호 입력");
+            else if(sample6_postcode==""||memberAddress=="") alert("주소입력");
+            else document.frm.submit();
+        }
+
+        function dup(){
+            let memberId = $('[name="memberId"]').val();
+
+            $.ajax({
+                url: "./dup", // 요청할 URL
+                type: "POST", // HTTP 요청 메서드 (GET, POST 등)
+                dataType: "text", // 응답 데이터 형식 (JSON, XML 등)
+                data : {
+                    "memberId" : memberId,
+                },
+                success: function(data) {
+                    if(data==0) {
+                        alert("사용 가능한 아이디");
+                    }else{
+                        alert("존재하는 아이디")
+                    }
+                },
+                error: function(xhr, status, error) {
+                }
+            });
+        }
+
+
+    </script>
 </head>
 <body>
-<form action="./reg" method="post">
+<form name="frm" action="./reg" method="post">
     <h4>아이디</h4>
-    <input type="text" name="memberId"><br>
+    <input type="text" name="memberId"><button onclick="dup()" type="button">중복확인</button><br>
     <h4>비밀번호</h4>
-    <input type="text" name="memberPass"><br>
+    <input type="password" name="memberPass"><br>
     <h4>전화번호</h4>
-    <input type="text" name="memberPhoneNumber"><br>
+    <input type="text" name="memberPhoneNumber" maxlength="13"><br>
     <h4>주소</h4>
-    <input type="text" id="sample6_postcode" placeholder="우편번호">
+    <input type="text" id="sample6_postcode" placeholder="우편번호" readonly>
     <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-    <input type="text" name="memberAddress" id="sample6_address" placeholder="주소"><br>
+    <input type="text" name="memberAddress" id="sample6_address" placeholder="주소" readonly><br>
     <input type="text" name="memberDetailAddr" id="sample6_detailAddress" placeholder="상세주소"><br><br>
-    <button>가입</button>
+    <button onclick="reg()" type="button">가입</button>
 </form>
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
