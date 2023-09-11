@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>나의찜</title>
+</head>
+<body>
+    <h2>찜목록</h2>
+    <tr th:each="items: ${wishList}">
+        <td th:text="${items.restaurantName}">맛있는 집</td>
+    </tr>
+</body>
+</html>
