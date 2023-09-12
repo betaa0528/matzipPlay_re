@@ -1,11 +1,10 @@
-package com.restaurantProject.famousrestaurant.service;
+package com.restaurantProject.famousrestaurant.util;
 
 import java.io.IOException;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
-import com.restaurantProject.famousrestaurant.naver.NaverLoginApi;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -17,7 +16,7 @@ import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
 
 @Component
-public class NaverLoginBO {
+public class NaverLoginApi {
 
     /* 인증 요청문을 구성하는 파라미터 */
     //client_id: 애플리케이션 등록 후 발급받은 클라이언트 아이디
@@ -45,7 +44,7 @@ public class NaverLoginBO {
                 .apiSecret(CLIENT_SECRET)
                 .callback(REDIRECT_URI)
                 .state(state) //앞서 생성한 난수값을 인증 URL생성시 사용함
-                .build(NaverLoginApi.instance());
+                .build(com.restaurantProject.famousrestaurant.naver.NaverLoginApi.instance());
 
         return oauthService.getAuthorizationUrl();
     }
@@ -62,7 +61,7 @@ public class NaverLoginBO {
                     .apiSecret(CLIENT_SECRET)
                     .callback(REDIRECT_URI)
                     .state(state)
-                    .build(NaverLoginApi.instance());
+                    .build(com.restaurantProject.famousrestaurant.naver.NaverLoginApi.instance());
 
             /* Scribe에서 제공하는 AccessToken 획득 기능으로 네아로 Access Token을 획득 */
             OAuth2AccessToken accessToken = oauthService.getAccessToken(code);
@@ -91,7 +90,7 @@ public class NaverLoginBO {
         OAuth20Service oauthService =new ServiceBuilder()
                 .apiKey(CLIENT_ID)
                 .apiSecret(CLIENT_SECRET)
-                .callback(REDIRECT_URI).build(NaverLoginApi.instance());
+                .callback(REDIRECT_URI).build(com.restaurantProject.famousrestaurant.naver.NaverLoginApi.instance());
 
         OAuthRequest request = new OAuthRequest(Verb.GET, PROFILE_API_URL, oauthService);
         oauthService.signRequest(oauthToken, request);

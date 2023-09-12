@@ -9,19 +9,22 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-
+import java.util.HashMap;
 
 @Controller
 public class LoginController {
 
     private LoginService loginService;
-
     @Autowired
     public void setLoginService(LoginService loginService) {
         this.loginService = loginService;
     }
 
-    //로그인 첫 화면 요청 메소드
+    @GetMapping("home")
+    public String home() {
+        return "home";
+    }
+
     @GetMapping("login")
     public String login(Model model, HttpSession session) {
         /* 네이버아이디로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
@@ -32,20 +35,24 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseBody
-    public int login(Member dto) {
-        return loginService.login(dto);
+    public int login(Member dto, HttpSession session) {
+        return loginService.login(dto,session);
     }
 
-    //네이버 로그인 성공시 callback호출 메소드
     @RequestMapping(value = "/callback", method = {RequestMethod.GET, RequestMethod.POST})
     public String callback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws IOException {
-        loginService.callback(code, state, session);
-        return "home";
+        HashMap<String,String> result = loginService.callback(code, state, session);
+        if(result.get("result").equals("1")){
+            model.addAttribute("naverId",result.get("naverId"));
+            return "sync";
+        }
+        else return "home";
     }
 
-    @GetMapping("home")
-    public String home() {
-        return "home";
+    @PostMapping("sync")
+    @ResponseBody
+    public int sync(Member dto, HttpSession session){
+        return loginService.sync(dto,session);
     }
 
     @GetMapping("reg")

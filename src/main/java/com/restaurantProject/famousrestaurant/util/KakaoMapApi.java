@@ -1,4 +1,4 @@
-package com.restaurantProject.famousrestaurant.service;
+package com.restaurantProject.famousrestaurant.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,9 +11,8 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 import java.net.URLEncoder;
 
-
 @Component
-public class KakaoMapService {
+public class KakaoMapApi {
     public String[] map(String address) {
         String[] result = new String[2];
 

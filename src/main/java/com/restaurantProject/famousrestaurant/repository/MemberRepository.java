@@ -9,5 +9,4 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     Optional<MemberEntity> findByMemberNaverId(String email);
     Optional<MemberEntity> findByMemberId(String id);
 
-
 }

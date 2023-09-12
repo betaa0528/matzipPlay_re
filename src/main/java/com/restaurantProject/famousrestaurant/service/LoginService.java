@@ -6,6 +6,8 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
+import com.restaurantProject.famousrestaurant.util.KakaoMapApi;
+import com.restaurantProject.famousrestaurant.util.NaverLoginApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Component
@@ -20,8 +23,8 @@ public class LoginService {
 
     private String apiResult = null;
     private MemberRepository memberRepository;
-    private NaverLoginBO naverLoginBO;
-    private KakaoMapService kakaoMapService;
+    private NaverLoginApi naverLoginApi;
+    private KakaoMapApi kakaoMapApi;
 
     @Autowired
     public void setMemberRepository(MemberRepository memberRepository) {
@@ -29,35 +32,65 @@ public class LoginService {
     }
 
     @Autowired
-    private void setNaverLoginBO(NaverLoginBO naverLoginBO) {
-        this.naverLoginBO = naverLoginBO;
+    private void setNaverLoginBO(NaverLoginApi naverLoginApi) {
+        this.naverLoginApi = naverLoginApi;
     }
 
     @Autowired
-    public void setKakaoMapService(KakaoMapService kakaoMapService) {
-        this.kakaoMapService = kakaoMapService;
+    public void setKakaoMapService(KakaoMapApi kakaoMapApi) {
+        this.kakaoMapApi = kakaoMapApi;
     }
 
-    public int login(Member dto) {
+    public int login(Member dto, HttpSession session) {
         Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
 
         if (result.isEmpty()) return 0;
         else {
-            String pw = result.get().getMemberPass();
-            if (!pw.equals(dto.getMemberPass())) return 1;
-            else return 2;
+            StringBuilder hexString = sha256(dto.getMemberPass());
+            if (!hexString.toString().equals(result.get().getMemberPass())) return 1;
+            else{
+                session.setAttribute("memberId",dto.getMemberId());
+                return 2;
+            }
         }
     }
 
-    public void callback(String code, String state, HttpSession session) throws IOException {
+    public int sync(Member dto, HttpSession session){
+        Optional<MemberEntity> user = memberRepository.findByMemberId(dto.getMemberId());
+
+        if (user.isEmpty()) return 0;
+        else {
+            StringBuilder hexString = sha256(dto.getMemberPass());
+            if (!hexString.toString().equals(user.get().getMemberPass())) return 1;
+            else{
+                MemberEntity u = user.get();
+                MemberEntity m = MemberEntity.builder()
+                        .id(u.getId())
+                        .memberId(u.getMemberId())
+                        .memberPass(u.getMemberPass())
+                        .memberNaverId(dto.getMemberNaverId())
+                        .memberAddress(u.getMemberAddress())
+                        .memberPhoneNumber(u.getMemberPhoneNumber())
+                        .mapX(u.getMapX())
+                        .mapY(u.getMapY())
+                        .build();
+                memberRepository.save(m);
+                session.setAttribute("memberId",u.getMemberId());
+                return 2;
+            }
+        }
+
+    }
+
+    public HashMap<String,String> callback(String code, String state, HttpSession session) throws IOException {
+        HashMap<String,String> map = new HashMap<>();
         String naverId;
-        String id = (String) session.getAttribute("memberId");
 
         OAuth2AccessToken oauthToken;
-        oauthToken = naverLoginBO.getAccessToken(session, code, state);
+        oauthToken = naverLoginApi.getAccessToken(session, code, state);
 
         //로그인 사용자 정보를 읽어온다.
-        apiResult = naverLoginBO.getUserProfile(oauthToken);
+        apiResult = naverLoginApi.getUserProfile(oauthToken);
 
         //JSON 파싱
         ObjectMapper objectMapper = new ObjectMapper();
@@ -66,34 +99,24 @@ public class LoginService {
 
         Optional<MemberEntity> result = memberRepository.findByMemberNaverId(naverId);
         if (result.isEmpty()) {
-            Optional<MemberEntity> user = memberRepository.findByMemberId(id);
-
-            MemberEntity u = user.get();
-            MemberEntity m = MemberEntity.builder()
-                    .id(u.getId())
-                    .memberId(u.getMemberId())
-                    .memberPass(u.getMemberPass())
-                    .memberNaverId(naverId)
-                    .memberAddress(u.getMemberAddress())
-                    .memberPhoneNumber(u.getMemberPhoneNumber())
-                    .build();
-            memberRepository.save(m);
-
-            System.out.println("네이버 아이디 생성완료");
+            map.put("naverId",naverId);
+            map.put("result","1");
+            return map;
         } else {
-            System.out.println("이미 연동되어 있음");
+            session.setAttribute("memberId",result.get().getMemberId());
+            map.put("result","2");
+            return map;
         }
     }
 
-    public void reg(Member dto) {
+    public StringBuilder sha256(String pw){
         StringBuilder hexString = new StringBuilder();
-
         try {
             // MessageDigest 객체 생성
             MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
 
             // 바이트 배열로 변환
-            byte[] inputBytes = dto.getMemberPass().getBytes();
+            byte[] inputBytes = pw.getBytes();
 
             // 해시 계산
             byte[] hashBytes = sha256.digest(inputBytes);
@@ -104,12 +127,16 @@ public class LoginService {
             }
         } catch (NoSuchAlgorithmException e) {
         }
+        return hexString;
+    }
 
+    public void reg(Member dto) {
+        StringBuilder hexString = sha256(dto.getMemberPass());
         Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
 
         if (result.isEmpty()) {
             String address = dto.getMemberAddress() + " " + dto.getMemberDetailAddr();
-            String[] map = kakaoMapService.map(address);
+            String[] map = kakaoMapApi.map(dto.getMemberAddress());
 
             MemberEntity m = MemberEntity.builder()
                     .memberId(dto.getMemberId())
@@ -120,8 +147,6 @@ public class LoginService {
                     .mapY(map[1])
                     .build();
             memberRepository.save(m);
-        } else {
-            System.out.println("이미 있는 아이디");
         }
     }
 
@@ -130,8 +155,9 @@ public class LoginService {
         if(result.isEmpty()) return 0;
         else return 1;
     }
+
     public String getAuthorizationUrl(HttpSession session) {
-        return naverLoginBO.getAuthorizationUrl(session);
+        return naverLoginApi.getAuthorizationUrl(session);
     }
 
 }
