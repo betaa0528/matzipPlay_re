@@ -1,10 +1,8 @@
 package com.restaurantProject.famousrestaurant.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,9 +23,9 @@ public class RestaurantEntity {
     @Column
     private String restaurantRoadAddress;
     @Column
-    private double xCoordinate;
+    private double mapX;
     @Column
-    private double yCoordinate;
+    private double mapY;
     @Column
     private String category;
 

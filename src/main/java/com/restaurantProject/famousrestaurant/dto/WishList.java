@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WishList {
-    private String restaurantName;
-    private String memberId;
+    private Long restaurantId;
+    private String memberWishId;
 }

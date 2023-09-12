@@ -28,7 +28,7 @@ public class ReviewService {
     public void save(Review review) throws IOException {
         Optional<RestaurantEntity> optionalRestaurantEntity = restaurantRepository.findById(review.getRestaurantId());
         RestaurantEntity restaurantEntity = optionalRestaurantEntity.get();
-        if(review.getFileList().isEmpty()) {
+        if(review.getFileList().get(0).getSize() == 0) {
             ReviewEntity reviewEntity = ReviewEntity.toSaveEntity(review, restaurantEntity);
             reviewRepository.save(reviewEntity);
         } else {

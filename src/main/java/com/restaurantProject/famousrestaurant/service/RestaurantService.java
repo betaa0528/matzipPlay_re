@@ -45,4 +45,8 @@ public class RestaurantService {
 
         return link;
     }
+
+    public List<RestaurantEntity> findByCategory(String category) {
+         return restaurantRepository.findByCategory(category);
+    }
 }

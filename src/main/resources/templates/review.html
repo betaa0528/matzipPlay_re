@@ -14,7 +14,7 @@
             <td>음식점명 : <h2 th:text="${byId.restaurantName}"></h2></td>
         </tr>
         <tr>
-            <td>memberId : <input type="text" name="memberId"></td>
+            <td>memberId : <input type="text" name="memberId" th:value="${session.memberId}" readonly></td>
         </tr>
         <tr>
             <td>
@@ -30,11 +30,17 @@
         <tr>
             <td>
                 <input type="submit" value="리뷰 저장">
-                <input type="button" value="작성 취소">
+                <input type="button" onclick="reviewCancle()" value="작성 취소">
             </td>
         </tr>
     </table>
 </form>
+<script th:inline="javascript">
+    const id = [[${byId.id}]];
+    const reviewCancle = () => {
+        location.href = `/restaurant/detail/${id}`;
+    }
 
+</script>
 </body>
 </html>

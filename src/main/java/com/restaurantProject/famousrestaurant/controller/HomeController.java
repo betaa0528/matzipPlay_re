@@ -1,18 +1,18 @@
 package com.restaurantProject.famousrestaurant.controller;
 
-import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
+import com.restaurantProject.famousrestaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequiredArgsConstructor
-public class testController {
-    private final RestaurantRepository restaurantRepository;
+public class HomeController {
+
+    private final RestaurantService restaurantService;
 
     @GetMapping("/")
-    public String test() {
-        restaurantRepository.findAll().forEach(System.out::println);
+    public String index() {
         return "index";
     }
 }
