@@ -17,6 +17,14 @@ public class Restaurant {
     private double mapX;
     private double mapY;
 
+    public Restaurant(Long id, String restaurantName, String restaurantAddress, String restaurantRoadAddress, String category) {
+        this.id = id;
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
+        this.restaurantRoadAddress = restaurantRoadAddress;
+        this.category = category;
+    }
+
     public static Restaurant toRestaurant(RestaurantEntity restaurantEntity){
         Restaurant restaurant = new Restaurant();
         restaurant.setId(restaurantEntity.getId());

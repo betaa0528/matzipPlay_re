@@ -21,7 +21,7 @@
 </head>
 <body>
 <h1 th:text="${session.memberId}"></h1>
-<a href="/restaurant/list">목록으로 돌아가기</a>
+<a th:href="@{|/restaurant/category/${restaurant.category}/paging|(page=${page})}">목록으로 돌아가기</a>
 <table>
     <tr>
         <td>사진</td>
