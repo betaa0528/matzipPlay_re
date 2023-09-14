@@ -2,9 +2,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>마이페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <body>
-    <h2 th:text="${ss}"></h2>
+    <!--프로필-->
+    고마운분, <p th:text="${id}">id</p>
+    <button type="button" class="btn btn-primary" onclick = "location.href = '/mypage/modify' ">정보수정</button>
+    <button type="button" class="btn btn-primary" onclick = "location.href = '/mypage/wishlist' ">나의 찜</button>
+    <button type="button" class="btn btn-primary"  onclick = "location.href = '/mypage/review' ">리뷰관리</button>
+
+
+
+    <h2>리뷰목록</h2>
+    <tr th:each="items: ${reviewList}">
+        <td th:text="${items.restaurantName}"></td>
+        <td th:text="${items.reviewImage}"></td>
+        <td th:text="${items.reviewText}"></td>
+    </tr>
 </body>
 </html>
