@@ -18,6 +18,7 @@ import javax.net.ssl.HandshakeCompletedEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -34,9 +35,9 @@ public class mypageController {
         //아이디 확인
         session.setAttribute("sessionId","hr1234");
         String sessionId = (String)session.getAttribute("sessionId");
-        MemberEntity member = memberRepository.findByMemberId(sessionId);
-        if(member.getMemberId()!=null){
-            memberId = member.getMemberId();
+        Optional<MemberEntity> member = memberRepository.findByMemberId(sessionId);
+        if(member.get().getMemberId()!=null){
+            memberId = member.get().getMemberId();
             model.addAttribute("id",memberId);
         }else{
             return "error";
@@ -53,9 +54,9 @@ public class mypageController {
     public String getWishList(Model model, HttpServletRequest session){
         session.setAttribute("sessionId","hr1234");
         String sessionId = (String)session.getAttribute("sessionId");
-        MemberEntity member = memberRepository.findByMemberId(sessionId);
-        if(member.getMemberId()!=null){
-            memberId = member.getMemberId();
+        Optional<MemberEntity> member = memberRepository.findByMemberId(sessionId);
+        if(member.get().getMemberId()!=null){
+            memberId = member.get().getMemberId();
             model.addAttribute("id",memberId);
         }else{
             return "error";
