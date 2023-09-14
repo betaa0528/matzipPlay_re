@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -57,7 +58,6 @@ public class LoginService {
 
     public int sync(Member dto, HttpSession session){
         Optional<MemberEntity> user = memberRepository.findByMemberId(dto.getMemberId());
-
         if (user.isEmpty()) return 0;
         else {
             StringBuilder hexString = sha256(dto.getMemberPass());
@@ -79,7 +79,26 @@ public class LoginService {
                 return 2;
             }
         }
+    }
 
+    public void forgotpw(Member dto, String pw){
+        Optional<MemberEntity> user = memberRepository.findByMemberNaverId(dto.getMemberNaverId());
+
+        if (user.isPresent()){
+            StringBuilder hexString = sha256(pw);
+            MemberEntity u = user.get();
+            MemberEntity m = MemberEntity.builder()
+                .id(u.getId())
+                .memberId(u.getMemberId())
+                .memberPass(hexString.toString())
+                .memberNaverId(dto.getMemberNaverId())
+                .memberAddress(u.getMemberAddress())
+                .memberPhoneNumber(u.getMemberPhoneNumber())
+                .mapX(u.getMapX())
+                .mapY(u.getMapY())
+                .build();
+            memberRepository.save(m);
+        }
     }
 
     public HashMap<String,String> callback(String code, String state, HttpSession session) throws IOException {
@@ -160,4 +179,11 @@ public class LoginService {
         return naverLoginApi.getAuthorizationUrl(session);
     }
 
+    public HashMap<String,String> getNaverIdAndPhoneNumberByUserId(Member dto){
+        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
+        HashMap<String,String> map = new HashMap<>();
+        map.put("phoneNumber",result.get().getMemberPhoneNumber());
+        map.put("naverId",result.get().getMemberNaverId());
+        return map;
+    }
 }

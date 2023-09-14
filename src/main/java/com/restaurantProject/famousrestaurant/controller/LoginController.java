@@ -2,6 +2,7 @@ package com.restaurantProject.famousrestaurant.controller;
 
 import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.service.LoginService;
+import com.restaurantProject.famousrestaurant.service.RegisterMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,17 @@ import java.util.HashMap;
 public class LoginController {
 
     private LoginService loginService;
+
     @Autowired
     public void setLoginService(LoginService loginService) {
         this.loginService = loginService;
+    }
+
+    private RegisterMail registerMail;
+
+    @Autowired
+    public void setRegisterMail(RegisterMail registerMail) {
+        this.registerMail = registerMail;
     }
 
     @GetMapping("home")
@@ -36,23 +45,22 @@ public class LoginController {
     @PostMapping("/login")
     @ResponseBody
     public int login(Member dto, HttpSession session) {
-        return loginService.login(dto,session);
+        return loginService.login(dto, session);
     }
 
     @RequestMapping(value = "/callback", method = {RequestMethod.GET, RequestMethod.POST})
     public String callback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws IOException {
-        HashMap<String,String> result = loginService.callback(code, state, session);
-        if(result.get("result").equals("1")){
-            model.addAttribute("naverId",result.get("naverId"));
+        HashMap<String, String> result = loginService.callback(code, state, session);
+        if (result.get("result").equals("1")) {
+            model.addAttribute("naverId", result.get("naverId"));
             return "sync";
-        }
-        else return "home";
+        } else return "home";
     }
 
     @PostMapping("sync")
     @ResponseBody
-    public int sync(Member dto, HttpSession session){
-        return loginService.sync(dto,session);
+    public int sync(Member dto, HttpSession session) {
+        return loginService.sync(dto, session);
     }
 
     @GetMapping("reg")
@@ -71,4 +79,20 @@ public class LoginController {
         return loginService.dup(dto);
     }
 
+    @PostMapping("dlatl")
+    public void dlatl(Member dto) throws Exception {
+        String pw = registerMail.sendSimpleMessage(dto.getMemberNaverId());
+        loginService.forgotpw(dto, pw);
+    }
+
+    @PostMapping("forgotPw")
+    @ResponseBody
+    public HashMap<String, String> forgotPw(Member dto) {
+        return loginService.getNaverIdAndPhoneNumberByUserId(dto);
+    }
+
+    @GetMapping("forgotPw")
+    public String fgp() {
+        return "forgotPw";
+    }
 }
