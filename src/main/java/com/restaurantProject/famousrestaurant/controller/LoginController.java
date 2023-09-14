@@ -3,6 +3,7 @@ package com.restaurantProject.famousrestaurant.controller;
 import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.service.LoginService;
 import com.restaurantProject.famousrestaurant.service.RegisterMail;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,21 +14,11 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @Controller
+@RequiredArgsConstructor
 public class LoginController {
 
-    private LoginService loginService;
-
-    @Autowired
-    public void setLoginService(LoginService loginService) {
-        this.loginService = loginService;
-    }
-
-    private RegisterMail registerMail;
-
-    @Autowired
-    public void setRegisterMail(RegisterMail registerMail) {
-        this.registerMail = registerMail;
-    }
+    private final LoginService loginService;
+    private final RegisterMail registerMail;
 
     @GetMapping("home")
     public String home() {
