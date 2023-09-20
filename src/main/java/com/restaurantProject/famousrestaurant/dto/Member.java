@@ -12,5 +12,7 @@ public class Member {
     private String memberPass;
     private String memberPhoneNumber;
     private String memberAddress;
+    private double mapX;
+    private double mapY;
 
 }

@@ -10,11 +10,13 @@
         <th>음식점id</th>
         <th>음식점명</th>
         <th>카테고리</th>
+<!--        <th>나와의 거리</th>-->
     </tr>
     <tr th:each="restaurant: ${list}">
         <td th:text="${restaurant.id}"></td>
         <td><a th:href="@{|/restaurant/detail/${restaurant.id}|(page=${list.number + 1})}" th:text="${restaurant.restaurantName}"></a></td>
         <td th:text="${restaurant.category}"></td>
+<!--        <td th:text="${restaurant.distance}"></td>-->
     </tr>
 </table>
 <!-- 첫번째 페이지로 이동 -->

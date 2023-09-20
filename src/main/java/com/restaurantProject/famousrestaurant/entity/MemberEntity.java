@@ -23,5 +23,9 @@ public class MemberEntity {
     private String memberPhoneNumber;
     @Column
     private String memberAddress;
+    @Column
+    private double mapX;
+    @Column
+    private double mapY;
 
 }

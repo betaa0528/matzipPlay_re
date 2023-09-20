@@ -23,6 +23,8 @@ public class RestaurantEntity {
     @Column
     private String restaurantRoadAddress;
     @Column
+    private String imgLink;
+    @Column
     private double mapX;
     @Column
     private double mapY;
