@@ -3,14 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>detail</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
     <style>
         table{
             border: 1px solid black;
+        }
+        td{
+            border: 1px solid black;
+        }
+        .reviewImg{
+            width: 100px;
+            height: 100px;
         }
 
     </style>
 </head>
 <body>
+<h1 th:text="${session.memberId}"></h1>
+<a th:href="@{|/restaurant/category/${restaurant.category}/paging|(page=${page})}">목록으로 돌아가기</a>
 <table>
     <tr>
         <td>사진</td>
@@ -26,6 +37,70 @@
         <td th:text="${restaurant.restaurantRoadAddress}"></td>
         <td th:text="${restaurant.category}"></td>
     </tr>
+    <tr>
+        <td><button onclick="saveReview()">리뷰쓰기</button></td>
+        <td>
+<!--            <button th:if="${wishListChk == 1}" id="addedWish">찜!!</button>-->
+            <button th:text="${wishListChk == 0 ? '찜하기' : '찜!!'}" id="addWish" onclick="saveWish()"></button>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>작성자ID </th>
+        <th>리뷰이미지</th>
+        <th>리뷰내용</th>
+    </tr>
+
+    <tr th:each="review : ${reviews}">
+        <td th:text="${review.getMemberId()}"></td>
+
+        <td th:if="${review.fileAttached == 1}">
+            <div th:each="fileName : ${review.storedName}">
+                <img th:src="@{|/upload/${fileName}|}" class="reviewImg">
+            </div>
+        </td>
+        <td th:text="${review.getReviewText()}"></td>
+    </tr>
 </table>
 </body>
+<script th:inline="javascript">
+    const id = [[${restaurant.id}]];
+    const member_id = [[${session.memberId}]];
+    const restaurant_id = [[${restaurant.id}]];
+    const saveReview = () => {
+        if(member_id == null) {
+            alert("로그인해주세요");
+        } else {
+            location.href = "/review/restaurant/" + id;
+        }
+    }
+
+    const saveWish = () => {
+        if(member_id == null) {
+            alert("로그인해주세요");
+        } else{
+            $.ajax({
+                type : "post",
+                url : "/review/wishList",
+                data : {
+                    "id" : id,
+                    "restaurantId" : restaurant_id,
+                    "memberWishId" : member_id
+                },
+                success : function (res){
+                    console.log("성공" , res);
+                    var wishBtn = document.getElementById("addWish");
+                    wishBtn.textContent = res == 0 ? "찜하기" : "찜!!"; // res 값 => 찜됐는지 안됐는지
+                },
+                error : function () {
+                    console.log("실패");
+                }
+            })
+        }
+
+    }
+
+</script>
 </html>

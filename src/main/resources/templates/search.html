@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<h2 th:text="${target}">에 대한 검색 결과입니다.</h2>
+<table>
+    <tr>
+        <td>음식점명</td>
+        <td>카테고리</td>
+        <td>이미지</td>
+    </tr>
+    <tr th:each="rest : ${list}">
+        <td onload="image()"></td>
+        <td th:text="${rest.restaurantName}"></td>
+        <td th:text="${rest.category}"></td>
+    </tr>
+</table>
+</body>
+<script th:inline="javascript">
+
+</script>
+</html>

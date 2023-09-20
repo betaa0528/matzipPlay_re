@@ -21,8 +21,14 @@ class RestaurantRepositoryTest {
 
     @Test
     public void test() {
-        List<RestaurantEntity> all = restaurantRepository.findAll();
-        all.stream().forEach(System.out::println);
+//        List<RestaurantEntity> all = restaurantRepository.findAll();
+//        all.stream().forEach(System.out::println);
+//        System.out.println(restaurantRepository.findByRestaurantName("왔따쪽갈비"));
+//        System.out.println(restaurantRepository.findById(1L).get().getRestaurantName());
+//        List<RestaurantEntity> restaurantEntities = restaurantRepository.findByCategory("분식");
+//        restaurantEntities.stream().forEach(System.out::println);
+        RestaurantEntity restaurantName = restaurantRepository.findByRestaurantName("호랭이 분식");
+        System.out.println(restaurantName);
 
     }
 

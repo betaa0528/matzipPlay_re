@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>review</title>
+</head>
+<body>
+<form action="/review/restaurant" method="post" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td><input type="hidden" name="restaurantId" th:value="${byId.id}"></td>
+        </tr>
+        <tr>
+            <td>음식점명 : <h2 th:text="${byId.restaurantName}"></h2></td>
+        </tr>
+        <tr>
+            <td>memberId : <input type="text" name="memberId" th:value="${session.memberId}" readonly></td>
+        </tr>
+        <tr>
+            <td>
+                리뷰내용칸
+                <textarea name="reviewText" placeholder="리뷰내용을 작성하세요"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                파일첨부 : <input type="file" name="fileList" multiple>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="리뷰 저장">
+                <input type="button" onclick="reviewCancle()" value="작성 취소">
+            </td>
+        </tr>
+    </table>
+</form>
+<script th:inline="javascript">
+    const id = [[${byId.id}]];
+    const reviewCancle = () => {
+        location.href = `/restaurant/detail/${id}`;
+    }
+
+</script>
+</body>
+</html>

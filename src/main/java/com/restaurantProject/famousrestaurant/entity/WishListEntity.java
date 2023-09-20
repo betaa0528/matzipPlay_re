@@ -1,9 +1,7 @@
 package com.restaurantProject.famousrestaurant.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.restaurantProject.famousrestaurant.dto.WishList;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,12 +10,21 @@ import javax.persistence.*;
 @Entity
 @ToString
 @Table(name = "wishlist_table")
+@AllArgsConstructor
+@NoArgsConstructor
 public class WishListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String restaurantName;
+    private Long restaurantId;
     @Column
-    private String memberId;
+    private String memberWishId;
+
+    public static WishListEntity toWishListEntity(WishList wishList) {
+        WishListEntity wishListEntity = new WishListEntity();
+        wishListEntity.setRestaurantId(wishList.getRestaurantId());
+        wishListEntity.setMemberWishId(wishList.getMemberWishId());
+        return wishListEntity;
+    }
 }
