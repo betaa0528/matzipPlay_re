@@ -78,8 +78,6 @@ public class RestaurantController {
     public String RestaurantDetail(@PageableDefault(page = 1)Pageable pageable,
                                    @PathVariable Long id, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Member testMember = getTestMember();
-        session.setAttribute("memberId" , testMember.getMemberId());
         Restaurant restaurant = restaurantService.findById(id); // 해당 {id} 음식점 정보를 가져옴
         int wishListChk = 0;
         if(session.getAttribute("memberId") != null){
@@ -93,10 +91,6 @@ public class RestaurantController {
         model.addAttribute("image", restaurantService.imgSearch(query));
         model.addAttribute("restaurant", restaurant);
         return "detail";
-    }
-
-    public Member getTestMember(){
-        return memberService.findById(1L);
     }
 
 }

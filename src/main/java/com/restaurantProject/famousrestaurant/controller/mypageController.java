@@ -61,7 +61,7 @@ public class mypageController {
             model.addAttribute("id",memberId);
 
             //찜목록 가져오기
-            List<WishListEntity> wishList = wishListRepository.findByMemberId(memberId);
+            List<WishListEntity> wishList = wishListRepository.findByMemberWishId(memberId);
             model.addAttribute("wishList",wishList);
             return "wishlist";
         }else{
