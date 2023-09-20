@@ -27,7 +27,6 @@ public class Restaurant {
         restaurant.setYCoordinate(restaurantEntity.getYCoordinate());
         restaurant.setCategory(restaurantEntity.getCategory());
         return restaurant;
-
     }
 
 }

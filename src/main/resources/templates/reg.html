@@ -69,42 +69,20 @@
     </style>
     <script>
         let check = false;
-
-        $(document).ready(function () {
-            const phoneNumberInput = $('[name="memberPhoneNumber"]');
-
-            phoneNumberInput.on("input", function () {
-                let phoneNumber = phoneNumberInput.val();
-
-                // '-' 및 숫자 이외의 문자 제거
-                phoneNumber = phoneNumber.replace(/[^\d-]/g, "");
-                // 형식에 맞게 '-' 추가
-                if (phoneNumber.length >= 4 && phoneNumber.charAt(3) !== '-') {
-                    phoneNumber = phoneNumber.substring(0, 3) + '-' + phoneNumber.substring(3);
-                }
-                if (phoneNumber.length >= 9 && phoneNumber.charAt(8) !== '-') {
-                    phoneNumber = phoneNumber.substring(0, 8) + '-' + phoneNumber.substring(8);
-                }
-                phoneNumberInput.val(phoneNumber);
-            });
-        });
+        let numberCheck = false;
 
         function reg(){
-            const phoneNumberPattern = /^010-\d{4}-\d{4}$/;
-
             let memberId = $('[name="memberId"]').val();
             let memberPass = $('[name="memberPass"]').val();
-            let memberPhoneNumber = $('[name="memberPhoneNumber"]').val();
             let sample6_postcode = $('#sample6_postcode').val();
             let memberAddress = $('[name="memberAddress').val();
             if(!check){
                 alert("아이디 중복 확인을 해주세요")
-            }else if(memberPass.length<8||memberId.length>16){
+            }else if(!numberCheck){
+                alert("휴대전화 인증을 진행해주세요")
+            } else if(memberPass.length<8||memberId.length>16){
                 alert("비밀번호는 8자 이상 16자 이하 입니다.");
                 $('[name="memberPass"]').focus();
-            }else if(memberPhoneNumber.length<13||!phoneNumberPattern.test(memberPhoneNumber)){
-                alert("전화번호를 예시와 같이 입력해주세요\n예) 010-0000-0000");
-                $('[name="memberPhoneNumber"]').focus();
             }else if(sample6_postcode==""||memberAddress==""){
                 alert("주소를 입력해주세요");
             }else{
@@ -114,27 +92,87 @@
 
         function dup(){
             let memberId = $('[name="memberId"]').val();
+            let pattern= /^[a-z0-9]+$/;
 
             if(memberId.length<4||memberId.length>10) {
                 alert("아이디는 4자 이상 10자 이하 입니다.");
                 $('[name="memberId"]').focus();
-                return;
+            }else if(!pattern.test(memberId)){
+                alert("아이디는 알파벳 소문자와 숫자로만 이루어져야 합니다.");
+                $('[name="memberId"]').focus();
+            }else {
+                $.ajax({
+                    url: "dup",
+                    type: "POST",
+                    dataType: "text",
+                    data: {"memberId": memberId},
+                    success: function (data) {
+                        if (data == 0) {
+                            alert("사용 가능한 아이디 입니다.");
+                            $('[name="memberId"]').prop("readonly", true);
+                            $('#dupCheck').prop("disabled", true);
+                            $('[name="memberPass"]').prop("disabled", false);
+                            $('[name="memberPhoneNumber"]').prop("disabled", false);
+                            $('[name="memberDetailAddr').prop("disabled", false);
+                            check = true;
+                        } else alert("이미 존재하는 아이디 입니다.")
+                    },
+                    error: function (xhr, status, error) {
+                    }
+                });
             }
+        }
+
+        function tel(){
+            let to = $('[name="memberPhoneNumber"]').val();
 
             $.ajax({
-                url: "./dup",
+                url: "send",
                 type: "POST",
                 dataType: "text",
-                data : { "memberId" : memberId },
+                data : { "to" : to },
                 success: function(data) {
-                    if(data==0) {
-                        alert("사용 가능한 아이디 입니다.");
-                        $('[name="memberId"]').prop("readonly",true);
-                        $('[name="memberPass"]').prop("disabled",false);
-                        $('[name="memberPhoneNumber"]').prop("disabled",false);
-                        $('[name="memberDetailAddr').prop("disabled",false);
-                        check = true;
-                    }else alert("이미 존재하는 아이디 입니다.")
+
+                    let resultContainer = $("#resultContainer");
+                    let number = $("<input>").attr("name", "number")
+                    let confirm = $("<button>").text("인증확인");
+
+                    resultContainer.append(number);
+                    resultContainer.append(confirm);
+
+                    number.attr("type","text");
+                    confirm.attr("onclick", "numberConfirm()");
+                    confirm.attr("id","confirm");
+                    confirm.attr("type","button");
+                },
+                error: function(xhr, status, error) {
+                }
+            });
+        }
+
+        function numberConfirm(){
+            let memberPhoneNumber = $('[name="memberPhoneNumber"]').val();
+            let number = $('[name="number"]').val();
+
+            $.ajax({
+                url: "confirm",
+                type: "POST",
+                dataType: "text",
+                data : {
+                    "number" : number,
+                    "memberPhoneNumber" : memberPhoneNumber
+                },
+                success: function(data) {
+                    if(data==1){
+                        numberCheck = true;
+                        alert("인증이 완료되었습니다.");
+                        $('[name="number"]').prop("disabled",true);
+                        $('[name="memberPhoneNumber"]').prop("readonly",true);
+                        $('#telCheck').prop("disabled",true);
+                        $('#confirm').prop("disabled",true);
+                    }else{
+                        alert("올바른 인증번호를 입력해주세요.")
+                    }
                 },
                 error: function(xhr, status, error) {
                 }
@@ -145,11 +183,12 @@
 <body>
 <form name="frm" action="./reg" method="post">
     <h4>아이디</h4>
-    <input type="text" name="memberId"><button onclick="dup()" type="button">중복확인</button><br>
+    <input type="text" name="memberId"><button id="dupCheck" onclick="dup()" type="button">중복확인</button><br>
     <h4>비밀번호</h4>
     <input type="password" name="memberPass" disabled><br>
     <h4>전화번호 ('-' 제외 입력)</h4>
-    <input type="text" name="memberPhoneNumber" maxlength="13" disabled><br>
+    <input type="text" name="memberPhoneNumber" maxlength="11" disabled><button id="telCheck" onclick="tel()" type="button">인증번호발급</button><br><br>
+    <div id="resultContainer"></div><br>
     <h4>주소</h4>
     <input type="text" id="sample6_postcode" placeholder="우편번호" readonly>
     <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
@@ -163,7 +202,6 @@
         new daum.Postcode({
             oncomplete: function(data) {
                 var addr = '';
-                var extraAddr = '';
                 if (data.userSelectedType === 'R') {
                     addr = data.roadAddress;
                 } else {

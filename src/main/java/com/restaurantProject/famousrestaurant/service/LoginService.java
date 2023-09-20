@@ -4,23 +4,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.restaurantProject.famousrestaurant.dto.Member;
+import com.restaurantProject.famousrestaurant.sms.dto.Message;
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import com.restaurantProject.famousrestaurant.util.KakaoMapApi;
 import com.restaurantProject.famousrestaurant.util.NaverLoginApi;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Random;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class LoginService {
 
@@ -29,7 +29,28 @@ public class LoginService {
     private final NaverLoginApi naverLoginApi;
     private final KakaoMapApi kakaoMapApi;
 
-    public int login(Member dto, HttpSession session) {
+    HashMap<String,String> authKey = new HashMap<>();
+
+    public String createNumber(Message dto) {
+        StringBuffer key = new StringBuffer();
+        Random rnd = new Random();
+
+        // 인증코드 6자리
+        for (int i = 0; i < 6; i++) key.append((rnd.nextInt(10)));
+
+        authKey.put(dto.getTo(),key.toString());
+        return key.toString();
+    }
+
+    public int confirm(String number, String memberPhoneNumber){
+        String key = authKey.get(memberPhoneNumber);
+        if(number.equals(key)) {
+            authKey.remove(memberPhoneNumber);
+            return 1;
+        }else return 0;
+    }
+
+    public int login(Member dto) {
         Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
 
         if (result.isEmpty()) return 0;
@@ -37,13 +58,12 @@ public class LoginService {
             StringBuilder hexString = sha256(dto.getMemberPass());
             if (!hexString.toString().equals(result.get().getMemberPass())) return 1;
             else {
-                session.setAttribute("memberId", dto.getMemberId());
                 return 2;
             }
         }
     }
 
-    public int sync(Member dto, HttpSession session) {
+    public int sync(Member dto) {
         Optional<MemberEntity> user = memberRepository.findByMemberId(dto.getMemberId());
         if (user.isEmpty()) return 0;
         else {
@@ -62,14 +82,13 @@ public class LoginService {
                         .mapY(u.getMapY())
                         .build();
                 memberRepository.save(m);
-                session.setAttribute("memberId", u.getMemberId());
                 return 2;
             }
         }
     }
 
     public void forgotpw(Member dto, String pw) {
-        Optional<MemberEntity> user = memberRepository.findByMemberNaverId(dto.getMemberNaverId());
+        Optional<MemberEntity> user = memberRepository.findByMemberId(dto.getMemberId());
 
         if (user.isPresent()) {
             StringBuilder hexString = sha256(pw);
@@ -109,7 +128,6 @@ public class LoginService {
             map.put("result", "1");
             return map;
         } else {
-            session.setAttribute("memberId", result.get().getMemberId());
             map.put("result", "2");
             return map;
         }
@@ -169,8 +187,18 @@ public class LoginService {
     public HashMap<String, String> getNaverIdAndPhoneNumberByUserId(Member dto) {
         Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
         HashMap<String, String> map = new HashMap<>();
-        map.put("phoneNumber", result.get().getMemberPhoneNumber());
-        map.put("naverId", result.get().getMemberNaverId());
+        if(result.isPresent()){
+            map.put("phoneNumber", result.get().getMemberPhoneNumber());
+            map.put("naverId", result.get().getMemberNaverId());
+        }else {
+            map.put("result","false");
+        }
         return map;
+    }
+
+    public String getMemberIdByPhoneNumber(Member dto){
+        Optional<MemberEntity> result = memberRepository.findByMemberPhoneNumber(dto.getMemberPhoneNumber());
+        if(result.isEmpty()) return null;
+        else return result.get().getMemberId();
     }
 }

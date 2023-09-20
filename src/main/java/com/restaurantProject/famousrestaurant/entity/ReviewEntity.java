@@ -17,14 +17,19 @@ public class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column
     private String memberId;
+
     @Column
     private String restaurantName;
+
     @Column
     private String reviewImage;
+
     @Column
     private String reviewText;
+
     @Column
     private LocalDateTime createdAt;
 }

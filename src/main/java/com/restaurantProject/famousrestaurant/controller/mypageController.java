@@ -24,47 +24,50 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class mypageController {
-    private final RestaurantRepository restaurantRepository;
+
     private final MemberRepository memberRepository;
     private final WishListRepository wishListRepository;
     private final ReviewRepository reviewRepository;
-    private String memberId;
-    HttpSession session;
-    @GetMapping("/mypage")
-    public String getMypage(Model model,HttpServletRequest session){
+
+    @GetMapping("mypage")
+    public String getMypage(Model model,HttpSession session){
+
         //아이디 확인
-        session.setAttribute("sessionId","hr1234");
-        String sessionId = (String)session.getAttribute("sessionId");
+        String sessionId = (String)session.getAttribute("memberId");
+        System.out.println(sessionId);
+
         Optional<MemberEntity> member = memberRepository.findByMemberId(sessionId);
+
         if(member.get().getMemberId()!=null){
-            memberId = member.get().getMemberId();
+            String memberId = member.get().getMemberId();
             model.addAttribute("id",memberId);
+
+            //리뷰목록 가져오기
+            List<ReviewEntity> reviewList = reviewRepository.findByMemberId(memberId);
+            model.addAttribute("reviewList",reviewList);
+            return "mypage";
         }else{
             return "error";
         }
 
-        //리뷰목록 가져오기
-        List<ReviewEntity> reviewList = (List<ReviewEntity>) reviewRepository.findByMemberId(memberId);
-        model.addAttribute("reviewList",reviewList);
-
-        return "mypage";
     }
 
     @GetMapping("/mypage/wishlist")
-    public String getWishList(Model model, HttpServletRequest session){
-        session.setAttribute("sessionId","hr1234");
-        String sessionId = (String)session.getAttribute("sessionId");
+    public String getWishList(Model model, HttpSession session){
+        String sessionId = (String)session.getAttribute("memberId");
         Optional<MemberEntity> member = memberRepository.findByMemberId(sessionId);
         if(member.get().getMemberId()!=null){
-            memberId = member.get().getMemberId();
+            String memberId = member.get().getMemberId();
             model.addAttribute("id",memberId);
+
+            //찜목록 가져오기
+            List<WishListEntity> wishList = wishListRepository.findByMemberId(memberId);
+            model.addAttribute("wishList",wishList);
+            return "wishlist";
         }else{
             return "error";
         }
 
-        //찜목록 가져오기
-        List<WishListEntity> wishList = (List<WishListEntity>) wishListRepository.findByMemberId(memberId);
-        model.addAttribute("wishList",wishList);
-        return "wishlist";
+
     }
 }

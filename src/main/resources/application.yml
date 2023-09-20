@@ -10,6 +10,11 @@ naver:
     id: 9MzYRB5D2ltx9F13zISx
     secret: FS49jYJ5VV
 
+naver-cloud-sms:
+  accesskey: 17fzA5KYVlFlhBhQpAK5
+  secretKey: yTsepyynNwTFolTCExmlSoa3PAjxhAIY16Om1t5h
+  serviceId: ncp:sms:kr:316018634333:prj_test
+  senderPhone: 01048232132
 
 spring:
   datasource:

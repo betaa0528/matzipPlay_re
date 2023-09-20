@@ -14,8 +14,6 @@
     <button type="button" class="btn btn-primary" onclick = "location.href = '/mypage/wishlist' ">나의 찜</button>
     <button type="button" class="btn btn-primary"  onclick = "location.href = '/mypage/review' ">리뷰관리</button>
 
-
-
     <h2>리뷰목록</h2>
     <tr th:each="items: ${reviewList}">
         <td th:text="${items.restaurantName}"></td>

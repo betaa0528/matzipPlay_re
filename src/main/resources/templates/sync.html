@@ -63,7 +63,7 @@
 
         alert("네이버 연동을 위해 로그인 해주세요");
 
-        function login(){
+        function sync(){
 
             let memberId = $('[name="memberId"]').val();
             let memberPass = $('[name="memberPass"]').val();
@@ -97,13 +97,13 @@
     </script>
 </head>
 <body>
-<form action="./login" method="post">
+<form>
     <input type="hidden" th:value="${naverId}" id="memberNaverId">
     <h4>아이디</h4>
     <input type="text" name="memberId"><br>
     <h4>비밀번호</h4>
     <input type="text" name="memberPass"><br>
-    <button onclick="login()" type="button">연동하기</button>
+    <button onclick="sync()" type="button">연동하기</button>
 </form>
 </body>
 </html>

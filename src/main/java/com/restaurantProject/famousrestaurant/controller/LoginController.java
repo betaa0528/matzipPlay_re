@@ -1,16 +1,24 @@
 package com.restaurantProject.famousrestaurant.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.restaurantProject.famousrestaurant.dto.Member;
+import com.restaurantProject.famousrestaurant.sms.dto.Message;
 import com.restaurantProject.famousrestaurant.service.LoginService;
 import com.restaurantProject.famousrestaurant.service.RegisterMail;
+import com.restaurantProject.famousrestaurant.service.SmsService;
+import com.restaurantProject.famousrestaurant.sms.dto.smsResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 @Controller
@@ -19,6 +27,22 @@ public class LoginController {
 
     private final LoginService loginService;
     private final RegisterMail registerMail;
+    private final SmsService smsService;
+
+    @PostMapping("send")
+    @ResponseBody
+    public int sendSms(Message messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        messageDto.setContent("인증번호 [" + loginService.createNumber(messageDto) + "]를 입력해주세요");
+        smsResponse response = smsService.sendSms(messageDto);
+        if(response.getStatusCode().equals("202")) return 1;
+        else return 0;
+    }
+
+    @PostMapping("confirm")
+    @ResponseBody
+    public int confirm(String number, String memberPhoneNumber) {
+        return loginService.confirm(number, memberPhoneNumber);
+    }
 
     @GetMapping("home")
     public String home() {
@@ -33,10 +57,12 @@ public class LoginController {
         return "login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("login")
     @ResponseBody
     public int login(Member dto, HttpSession session) {
-        return loginService.login(dto, session);
+        int result = loginService.login(dto);
+        if(result==2) session.setAttribute("memberId", dto.getMemberId());
+        return result;
     }
 
     @RequestMapping(value = "/callback", method = {RequestMethod.GET, RequestMethod.POST})
@@ -51,7 +77,9 @@ public class LoginController {
     @PostMapping("sync")
     @ResponseBody
     public int sync(Member dto, HttpSession session) {
-        return loginService.sync(dto, session);
+        int result = loginService.sync(dto);
+        if(result==2) session.setAttribute("memberId", dto.getMemberId());
+        return result;
     }
 
     @GetMapping("reg")
@@ -60,20 +88,38 @@ public class LoginController {
     }
 
     @PostMapping("reg")
-    public void reg(Member dto) {
+    public String reg(Member dto) {
         loginService.reg(dto);
+        return "login";
     }
 
-    @PostMapping("/dup")
+    @PostMapping("dup")
     @ResponseBody
     public int dup(Member dto) {
         return loginService.dup(dto);
     }
 
-    @PostMapping("dlatl")
-    public void dlatl(Member dto) throws Exception {
+    @PostMapping("resetPassEmail")
+    @ResponseBody
+    public int resetPassEmail(Member dto) throws Exception {
         String pw = registerMail.sendSimpleMessage(dto.getMemberNaverId());
-        loginService.forgotpw(dto, pw);
+        if(pw==null||pw.isEmpty()) return 0;
+        else {
+            loginService.forgotpw(dto, pw);
+            return 1;
+        }
+    }
+
+    @PostMapping("resetPassPhone")
+    @ResponseBody
+    public int resetPassPhone(Message messageDto, Member dto) throws Exception {
+        String pw = registerMail.createKey();
+        messageDto.setContent("임시 비밀번호 [" + pw + "]가 발급되었습니다.");
+        smsResponse response = smsService.sendSms(messageDto);
+        if(response.getStatusCode().equals("202")){
+            loginService.forgotpw(dto, pw);
+            return 1;
+        }else return 0;
     }
 
     @PostMapping("forgotPw")
@@ -83,7 +129,23 @@ public class LoginController {
     }
 
     @GetMapping("forgotPw")
-    public String fgp() {
-        return "forgotPw";
+    public String forgotPw() { return "forgotPw";}
+
+    @PostMapping("forgotId")
+    @ResponseBody
+    public int forgotId(Member dto, Message messageDto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        String memberId = loginService.getMemberIdByPhoneNumber(dto);
+        if(memberId==null) return 0;
+        else{
+            messageDto.setContent("아이디는 [" + memberId + "]입니다");
+            smsService.sendSms(messageDto);
+            return 1;
+        }
     }
+
+    @GetMapping("forgotId")
+    public String forgotId() {
+        return "forgotId";
+    }
+
 }

@@ -64,34 +64,43 @@
         let memberNaverId;
         let memberPhoneNumber;
 
-        function login(){
+        function forgotPw(){
             let memberId = $('[name="memberId"]').val();
             $.ajax({
-                url: "./forgotPw", // 요청할 URL
+                url: "forgotPw", // 요청할 URL
                 type: "POST", // HTTP 요청 메서드 (GET, POST 등)
                 dataType: "JSON", // 응답 데이터 형식 (JSON, XML 등)
                 data : {
                     "memberId" : memberId,
                 },
                 success: function(data) {
+                    if(data.result=="false") {
+                        alert("등록되지 않은 아이디입니다.");
+                        return;
+                    }
+
                     memberNaverId = data.naverId;
                     memberPhoneNumber = data.phoneNumber;
+                    let naverIdParagraph;
 
                     let resultContainer = $("#resultContainer");
-                    let naverIdParagraph = $("<p>").attr("id", "memberNaverId").text("네이버 이메일: " + memberNaverId);
+
+                    if(memberNaverId==null) naverIdParagraph = $("<p>").attr("id", "memberNaverId").text("네이버 이메일: 이메일이 존재하지 않습니다.");
+                    else naverIdParagraph = $("<p>").attr("id", "memberNaverId").text("네이버 이메일: " + memberNaverId);
+
                     let phoneNumberParagraph = $("<p>").attr("id", "memberPhoneNumber").text("전화번호: " + memberPhoneNumber);
                     let naverIdButton = $("<button>").text("이메일로 임시 비밀번호 받기");
                     let phoneNumberButton = $("<button>").text("전화번호로 임시 비밀번호 받기");
-
 
                     resultContainer.append(naverIdParagraph);
                     resultContainer.append(phoneNumberParagraph);
                     resultContainer.append(naverIdButton);
                     resultContainer.append(phoneNumberButton);
 
-
                     naverIdButton.attr("onclick", "naverIdButton()");
+                    naverIdButton.attr("type","button");
                     phoneNumberButton.attr("onclick", "phoneNumberButton()");
+                    phoneNumberButton.attr("type","button");
 
                 },
                 error: function(xhr, status, error) {
@@ -99,28 +108,66 @@
             });
         }
 
+        function phoneNumberButton(){
+            let memberId = $('[name="memberId"]').val();
+            if(memberPhoneNumber!=null){
+                $.ajax({
+                    url: "resetPassPhone", // 요청할 URL
+                    type: "POST", // HTTP 요청 메서드 (GET, POST 등)
+                    dataType: "JSON", // 응답 데이터 형식 (JSON, XML 등)
+                    data : {
+                        "memberId" : memberId,
+                        "to" : memberPhoneNumber,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        if(data==1) alert("임시 비밀번호가 전화번호로 전송되었습니다.");
+                        else alert("임시 비밀번호가 전송되지 않았습니다.");
+                    },
+                    error: function(xhr, status, error) {
+                    }
+                });
+                return;
+            }else {
+                alert("전화번호가 존재하지 않습니다.");
+                return;
+            }
+        }
+
         function naverIdButton(){
-            $.ajax({
-                url: "./dlatl", // 요청할 URL
-                type: "POST", // HTTP 요청 메서드 (GET, POST 등)
-                dataType: "JSON", // 응답 데이터 형식 (JSON, XML 등)
-                data : {
-                    "memberNaverId" : memberNaverId,
-                },
-                success: function(data) {
-                    console.log(data);
-                },
-                error: function(xhr, status, error) {
-                }
-            });
+            let memberId = $('[name="memberId"]').val();
+            if(memberNaverId!=null){
+                $.ajax({
+                    url: "resetPassEmail", // 요청할 URL
+                    type: "POST", // HTTP 요청 메서드 (GET, POST 등)
+                    dataType: "JSON", // 응답 데이터 형식 (JSON, XML 등)
+                    data : {
+                        "memberId" : memberId,
+                        "memberNaverId" : memberNaverId,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        if(data==1) alert("임시 비밀번호가 이메일로 전송되었습니다.");
+                        else alert("임시 비밀번호가 전송되지 않았습니다.");
+                    },
+                    error: function(xhr, status, error) {
+                    }
+                });
+                return;
+            }else{
+                alert("연동된 이메일이 존재하지 않습니다.");
+                return
+            }
 
         }
     </script>
 </head>
 <body>
-    <h4>아이디</h4>
-    <input type="text" name="memberId"><br>
-    <button onclick="login()" type="button">비밀번호 찾기</button>
-    <div id="resultContainer"></div>
+    <form>
+        <h4>아이디</h4>
+        <input type="text" name="memberId"><br>
+        <button onclick="forgotPw()" type="button">비밀번호 찾기</button>
+        <div id="resultContainer"></div>
+    </form>
 </body>
 </html>

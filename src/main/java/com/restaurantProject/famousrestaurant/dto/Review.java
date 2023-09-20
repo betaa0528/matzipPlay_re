@@ -15,5 +15,4 @@ public class Review {
     private String reviewImage;
     private String reviewText;
     private LocalDateTime createdAt;
-
 }
