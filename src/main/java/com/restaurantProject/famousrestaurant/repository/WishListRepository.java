@@ -8,5 +8,7 @@ import java.util.List;
 public interface WishListRepository extends JpaRepository<WishListEntity, Long> {
     List<WishListEntity> findByMemberWishId(String user1);
 
+    List<WishListEntity> findByMemberId(String memberId);
+
     WishListEntity findByMemberWishIdAndRestaurantId(String memberWishId, long l);
 }
