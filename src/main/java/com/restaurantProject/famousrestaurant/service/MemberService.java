@@ -10,14 +10,4 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository repository;
-
-    public Member findById(Long id){
-        MemberEntity memberEntity = repository.findById(id).get();
-        Member member = new Member();
-        member.setMemberId(member.getMemberId());
-        member.setMemberAddress(member.getMemberAddress());
-        member.setMapX(126.8863995);
-        member.setMapY(37.5269193);
-        return member;
-    }
 }
