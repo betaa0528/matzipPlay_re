@@ -1,6 +1,8 @@
 package com.restaurantProject.famousrestaurant.service;
 
+import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
+import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
 import com.restaurantProject.famousrestaurant.geo.GeoPoint;
 import com.restaurantProject.famousrestaurant.geo.GeoTrans;
@@ -9,23 +11,25 @@ import com.restaurantProject.famousrestaurant.naver.dto.SearchImageReq;
 import com.restaurantProject.famousrestaurant.naver.dto.SearchImageRes;
 import com.restaurantProject.famousrestaurant.naver.dto.SearchLocalReq;
 import com.restaurantProject.famousrestaurant.naver.dto.SearchLocalRes;
+import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final MemberRepository memberRepository;
     private final NaverClient naverClient;
 
 
@@ -41,6 +45,9 @@ public class RestaurantService {
 
     public Restaurant findById(Long id) {
         RestaurantEntity restaurantEntity = restaurantRepository.findById(id).get();
+        if(restaurantEntity.getImgLink() == null ){
+            restaurantEntity.setImgLink(imgSearch(restaurantEntity.getRestaurantName()));
+        }
         return Restaurant.toRestaurant(restaurantEntity);
     }
 
@@ -49,75 +56,68 @@ public class RestaurantService {
         searchImageReq.setQuery(query);
         SearchImageRes searchImageRes = naverClient.searchImage(searchImageReq);
 
-        SearchImageRes.SearchImageItem searchImageItem = searchImageRes.getItems().stream().findFirst().get();
-        String link = searchImageItem.getLink();
+        SearchImageRes.SearchImageItem searchImageItem = null;
+        if(searchImageRes.getItems().stream().findFirst().isPresent()){
+            searchImageItem = searchImageRes.getItems().stream().findFirst().get();
+        }
 
-        return link;
+
+        if(searchImageItem == null){
+            return null;
+        } else {
+            return searchImageItem.getLink();
+        }
     }
 
     public List<RestaurantEntity> findByCategory(String category) {
          return restaurantRepository.findByCategory(category);
     }
 
-    public int saveFindCategory(HttpSession session) throws InterruptedException {
-        SearchLocalReq searchLocalReq = new SearchLocalReq();
-        String[] categoryArr = {"까페", "분식", "일식", "중국식", "한식", "패스트부드"};
-        for(String category : categoryArr){
-            for(int i=0; i<10 ; i++) {
-                searchLocalReq.setQuery("서울 " + category + i);
-                SearchLocalRes searchLocalRes = naverClient.searchLocal(searchLocalReq);
-                List<SearchLocalRes.SearchLocalItem> items = searchLocalRes.getItems();
-                for (SearchLocalRes.SearchLocalItem item : items) {
-                    RestaurantEntity restaurantEntity = new RestaurantEntity();
-                    restaurantEntity.setRestaurantName(item.getTitle());
-                    restaurantEntity.setRestaurantAddress(item.getAddress());
-                    restaurantEntity.setRestaurantRoadAddress(item.getRoadAddress());
-                    restaurantEntity.setCategory(category);
-                    restaurantEntity.setMapX((double) item.getMapx() / 10000000);
-                    restaurantEntity.setMapY((double) item.getMapy() / 10000000);
-                    if (session != null) {
-                        GeoPoint resPoint = new GeoPoint((double) item.getMapx() / 10000000, (double) item.getMapy() / 10000000);
-                        GeoPoint userPoint = (GeoPoint) session.getAttribute("memberPoint");
-//                        restaurantEntity.setDistance(GeoTrans.getDistancebyGeo(resPoint, userPoint));
-                    } else {
-//                        restaurantEntity.setDistance(0.0);
-                    }
-                    restaurantRepository.save(restaurantEntity);
-                }
-            }
-            Thread.sleep(1000);
-        }
-        return 1;
-
-    }
-
-    public Page<Restaurant> paging(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1;
-        int pageLimit = 3;
-        Page<RestaurantEntity> restaurantEntities =
-                restaurantRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-
-        System.out.println("restaurantEntities.getContent() : " + restaurantEntities.getContent()); // 요청페이지에 해당하는글
-        System.out.println("restaurantEntities.getTotalElements() : " + restaurantEntities.getTotalElements()); // 전체 글갯수
-        System.out.println("restaurantEntities.getNumber() : " + restaurantEntities.getNumber()); // DB로 요청한 페이지번호
-        System.out.println("restaurantEntities.getTotalPages : "  + restaurantEntities.getTotalPages()); // 전체 페이지 갯수
-        System.out.println("restaurantEntities.getSize : " + restaurantEntities.getSize()); // 한 페이지에 보여지는 글 갯수
-        System.out.println("restaurantEntities.hasPrevious : " + restaurantEntities.hasPrevious()); // 이전 페이지 존재여부
-        System.out.println("restaurantEntities.isFirst : " + restaurantEntities.isFirst()); // 첫 페이지 여부
-        System.out.println("restaurantEntities.isLast : " + restaurantEntities.isLast()); // 마지막 페이지 여부
+//    public int saveFindCategory(HttpSession session) throws InterruptedException {
+//        SearchLocalReq searchLocalReq = new SearchLocalReq();
+//        String[] categoryArr = {"까페", "분식", "일식", "중국식", "한식", "패스트부드"};
+//        for(String category : categoryArr){
+//            for(int i=0; i<10 ; i++) {
+//                searchLocalReq.setQuery("서울 " + category + i);
+//                SearchLocalRes searchLocalRes = naverClient.searchLocal(searchLocalReq);
+//                List<SearchLocalRes.SearchLocalItem> items = searchLocalRes.getItems();
+//                for (SearchLocalRes.SearchLocalItem item : items) {
+//                    RestaurantEntity restaurantEntity = new RestaurantEntity();
+//                    restaurantEntity.setRestaurantName(item.getTitle());
+//                    restaurantEntity.setRestaurantAddress(item.getAddress());
+//                    restaurantEntity.setRestaurantRoadAddress(item.getRoadAddress());
+//                    restaurantEntity.setCategory(category);
+//                    restaurantEntity.setMapX((double) item.getMapx() / 10000000);
+//                    restaurantEntity.setMapY((double) item.getMapy() / 10000000);
+//                    if (session != null) {
+//                        GeoPoint resPoint = new GeoPoint((double) item.getMapx() / 10000000, (double) item.getMapy() / 10000000);
+//                        GeoPoint userPoint = (GeoPoint) session.getAttribute("memberPoint");
+////                        restaurantEntity.setDistance(GeoTrans.getDistancebyGeo(resPoint, userPoint));
+//                    } else {
+////                        restaurantEntity.setDistance(0.0);
+//                    }
+//                    restaurantRepository.save(restaurantEntity);
+//                }
+//            }
+//            Thread.sleep(1000);
+//        }
+//        return 1;
+//
+//    }
 
 
-        Page<Restaurant> restaurants = restaurantEntities.map(rest -> new Restaurant(rest.getId(), rest.getRestaurantName(), rest.getRestaurantAddress(), rest.getRestaurantRoadAddress(), rest.getCategory()));
-        return restaurants;
-    }
-
-    public Page<Restaurant> categoryPaging(String category, Pageable pageable) {
+    public Page<Restaurant> categoryPaging(String category, Pageable pageable, Member member) {
         int page = pageable.getPageNumber() - 1;
         int pageLimit = 1;
         Page<RestaurantEntity> restaurantEntities =
-                restaurantRepository.findByCategory(category, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+                restaurantRepository.findByCategory(category, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.ASC, "distance")));
 
-
+        for(RestaurantEntity restaurantEntity : restaurantEntities) {
+            if(restaurantEntity.getImgLink() == null) {
+                restaurantEntity.setImgLink(imgSearch(restaurantEntity.getRestaurantName()));
+                restaurantRepository.save(restaurantEntity);
+            }
+        }
         System.out.println("restaurantEntities.getContent() : " + restaurantEntities.getContent()); // 요청페이지에 해당하는글
         System.out.println("restaurantEntities.getTotalElements() : " + restaurantEntities.getTotalElements()); // 전체 글갯수
         System.out.println("restaurantEntities.getNumber() : " + restaurantEntities.getNumber()); // DB로 요청한 페이지번호
@@ -127,23 +127,45 @@ public class RestaurantService {
         System.out.println("restaurantEntities.isFirst : " + restaurantEntities.isFirst()); // 첫 페이지 여부
         System.out.println("restaurantEntities.isLast : " + restaurantEntities.isLast()); // 마지막 페이지 여부
 
+        Page<Restaurant> restaurants = restaurantEntities.map(restaurantEntity -> {
+                    Restaurant restaurant = new Restaurant();
+                    restaurant.setId(restaurantEntity.getId());
+                    restaurant.setRestaurantName(restaurantEntity.getRestaurantName());
+                    restaurant.setRestaurantAddress(restaurantEntity.getRestaurantAddress());
+                    restaurant.setRestaurantRoadAddress(restaurantEntity.getRestaurantRoadAddress());
+                    restaurant.setImgLink(restaurantEntity.getImgLink());
+                    restaurant.setCategory(restaurantEntity.getCategory());
+                    restaurant.setMapX(restaurantEntity.getMapX());
+                    restaurant.setMapY(restaurantEntity.getMapY());
+                    restaurant.setDistance(restaurantEntity.getDistance());
+            return restaurant;
+        });
+//        Page<Restaurant> restaurants = getRestaurantsByCategoryAndSortByDistance(restaurantEntities, member, pageable);
 
-        Page<Restaurant> restaurants = restaurantEntities.map(rest -> new Restaurant(rest.getId(), rest.getRestaurantName(), rest.getRestaurantAddress(), rest.getRestaurantRoadAddress(), rest.getCategory()));
         return restaurants;
     }
 
+
     // 검색창에서 음식점을 검색해서 결과를 되돌려주는 메소드
     // 만일 검색결과 중 DB에 없는 식당이 있다면 DB에저장함.
-    public List<Restaurant> search(String target) {
+    public List<Restaurant> search(String target, HttpSession session) {
         SearchLocalReq searchLocalReq = new SearchLocalReq();
         SearchLocalRes searchLocalRes = null;
         List<Restaurant> restaurants = new ArrayList<>();
         List<RestaurantEntity> restaurantEntities = new ArrayList<>();
+        GeoPoint memberPt = new GeoPoint(126.9783785, 37.5666612);
+        if(session != null){
+            String memberId = (String) session.getAttribute("memberId");
+            MemberEntity memberEntity = memberRepository.findByMemberId(memberId).get();
+            memberPt = new GeoPoint(Double.parseDouble(memberEntity.getMapX()) , Double.parseDouble(memberEntity.getMapY()));
+        }
+
         for(int i=0; i<2; i++){
             searchLocalReq.setQuery(target + i);
             searchLocalRes = naverClient.searchLocal(searchLocalReq);
             List<SearchLocalRes.SearchLocalItem> items = searchLocalRes.getItems();
             for(SearchLocalRes.SearchLocalItem item : items){
+                String imgLink = imgSearch(item.getTitle());
                 item.setTitle(titleTrans(item.getTitle())); // api결과 목록의 음식점명의 태그명을 지움
                 if(apiTitleChk(item.getTitle())){
                     RestaurantEntity restaurantEntity = new RestaurantEntity();
@@ -153,6 +175,13 @@ public class RestaurantService {
                     restaurantEntity.setCategory(apiCategoryTrans(item.getCategory()));
                     restaurantEntity.setMapX((double) item.getMapx() / 10000000);
                     restaurantEntity.setMapY((double) item.getMapy() / 10000000);
+                    restaurantEntity.setImgLink(imgLink);
+                    restaurantEntity.setDistance(
+                            GeoTrans.getDistancebyGeo(
+                                    new GeoPoint((double) item.getMapx() / 10000000,(double) item.getMapy() / 10000000 ),
+                                    memberPt
+                            )
+                    );
                     restaurantRepository.save(restaurantEntity);
                     restaurantEntities.add(restaurantEntity);
                 } else {
@@ -164,6 +193,7 @@ public class RestaurantService {
         for(RestaurantEntity restaurantEntity : restaurantEntities){
             restaurants.add(Restaurant.toRestaurant(restaurantEntity));
         }
+        sortByDistance(restaurants , memberPt); // 거리 기준으로 정렬하는 메소드
         return restaurants;
     }
 
@@ -198,5 +228,50 @@ public class RestaurantService {
         } else {
             return "기타";
         }
+    }
+
+    public void sortByDistance(List<Restaurant> restaurantList, GeoPoint memberPt) {
+        Comparator<Restaurant> distanceComparator = (r1, r2) -> {
+            GeoPoint pt1 = new GeoPoint(r1.getMapX(), r1.getMapY());
+            GeoPoint pt2 = new GeoPoint(r2.getMapX(), r2.getMapY());
+            double distanceToR1 = GeoTrans.getDistancebyGeo(pt1, memberPt);
+            double distanceToR2 = GeoTrans.getDistancebyGeo(pt2, memberPt);
+            r1.setDistance(distanceToR1);
+            r2.setDistance(distanceToR2);
+            return Double.compare(distanceToR1, distanceToR2);
+        };
+
+        restaurantList.sort(distanceComparator);
+    }
+
+    public void saveDistance(HttpSession session) {
+        if(session!=null){
+            String memberId =(String) session.getAttribute("memberId");
+            System.out.println(memberId);
+            MemberEntity memberEntity = memberRepository.findByMemberId(memberId).get();
+            double mapx = Double.parseDouble(memberEntity.getMapX());
+            double mapy = Double.parseDouble(memberEntity.getMapY());
+            GeoPoint userPt = new GeoPoint(mapx, mapy);
+            List<RestaurantEntity> all = restaurantRepository.findAll();
+            for(RestaurantEntity restaurantEntity : all ) {
+//            System.out.println("rest x : " + restaurantEntity.getMapX());
+//            System.out.println("rest y : " + restaurantEntity.getMapY());
+//            System.out.println("mem x : " + mapx);
+//            System.out.println("mem y : " + mapy);
+                restaurantEntity.setDistance(
+                        GeoTrans.getDistancebyGeo(userPt, new GeoPoint(restaurantEntity.getMapX(), restaurantEntity.getMapY()))
+                );
+                restaurantRepository.save(restaurantEntity);
+//            System.out.println(restaurantEntity.getDistance());
+            }
+        } else {
+            GeoPoint basicPt = new GeoPoint(126.9783785, 37.5666612); // session 없으면 서울시청의 좌표값을 기본으로 넣음
+            List<RestaurantEntity> all = restaurantRepository.findAll();
+            for(RestaurantEntity restaurantEntity : all) {
+                restaurantEntity.setDistance(GeoTrans.getDistancebyGeo(basicPt, new GeoPoint(restaurantEntity.getMapX(),restaurantEntity.getMapY())));
+                restaurantRepository.save(restaurantEntity);
+            }
+        }
+
     }
 }

@@ -25,11 +25,13 @@ public class RestaurantEntity {
     @Column
     private String imgLink;
     @Column
+    private String category;
+    @Column
     private double mapX;
     @Column
     private double mapY;
     @Column
-    private String category;
+    private Double distance;
 
     @OneToMany(mappedBy = "restaurantEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ReviewEntity> reviewEntity;

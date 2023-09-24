@@ -17,12 +17,33 @@ public class Restaurant {
     private String category;
     private double mapX;
     private double mapY;
+    private double distance;
+
+    public Restaurant(Long id, String restaurantName, String restaurantAddress, String restaurantRoadAddress, String imgLink, String category, double mapX, double mapY) {
+        this.id = id;
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
+        this.restaurantRoadAddress = restaurantRoadAddress;
+        this.imgLink = imgLink;
+        this.category = category;
+        this.mapX = mapX;
+        this.mapY = mapY;
+    }
 
     public Restaurant(Long id, String restaurantName, String restaurantAddress, String restaurantRoadAddress, String category) {
         this.id = id;
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantRoadAddress = restaurantRoadAddress;
+        this.category = category;
+    }
+
+    public Restaurant(Long id, String restaurantName, String restaurantAddress, String restaurantRoadAddress, String imgLink, String category) {
+        this.id = id;
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
+        this.restaurantRoadAddress = restaurantRoadAddress;
+        this.imgLink = imgLink;
         this.category = category;
     }
 
@@ -41,7 +62,7 @@ public class Restaurant {
         restaurant.setRestaurantName(restaurantEntity.getRestaurantName());
         restaurant.setRestaurantAddress(restaurantEntity.getRestaurantAddress());
         restaurant.setRestaurantRoadAddress(restaurantEntity.getRestaurantRoadAddress());
-        restaurant.setImgLink(restaurant.getImgLink());
+        restaurant.setImgLink(restaurantEntity.getImgLink());
         restaurant.setMapX(restaurantEntity.getMapX());
         restaurant.setMapY(restaurantEntity.getMapY());
         restaurant.setCategory(restaurantEntity.getCategory());

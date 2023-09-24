@@ -1,10 +1,24 @@
 package com.restaurantProject.famousrestaurant.geo;
 
+import com.restaurantProject.famousrestaurant.entity.MemberEntity;
+import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
+import com.restaurantProject.famousrestaurant.repository.MemberRepository;
+import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 public class geoTest {
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+
 
     @Test
     public void geoTransTest(){
@@ -40,5 +54,23 @@ public class geoTest {
 //        System.out.println("geo distance between (127,38) and (128,38) =" + GeoTrans.getDistancebyGeo(in_pt, in2_pt) + "km");
 //        double distancebyGeo = GeoTrans.getDistancebyGeo(pt1, pt2);
 //        System.out.println(distancebyGeo);
+
+        List<RestaurantEntity> all = restaurantRepository.findAll();
+        Optional<MemberEntity> memberEntity = memberRepository.findById(1L);
+        MemberEntity memberEntity1 = memberEntity.get();
+
+        for(RestaurantEntity restaurant : all) {
+            System.out.println(restaurant.getRestaurantName());
+            System.out.println("rest x : " + restaurant.getMapX());
+            System.out.println("rest y : " + restaurant.getMapY());
+            System.out.println("mem x : " + memberEntity1.getMapX());
+            System.out.println("mem y : " + memberEntity1.getMapY());
+            var resPt = new GeoPoint(restaurant.getMapX(), restaurant.getMapY());
+            var userPt = new GeoPoint(Double.parseDouble(memberEntity1.getMapX()), Double.parseDouble(memberEntity1.getMapY()));
+            double distancebyGeo = GeoTrans.getDistancebyGeo(resPt, userPt);
+            System.out.println(distancebyGeo);
+
+        }
+
     }
 }

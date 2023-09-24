@@ -43,6 +43,7 @@
     </style>
 </head>
 <body>
+<form action="/restaurant/search/" method="get" ></form>
 <div class="search-box">
     <input type="text" id="searchBar" placeholder="검색어를 입력해주세요"> <button onclick="search()">검색!!</button>
 </div>
@@ -82,6 +83,12 @@
             <img src="https://post-phinf.pstatic.net/MjAxOTExMTlfMTEw/MDAxNTc0MTIxNjI2NDMz.nQW51RJialoZIRnH1KVCA92mXu8lymn4FiMW8yE7L3gg._uKagENQcL5DsBsmWvxrRrckMgU6RsBI2eVnPPqxVRog.JPEG/TheCrimsonMonkey.jpg?type=w1200" alt="" class="div-img">
         </div>
         <p id="fast">양식</p>
+    </div>
+    <div class="category-box" onclick="category(this)">
+        <div class="categoryImg">
+            <img src="https://kr.yamaha.com/ko/files/02_FG9-R_33796c2d39e611a84cb362397e1be471.jpg?impolicy=resize&imwid=396&imhei=396" alt="" class="div-img">
+        </div>
+        <p id="other">기타</p>
     </div>
 </div>
 </body>

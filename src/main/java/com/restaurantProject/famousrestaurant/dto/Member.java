@@ -1,5 +1,6 @@
 package com.restaurantProject.famousrestaurant.dto;
 
+import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import lombok.*;
 
 @Getter
@@ -18,4 +19,17 @@ public class Member {
     private String mapX;
     private String mapY;
 
+    public static Member toMember(MemberEntity entity) {
+        Member member = new Member();
+        member.setMemberId(entity.getMemberId());
+        member.setMemberNaverId(entity.getMemberNaverId());
+        member.setMemberPass(entity.getMemberPass());
+        member.setMemberPhoneNumber(entity.getMemberPhoneNumber());
+        member.setMemberAddress(entity.getMemberAddress());
+        member.setMemberDetailAddr("");
+        member.setMapX(entity.getMapX());
+        member.setMapY(entity.getMapY());
+
+        return member;
+    }
 }

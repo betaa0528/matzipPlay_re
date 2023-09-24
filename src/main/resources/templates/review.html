@@ -5,7 +5,7 @@
     <title>review</title>
 </head>
 <body>
-<form action="/review/restaurant" method="post" enctype="multipart/form-data">
+<form action="/review/restaurant" name="reviewForm" method="post" enctype="multipart/form-data">
     <table>
         <tr>
             <td><input type="hidden" name="restaurantId" th:value="${byId.id}"></td>
@@ -19,7 +19,7 @@
         <tr>
             <td>
                 리뷰내용칸
-                <textarea name="reviewText" placeholder="리뷰내용을 작성하세요"></textarea>
+                <textarea name="reviewText" id="reviewText" placeholder="리뷰내용을 작성하세요"></textarea>
             </td>
         </tr>
         <tr>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td>
-                <input type="submit" value="리뷰 저장">
+                <input type="button" onclick="reviewSave()" value="리뷰 저장">
                 <input type="button" onclick="reviewCancle()" value="작성 취소">
             </td>
         </tr>
@@ -37,6 +37,18 @@
 </form>
 <script th:inline="javascript">
     const id = [[${byId.id}]];
+    const reviewText = document.getElementById("reviewText");
+
+    const reviewSave = () => {
+        if(reviewText.value == ""){
+            alert("리뷰내용을 입력해주세요");
+            reviewText.focus();
+        } else {
+            document.reviewForm.submit();
+        }
+    }
+
+
     const reviewCancle = () => {
         location.href = `/restaurant/detail/${id}`;
     }
