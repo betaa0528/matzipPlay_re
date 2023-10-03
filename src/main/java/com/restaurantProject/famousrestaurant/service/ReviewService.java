@@ -46,7 +46,7 @@ public class ReviewService {
         }
     }
 
-    public List<Review> findAll(Long restaurant_id) {
+    public List<Review> findByRestaurantId(Long restaurant_id) {
         RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurant_id).get();
         List<ReviewEntity> reviewEntities = reviewRepository.findAllByRestaurantEntityOrderByIdDesc(restaurantEntity);
         List<Review> reviews = new ArrayList<>();

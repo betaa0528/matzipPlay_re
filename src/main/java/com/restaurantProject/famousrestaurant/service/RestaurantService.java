@@ -73,42 +73,10 @@ public class RestaurantService {
          return restaurantRepository.findByCategory(category);
     }
 
-//    public int saveFindCategory(HttpSession session) throws InterruptedException {
-//        SearchLocalReq searchLocalReq = new SearchLocalReq();
-//        String[] categoryArr = {"까페", "분식", "일식", "중국식", "한식", "패스트부드"};
-//        for(String category : categoryArr){
-//            for(int i=0; i<10 ; i++) {
-//                searchLocalReq.setQuery("서울 " + category + i);
-//                SearchLocalRes searchLocalRes = naverClient.searchLocal(searchLocalReq);
-//                List<SearchLocalRes.SearchLocalItem> items = searchLocalRes.getItems();
-//                for (SearchLocalRes.SearchLocalItem item : items) {
-//                    RestaurantEntity restaurantEntity = new RestaurantEntity();
-//                    restaurantEntity.setRestaurantName(item.getTitle());
-//                    restaurantEntity.setRestaurantAddress(item.getAddress());
-//                    restaurantEntity.setRestaurantRoadAddress(item.getRoadAddress());
-//                    restaurantEntity.setCategory(category);
-//                    restaurantEntity.setMapX((double) item.getMapx() / 10000000);
-//                    restaurantEntity.setMapY((double) item.getMapy() / 10000000);
-//                    if (session != null) {
-//                        GeoPoint resPoint = new GeoPoint((double) item.getMapx() / 10000000, (double) item.getMapy() / 10000000);
-//                        GeoPoint userPoint = (GeoPoint) session.getAttribute("memberPoint");
-////                        restaurantEntity.setDistance(GeoTrans.getDistancebyGeo(resPoint, userPoint));
-//                    } else {
-////                        restaurantEntity.setDistance(0.0);
-//                    }
-//                    restaurantRepository.save(restaurantEntity);
-//                }
-//            }
-//            Thread.sleep(1000);
-//        }
-//        return 1;
-//
-//    }
 
-
-    public Page<Restaurant> categoryPaging(String category, Pageable pageable, Member member) {
+    public Page<Restaurant> categoryPaging(String category, Pageable pageable) {
         int page = pageable.getPageNumber() - 1;
-        int pageLimit = 1;
+        int pageLimit = 4;
         Page<RestaurantEntity> restaurantEntities =
                 restaurantRepository.findByCategory(category, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.ASC, "distance")));
 
@@ -154,7 +122,7 @@ public class RestaurantService {
         List<Restaurant> restaurants = new ArrayList<>();
         List<RestaurantEntity> restaurantEntities = new ArrayList<>();
         GeoPoint memberPt = new GeoPoint(126.9783785, 37.5666612);
-        if(session != null){
+        if(session.getAttribute("memberId") != null){
             String memberId = (String) session.getAttribute("memberId");
             MemberEntity memberEntity = memberRepository.findByMemberId(memberId).get();
             memberPt = new GeoPoint(Double.parseDouble(memberEntity.getMapX()) , Double.parseDouble(memberEntity.getMapY()));
@@ -176,12 +144,8 @@ public class RestaurantService {
                     restaurantEntity.setMapX((double) item.getMapx() / 10000000);
                     restaurantEntity.setMapY((double) item.getMapy() / 10000000);
                     restaurantEntity.setImgLink(imgLink);
-                    restaurantEntity.setDistance(
-                            GeoTrans.getDistancebyGeo(
-                                    new GeoPoint((double) item.getMapx() / 10000000,(double) item.getMapy() / 10000000 ),
-                                    memberPt
-                            )
-                    );
+                    double distanceByGeo = GeoTrans.getDistancebyGeo(new GeoPoint((double) item.getMapx() / 10000000, (double) item.getMapy() / 10000000), memberPt);
+                    restaurantEntity.setDistance(Math.round(distanceByGeo * 100) / 100.0);
                     restaurantRepository.save(restaurantEntity);
                     restaurantEntities.add(restaurantEntity);
                 } else {
@@ -236,8 +200,8 @@ public class RestaurantService {
             GeoPoint pt2 = new GeoPoint(r2.getMapX(), r2.getMapY());
             double distanceToR1 = GeoTrans.getDistancebyGeo(pt1, memberPt);
             double distanceToR2 = GeoTrans.getDistancebyGeo(pt2, memberPt);
-            r1.setDistance(distanceToR1);
-            r2.setDistance(distanceToR2);
+            r1.setDistance(Math.round(distanceToR1 * 100) / 100.0);
+            r2.setDistance(Math.round(distanceToR2 * 100) / 100.0);
             return Double.compare(distanceToR1, distanceToR2);
         };
 
@@ -245,7 +209,7 @@ public class RestaurantService {
     }
 
     public void saveDistance(HttpSession session) {
-        if(session!=null){
+        if(session.getAttribute("memberId")!=null){
             String memberId =(String) session.getAttribute("memberId");
             System.out.println(memberId);
             MemberEntity memberEntity = memberRepository.findByMemberId(memberId).get();
@@ -254,13 +218,8 @@ public class RestaurantService {
             GeoPoint userPt = new GeoPoint(mapx, mapy);
             List<RestaurantEntity> all = restaurantRepository.findAll();
             for(RestaurantEntity restaurantEntity : all ) {
-//            System.out.println("rest x : " + restaurantEntity.getMapX());
-//            System.out.println("rest y : " + restaurantEntity.getMapY());
-//            System.out.println("mem x : " + mapx);
-//            System.out.println("mem y : " + mapy);
-                restaurantEntity.setDistance(
-                        GeoTrans.getDistancebyGeo(userPt, new GeoPoint(restaurantEntity.getMapX(), restaurantEntity.getMapY()))
-                );
+                double distanceByGeo = GeoTrans.getDistancebyGeo(userPt, new GeoPoint(restaurantEntity.getMapX(), restaurantEntity.getMapY()));
+                restaurantEntity.setDistance(Math.round(distanceByGeo*100)/100.0);
                 restaurantRepository.save(restaurantEntity);
 //            System.out.println(restaurantEntity.getDistance());
             }
@@ -268,7 +227,9 @@ public class RestaurantService {
             GeoPoint basicPt = new GeoPoint(126.9783785, 37.5666612); // session 없으면 서울시청의 좌표값을 기본으로 넣음
             List<RestaurantEntity> all = restaurantRepository.findAll();
             for(RestaurantEntity restaurantEntity : all) {
-                restaurantEntity.setDistance(GeoTrans.getDistancebyGeo(basicPt, new GeoPoint(restaurantEntity.getMapX(),restaurantEntity.getMapY())));
+                double distanceByGeo = GeoTrans.getDistancebyGeo(basicPt, new GeoPoint(restaurantEntity.getMapX(), restaurantEntity.getMapY()));
+                restaurantEntity.setDistance(Math.round(distanceByGeo*100)/100.0);
+
                 restaurantRepository.save(restaurantEntity);
             }
         }

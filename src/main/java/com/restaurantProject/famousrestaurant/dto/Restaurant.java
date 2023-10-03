@@ -63,6 +63,7 @@ public class Restaurant {
         restaurant.setRestaurantAddress(restaurantEntity.getRestaurantAddress());
         restaurant.setRestaurantRoadAddress(restaurantEntity.getRestaurantRoadAddress());
         restaurant.setImgLink(restaurantEntity.getImgLink());
+        restaurant.setDistance(restaurantEntity.getDistance());
         restaurant.setMapX(restaurantEntity.getMapX());
         restaurant.setMapY(restaurantEntity.getMapY());
         restaurant.setCategory(restaurantEntity.getCategory());

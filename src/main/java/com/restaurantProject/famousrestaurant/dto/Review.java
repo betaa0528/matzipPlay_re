@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,15 +18,14 @@ import java.util.List;
 public class Review {
     private String memberId;
     private String reviewText;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private Long restaurantId;
-
     private List<MultipartFile> fileList; // 파일 담는 용도
     private List<String> originalName; // 원본 파일 이름
     private List<String> storedName; // 서버 저장 파일이름
     private int fileAttached; // 파일 첨부 여부
 
-    public Review(String memberId, String reviewText, LocalDateTime createdAt, Long restaurantId) {
+    public Review(String memberId, String reviewText, String createdAt, Long restaurantId) {
         this.memberId = memberId;
         this.reviewText = reviewText;
         this.createdAt = createdAt;
@@ -36,7 +36,8 @@ public class Review {
         Review review = new Review();
         review.setMemberId(reviewEntity.getMemberId());
         review.setReviewText(reviewEntity.getReviewText());
-        review.setCreatedAt(reviewEntity.getCreatedAt());
+        review.setCreatedAt(String.valueOf(reviewEntity.getCreatedAt().toLocalDate()));
+//        review.setCreatedAt(reviewEntity.getCreatedAt());
         review.setRestaurantId(restaurantId);
         if(reviewEntity.getFileAttached() == 0){
             review.setFileAttached(reviewEntity.getFileAttached());

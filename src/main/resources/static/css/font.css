@@ -1,0 +1,5 @@
+@font-face {
+    font-family: 'BMHannah'; /*font 이름*/
+    font-weight: normal; /* font 굵기 정의 */
+    src : url("/static/font/BMHANNAAir_ttf.ttf") format("truetype");
+}
