@@ -67,12 +67,6 @@ public class RestaurantController {
         return "paging";
     }
 
-    @GetMapping("/list")
-    public String RestaurantList(Model model) {
-        List<Restaurant> list = restaurantService.findAll();
-        model.addAttribute("restaurantlist" , list);
-        return "restaurantList";
-    }
 
     @GetMapping("/detail/{id}")
     public String RestaurantDetail(@PageableDefault(page = 1)Pageable pageable,

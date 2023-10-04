@@ -28,9 +28,10 @@ public class ReviewController {
 
     @GetMapping("/restaurant/{id}")
     public String reviewForm(@PathVariable Long id, Model model, HttpSession session) {
-        session.setAttribute("memberId" , session.getAttribute("memberId"));
+        String memberId = session.getAttribute("memberId").toString();
         Restaurant byId = restaurantService.findById(id);
         model.addAttribute("byId", byId);
+        model.addAttribute("memberId", memberId);
         return "review";
     }
 
