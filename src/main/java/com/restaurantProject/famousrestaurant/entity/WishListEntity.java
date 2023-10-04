@@ -21,10 +21,16 @@ public class WishListEntity {
     @Column
     private String memberWishId;
 
-    public static WishListEntity toWishListEntity(WishList wishList) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "join_id")
+    private RestaurantEntity restaurantEntity;
+
+    public static WishListEntity toWishListEntity(WishList wishList, RestaurantEntity restaurantEntity) {
         WishListEntity wishListEntity = new WishListEntity();
         wishListEntity.setRestaurantId(wishList.getRestaurantId());
         wishListEntity.setMemberWishId(wishList.getMemberWishId());
+        wishListEntity.setRestaurantEntity(restaurantEntity);
         return wishListEntity;
     }
+
 }

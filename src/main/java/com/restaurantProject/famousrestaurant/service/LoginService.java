@@ -78,6 +78,7 @@ public class LoginService {
                         .memberNaverId(dto.getMemberNaverId())
                         .memberAddress(u.getMemberAddress())
                         .memberPhoneNumber(u.getMemberPhoneNumber())
+                        .memberProfile(u.getMemberProfile())
                         .mapX(u.getMapX())
                         .mapY(u.getMapY())
                         .build();
@@ -100,6 +101,7 @@ public class LoginService {
                     .memberNaverId(dto.getMemberNaverId())
                     .memberAddress(u.getMemberAddress())
                     .memberPhoneNumber(u.getMemberPhoneNumber())
+                    .memberProfile(u.getMemberProfile())
                     .mapX(u.getMapX())
                     .mapY(u.getMapY())
                     .build();
@@ -167,6 +169,7 @@ public class LoginService {
                     .memberPass(hexString.toString())
                     .memberPhoneNumber(dto.getMemberPhoneNumber())
                     .memberAddress(address)
+                    .memberProfile("default.jpg")
                     .mapX(map[0])
                     .mapY(map[1])
                     .build();

@@ -38,7 +38,7 @@ public class ReviewService {
             for(MultipartFile reviewFile : review.getFileList()) {
                 String originalFileName = reviewFile.getOriginalFilename();
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
-                String savePath = "C:/review_img/" + storedFileName;
+                String savePath = "/Users/yun/Desktop/review_img/" + storedFileName;
                 reviewFile.transferTo(new File(savePath));
                 ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
                 reviewFileRepository.save(reviewFileEntity);

@@ -128,9 +128,6 @@ public class LoginController {
         return loginService.getNaverIdAndPhoneNumberByUserId(dto);
     }
 
-    @GetMapping("forgotPw")
-    public String forgotPw() { return "forgotPw";}
-
     @PostMapping("forgotId")
     @ResponseBody
     public int forgotId(Member dto, Message messageDto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
@@ -143,9 +140,9 @@ public class LoginController {
         }
     }
 
-    @GetMapping("forgotId")
+    @GetMapping("forgot")
     public String forgotId() {
-        return "forgotId";
+        return "forgot";
     }
 
 }
