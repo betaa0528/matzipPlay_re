@@ -71,7 +71,10 @@ public class LoginController {
         if (result.get("result").equals("1")) {
             model.addAttribute("naverId", result.get("naverId"));
             return "sync";
-        } else return "home";
+        }else{
+            session.setAttribute("memberId",result.get("memberId"));
+            return "home";
+        }
     }
 
     @PostMapping("sync")

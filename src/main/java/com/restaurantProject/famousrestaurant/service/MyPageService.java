@@ -40,17 +40,8 @@ public class MyPageService {
         }
     }
 
-    public String edit(MultipartFile file, String realPath, String img) {
-        if (file.isEmpty()) {
-            return img;
-        } else {
-            MyPageService m = new MyPageService();
-            return m.upload(file, realPath);
-        }
-    }
-
     public void delete(String realPath, String fileName) {
-        String filePath = realPath +"/"+ fileName;
+        String filePath = realPath + fileName;
         File file = new File(filePath);
         file.delete();
     }

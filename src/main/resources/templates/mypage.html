@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>마이페이지</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <style>
         @font-face {
             font-family: 'BMHANNAAir';
@@ -163,7 +163,27 @@
             font-size: 18px;
             margin-top: 1%;
         }
-
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%;
+            text-align: center;
+        }
+        #openModalBtn:hover{
+            cursor: pointer;
+        }
     </style>
     <script>
         $(document).ready(function() {
@@ -180,7 +200,18 @@
                 $("#wish").css("color","black");
                 $("#reviewContainer").css("display", "none");
                 $("#review").css("color","lightgray");
-            })
+            });
+
+            $("#openModalBtn").click(function() {
+                $("#myModal").css("display", "block");
+            });
+
+            // 모달 외부 클릭 시 모달 닫기
+            $(window).click(function(event) {
+                if (event.target == $("#myModal")[0]) {
+                    $("#myModal").css("display", "none");
+                }
+            });
         });
 
     </script>
@@ -189,7 +220,7 @@
     <!--프로필-->
     <div id="wrap">
         <div id="profile">
-            <img width="200" th:src="@{|/profile/${member.getMemberProfile()}|}">
+            <img id="openModalBtn" width="200" th:src="@{|/profile/${member.getMemberProfile()}|}">
             <div id="profileText">
                 <span id="memberId" th:text="${member.getMemberId()}"></span>
                 <div>
@@ -240,14 +271,16 @@
             </div>
         </div>
     </div>
-
-<!--    <form action="mypage/profile" method="post" enctype="multipart/form-data">-->
-<!--        <input type="hidden" th:value="${id}" name="memberId">-->
-<!--        <input id="file" type="file" accept="image/*" name="file">-->
-<!--        <button>-->
-<!--            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">&lt;!&ndash;! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. &ndash;&gt;<style>svg{fill:#d4d7de}</style><path d="M149.1 64.8L138.7 96H64C28.7 96 0 124.7 0 160V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H373.3L362.9 64.8C356.4 45.2 338.1 32 317.4 32H194.6c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/></svg>-->
-<!--        </button>-->
-<!--    </form>-->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <img width="400" th:src="@{|/profile/${member.getMemberProfile()}|}">
+            <form action="mypage/profile" method="post" enctype="multipart/form-data">
+                <input type="hidden" th:value="${member.getMemberId()}" name="memberId">
+                <input id="file" type="file" accept="image/*" name="file">
+                <button>변경하기</button>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>

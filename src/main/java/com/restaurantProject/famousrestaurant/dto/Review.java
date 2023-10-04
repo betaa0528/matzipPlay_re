@@ -38,7 +38,6 @@ public class Review {
         review.setMemberId(reviewEntity.getMemberId());
         review.setReviewText(reviewEntity.getReviewText());
         review.setCreatedAt(String.valueOf(reviewEntity.getCreatedAt().toLocalDate()));
-//        review.setCreatedAt(reviewEntity.getCreatedAt());
         review.setRestaurantId(restaurantId);
         if(reviewEntity.getFileAttached() == 0){
             review.setFileAttached(reviewEntity.getFileAttached());

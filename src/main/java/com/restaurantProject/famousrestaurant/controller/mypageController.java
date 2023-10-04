@@ -98,16 +98,17 @@ public class mypageController {
         Optional<MemberEntity> memOptional = memberRepository.findByMemberId(member.getMemberId());
         if(memOptional.isPresent()){
             MemberEntity mem = memOptional.get();
-            if(!mem.getMemberProfile().equals("defalut.jpg")){
+            System.out.println(mem.getMemberProfile());
+            if(mem.getMemberProfile().equals("default.jpeg")){
                 String profile = myPageService.upload(file,"/Users/yun/Desktop/profile/");
                 mem.setMemberProfile(profile);
-                memberRepository.save(mem);
             }else{
-                myPageService.delete(mem.getMemberProfile(),"/Users/yun/Desktop/profile/");
+                myPageService.delete("/Users/yun/Desktop/profile/",mem.getMemberProfile());
                 String profile = myPageService.upload(file,"/Users/yun/Desktop/profile/");
                 mem.setMemberProfile(profile);
             }
+            memberRepository.save(mem);
         }
-        return "mypage";
+        return "redirect:/mypage";
     }
 }
