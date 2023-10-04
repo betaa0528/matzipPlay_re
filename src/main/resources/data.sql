@@ -29,4 +29,4 @@ insert into restaurant_table(`restaurant_name`, `restaurant_address`,`restaurant
 insert into restaurant_table(`restaurant_name`, `restaurant_address`,`restaurant_road_address`, `category`, `mapx`, `mapy`) values ('버거킹국제점', '서울특별시 용산구 한강로2가 191-0 (지하1층)', '서울특별시 용산구 한강대로 92 (한강로2가,(지하1층))', '양식', 197099.3815, 447328.5488);
 insert into restaurant_table(`restaurant_name`, `restaurant_address`,`restaurant_road_address`, `category`, `mapx`, `mapy`) values ('씨지브이미아2', '서울특별시 강북구 미아동 35-4 1101호 ', '서울특별시 강북구 도봉로 34 (미아동,1101호)', '양식', 202642.446, 456636.3082);
 
-insert into member_table(`member_id` , `member_pass` , `member_phone_number`, `member_address`, `mapx`, `mapy`) values ('user1', '1234', '010-1234-1234' , '서울시 강서구' , 126.8863995 , 37.5269193);
+INSERT INTO member_table (mapx,mapy,member_address,member_id,member_naver_id,member_pass,member_phone_number,member_profile) values('127.45247758491','36.3186118269791','대전 동구 판암동 502-5 어딘가','aa123','lolo1123l@naver.com','1718c24b10aeb8099e3fc44960ab6949ab76a267352459f203ea1036bec382c2','01048232132','default.jpeg');

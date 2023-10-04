@@ -33,7 +33,6 @@ public class ReviewEntity extends BaseEntity{
     @OneToMany(mappedBy = "reviewEntity" , cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ReviewFileEntity> reviewFileEntity;
 
-
     public static ReviewEntity toSaveEntity(Review review, RestaurantEntity restaurantEntity) {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setMemberId(review.getMemberId());

@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review {
+    private Long id;
     private String memberId;
     private String reviewText;
     private LocalDateTime createdAt;
