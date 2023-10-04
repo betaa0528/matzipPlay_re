@@ -24,6 +24,7 @@
 
         header {
             width: 40vw;
+            height: 30vh;
             margin: 0 auto;
             background-color: white;
         }
@@ -36,14 +37,17 @@
 
         section {
             width: 40vw;
-            height: 200vh;
+            height: 52vh;
             margin: 0 auto;
             padding-top: 20px;
             background-color: white;
+            overflow-y: scroll;
+
         }
 
         #logo {
-            width: 100%;
+            width: 80%;
+            height: 100%;
         }
 
         #logo:hover {
@@ -196,7 +200,7 @@
 </head>
 <body>
 <header>
-    <img src="/img/logo.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logoText.png" id="logo" onclick="goIndex()" alt="">
 </header>
 <nav>
     <form action="/restaurant/search" method="get" name="searchForm">

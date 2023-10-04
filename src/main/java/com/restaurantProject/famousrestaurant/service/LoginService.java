@@ -130,6 +130,7 @@ public class LoginService {
             map.put("result", "1");
             return map;
         } else {
+            map.put("memberId",result.get().getMemberId());
             map.put("result", "2");
             return map;
         }
