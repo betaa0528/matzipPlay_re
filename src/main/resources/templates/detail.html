@@ -25,8 +25,10 @@
 
         header {
             width: 40vw;
+            height: 30vh;
             margin: 0 auto;
             background-color: white;
+            text-align: center;
         }
 
         nav {
@@ -44,7 +46,8 @@
         }
 
         #logo {
-            width: 100%;
+            width: 80%;
+            height: 100%;
         }
 
         #logo:hover {
@@ -130,8 +133,9 @@
         .restaurant-info-wrap{
             /*border: 1px solid black;*/
             display: flex;
-            width: 100%;
+            width: 90%;
             height: 30vh;
+            margin: 0 auto;
         }
 
         .restaurant-info-img-box{
@@ -145,6 +149,7 @@
         }
 
         .restaurant-info-box{
+            width: 60%;
             padding-left: 1vw;
             padding-top: 1vw;
         }
@@ -172,6 +177,7 @@
             display: flex;
             position: relative;
             height: 25%;
+            width: 100% ;
             margin-top: 4px;
         }
 
@@ -288,6 +294,7 @@
             font-weight: 100;
             padding: 10px;
             width: 20%;
+            /*color: grey;*/
         }
 
         .review-text-content {
@@ -309,7 +316,7 @@
 </head>
 <body>
 <header>
-    <img src="/img/logo.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt="">
 </header>
 <nav>
     <form action="/restaurant/search" method="get" name="searchForm">
@@ -366,8 +373,6 @@
 </nav>
 
 <section>
-<!--    <h1 th:text="${session.memberId}"></h1>-->
-<!--    <a th:href="@{|/restaurant/category/${restaurant.category}/paging|(page=${page})}">목록으로 돌아가기</a>-->
     <div class="restaurant-info-wrap">
         <div class="restaurant-info-img-box">
             <img th:src="${restaurant.imgLink}" alt="" class="restaurant-info-img">
@@ -384,7 +389,6 @@
                     <span class="wish-icon-text" th:text="${wishListChk == 0 ? '찜하기' : '찜!!'}"></span>
                 </div>
             </div>
-
             <table class="restaurant-info-tbl">
                 <tr>
                     <td>주소</td>
@@ -404,11 +408,6 @@
                 </tr>
             </table>
         </div>
-    </div>
-    <div class="btns-box">
-<!--        <button onclick="saveReview()">리뷰쓰기</button>-->
-<!--        <button th:text="${wishListChk == 0 ? '찜하기' : '찜!!'}" id="addWish" onclick="saveWish()"></button>-->
-
     </div>
     <hr />
     <div th:if="${reviews.isEmpty()}" class="review-empty-div">
@@ -481,5 +480,28 @@
         location.href="/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
     }
 
+
+    // review-empty-div 요소와 review-present-div 요소를 가져옵니다.
+    const reviewEmptyDiv = document.querySelector('.review-empty-div');
+    const reviewPresentDiv = document.querySelector('.review-present-div');
+    const section = document.querySelector('section');
+
+    // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.
+    function adjustSectionHeight() {
+        const isEmpty = reviewEmptyDiv.style.display !== 'none';
+        const isPresent = reviewPresentDiv.style.display !== 'none';
+
+        if (isEmpty) {
+            const emptyHeight = reviewEmptyDiv.clientHeight;
+            section.style.height = `${emptyHeight + 200}px`; // 리뷰가 없는 경우, section의 높이를 설정
+        } else if (isPresent) {
+            const reviewHeight = reviewPresentDiv.clientHeight;
+            section.style.height = `${reviewHeight + 100}px`; // 리뷰가 있는 경우, section의 높이를 리뷰 높이에 맞춤
+        }
+    }
+
+    // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.
+    window.addEventListener('load', adjustSectionHeight);
+    window.addEventListener('resize', adjustSectionHeight);
 </script>
 </html>
