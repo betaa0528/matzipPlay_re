@@ -28,6 +28,8 @@ public class ReviewService {
     public void save(Review review) throws IOException {
         Optional<RestaurantEntity> optionalRestaurantEntity = restaurantRepository.findById(review.getRestaurantId());
         RestaurantEntity restaurantEntity = optionalRestaurantEntity.get();
+
+
         if(review.getFileList().get(0).getSize() == 0) {
             ReviewEntity reviewEntity = ReviewEntity.toSaveEntity(review, restaurantEntity);
             reviewRepository.save(reviewEntity);
@@ -38,7 +40,8 @@ public class ReviewService {
             for(MultipartFile reviewFile : review.getFileList()) {
                 String originalFileName = reviewFile.getOriginalFilename();
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
-                String savePath = "/Users/yun/Desktop/review_img/" + storedFileName;
+//                String savePath = "/Users/yun/Desktop/review_img/" + storedFileName;
+                String savePath = "C:/review_img/" + storedFileName;
                 reviewFile.transferTo(new File(savePath));
                 ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
                 reviewFileRepository.save(reviewFileEntity);

@@ -25,6 +25,7 @@ public class Review {
     private List<String> originalName; // 원본 파일 이름
     private List<String> storedName; // 서버 저장 파일이름
     private int fileAttached; // 파일 첨부 여부
+    private String[] recommendValues;
 
     public Review(String memberId, String reviewText, String createdAt, Long restaurantId) {
         this.memberId = memberId;
@@ -40,6 +41,7 @@ public class Review {
         review.setCreatedAt(String.valueOf(reviewEntity.getCreatedAt().toLocalDate()));
 //        review.setCreatedAt(reviewEntity.getCreatedAt());
         review.setRestaurantId(restaurantId);
+        review.setRecommendValues(reviewEntity.getRecommendValues().split(","));
         if(reviewEntity.getFileAttached() == 0){
             review.setFileAttached(reviewEntity.getFileAttached());
         } else {

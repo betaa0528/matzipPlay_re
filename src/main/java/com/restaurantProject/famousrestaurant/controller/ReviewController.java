@@ -32,11 +32,13 @@ public class ReviewController {
         Restaurant byId = restaurantService.findById(id);
         model.addAttribute("byId", byId);
         model.addAttribute("memberId", memberId);
+        model.addAttribute("session", session.getAttribute("memberId"));
         return "review";
     }
 
     @PostMapping("/restaurant")
     public String reviewSave(@ModelAttribute Review review) throws IOException {
+//        System.out.println(review);
         reviewService.save(review);
         return "redirect:/restaurant/detail/" + review.getRestaurantId();
     }

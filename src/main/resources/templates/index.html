@@ -23,10 +23,10 @@
 
         header {
             width: 40vw;
-            height: 30vh;
             margin: 0 auto;
             background-color: white;
             text-align: center;
+            position: relative;
         }
 
         section {
@@ -131,18 +131,30 @@
             object-fit: cover;
         }
 
+        .session-chk{
+            position: absolute;
+            right: 5%;
+        }
+
+        .session-chk a{
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
 <header>
-    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
+    <span th:if="${session.isEmpty()}" class="session-chk"><a th:href="@{/login}">로그인</a></span>
+    <span th:if="${!session.isEmpty()}" class="session-chk">
+        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+            <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <section>
-    <form action="/restaurant/search" method="get" name="searchForm">
+    <form action="/restaurant/search" method="get" onsubmit="return search()" name="searchForm">
         <div class="search-box">
             <div id="searchIcon"></div>
             <input type="text" class="search-bar" placeholder="검색어를 입력해주세요!" name="keyword">
-            <input type="button" class="search-btn" onclick="search()" value="검색!">
+            <input type="submit" class="search-btn" value="검색!">
         </div>
     </form>
 
@@ -204,27 +216,19 @@
     }
     const category = (cate) => {
         location.href="/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
-        // $.ajax({
-        //     url: "/restaurant/category/",
-        //     type: "get",
-        //     data:{
-        //         "category" : cate.querySelector('p').textContent
-        //     },
-        //     success : function (res) {
-        //         location.href="/restaurant/category/" + cate.querySelector('p').textContent;
-        //     },
-        //     error : function (){
-        //         console.log("실패")
-        //     }
-        // });
     }
 
-    const keyword = document.getElementsByClassName("search-bar");
+
+    const searchBar = document.querySelector(".search-bar");
     const search = () => {
-        if(keyword.value === ""){
+        console.log("클릭됨");
+        if(searchBar.value === ""){
             alert("검색어를 입력해주세요");
+            searchBar.focus();
+            return false;
         } else {
-            document.searchForm.submit();
+            return true;
+            // document.searchForm.submit();
         }
     }
 </script>

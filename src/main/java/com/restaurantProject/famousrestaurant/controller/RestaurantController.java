@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -30,11 +31,9 @@ public class RestaurantController {
     private final MemberService memberService;
 
     @GetMapping("")
-    public String index(HttpSession session){
-//        session.setAttribute("memberId", memberService.getId(1L));
-        log.info("session ID : " + session.getId());
+    public String index(HttpSession session, Model model){
         restaurantService.saveDistance(session);
-
+        model.addAttribute("session", session.getAttribute("memberId"));
         return "index";
 
     }
@@ -45,7 +44,8 @@ public class RestaurantController {
         List<Restaurant> restaurantList = restaurantService.search(keyword, session);
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", restaurantList);
-        log.info(String.valueOf(restaurantList.get(0).getDistance()));
+        model.addAttribute("session", session.getAttribute("memberId"));
+//        log.info(String.valueOf(restaurantList.get(0).getDistance()));
         return "search";
     }
     @GetMapping("/category/{category}/paging")
@@ -63,6 +63,7 @@ public class RestaurantController {
         model.addAttribute("list" , restaurantsList);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("session", session.getAttribute("memberId"));
 //        model.addAttribute("restaurantList", restaurantService.findByCategory(category));
         return "paging";
     }
@@ -78,13 +79,11 @@ public class RestaurantController {
             wishListChk = wishListService.wishListCheck(session.getAttribute("memberId").toString(), id);
         }
         List<Review> reviews = reviewService.findByRestaurantId(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
-        if(!reviews.isEmpty()){
-            System.out.println(reviews.get(0).getCreatedAt());
-        }
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("wishListChk", wishListChk);
         model.addAttribute("reviews", reviews);
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("session", session.getAttribute("memberId"));
         return "detail";
     }
 

@@ -22,15 +22,16 @@
 
         header {
             width: 40vw;
-            height: 30vh;
             margin: 0 auto;
             background-color: white;
             text-align: center;
+            position: relative;
         }
 
         nav {
             width: 40vw;
             margin: 0 auto;
+            padding-top: 30px;
             background-color: white;
         }
 
@@ -45,6 +46,7 @@
         #logo {
             width: 80%;
             height: 100%;
+            margin-bottom: 10px;
         }
 
         #logo:hover {
@@ -184,19 +186,30 @@
             /*text-decoration: none;*/
         }
 
+        .session-chk{
+            position: absolute;
+            right: 5%;
+        }
 
+        .session-chk a {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
 <header>
-    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
+    <span th:if="${session.isEmpty()}" class="session-chk"><a th:href="@{/login}">로그인</a></span>
+    <span th:if="${!session.isEmpty()}" class="session-chk">
+        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+            <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <nav>
-    <form action="/restaurant/search" method="get" name="searchForm">
+    <form action="/restaurant/search" method="get" onsubmit="return search()" name="searchForm">
         <div class="search-box">
             <div id="searchIcon"></div>
             <input type="text" class="search-bar" placeholder="검색어를 입력해주세요!" name="keyword">
-            <input type="button" class="search-btn" onclick="search()" value="검색!">
+            <input type="submit" class="search-btn" value="검색!">
         </div>
     </form>
     <div class="category-wrap">
@@ -293,6 +306,19 @@
 
     const category = (cate) => {
         location.href="/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
+    }
+
+    const searchBar = document.querySelector(".search-bar");
+    const search = () => {
+        console.log("클릭됨");
+        if(searchBar.value === ""){
+            alert("검색어를 입력해주세요");
+            searchBar.focus();
+            return false;
+        } else {
+            return true;
+            // document.searchForm.submit();
+        }
     }
 
     // search-result 요소와 section 요소를 가져옵니다.

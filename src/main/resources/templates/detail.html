@@ -25,15 +25,16 @@
 
         header {
             width: 40vw;
-            height: 30vh;
             margin: 0 auto;
             background-color: white;
             text-align: center;
+            position: relative;
         }
 
         nav {
             width: 40vw;
             margin: 0 auto;
+            padding-top: 30px;
             background-color: white;
         }
 
@@ -48,6 +49,7 @@
         #logo {
             width: 80%;
             height: 100%;
+            margin-bottom: 10px;
         }
 
         #logo:hover {
@@ -202,11 +204,16 @@
             right: 0;
         }
 
+        .review-icon-box:hover , .wish-icon-box:hover{
+            cursor: pointer;
+        }
+
         .wish-icon, .review-icon{
             width: 20px;
             filter: opacity(0.5) drop-shadow(0 0 0 #707070);
 
         }
+
 
         .wish-icon-box:hover .wish-icon,.wish-icon-box:hover .wish-icon-text ,
         .review-icon-box:hover .review-icon , .review-icon-box:hover .review-icon-text{
@@ -312,18 +319,47 @@
             /*border: 1px solid blue;*/
             width: 100%;
         }
+
+        .review-recommend-wrap{
+            /*border: 1px solid black;*/
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px 20px;
+        }
+
+        .review-recommend-div{
+            /*border: 0.05cm solid #424242;*/
+            border-radius: 5px;
+            width: auto;
+            padding: 5px 5px;
+            margin-right: 5px;
+            background-color: whitesmoke;
+        }
+
+        .session-chk{
+            position: absolute;
+            right: 5%;
+        }
+
+        .session-chk a{
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
 <header>
-    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
+    <span th:if="${session.isEmpty()}" class="session-chk"><a th:href="@{/login}">로그인</a></span>
+    <span th:if="${!session.isEmpty()}" class="session-chk">
+        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+            <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <nav>
-    <form action="/restaurant/search" method="get" name="searchForm">
+    <form action="/restaurant/search" method="get" onsubmit="return search()" name="searchForm">
         <div class="search-box">
             <div id="searchIcon"></div>
             <input type="text" class="search-bar" placeholder="검색어를 입력해주세요!" name="keyword">
-            <input type="button" class="search-btn" onclick="search()" value="검색!">
+            <input type="submit" class="search-btn" value="검색!">
         </div>
     </form>
     <div class="category-wrap">
@@ -386,7 +422,7 @@
                 </div>
                 <div class="wish-icon-box" onclick="saveWish()">
                     <img src="/img/wishIcon.png" class="wish-icon" alt=""><br>
-                    <span class="wish-icon-text" th:text="${wishListChk == 0 ? '찜하기' : '찜!!'}"></span>
+                    <span class="wish-icon-text" onclick="wishKeepCss" th:text="${wishListChk == 0 ? '찜하기' : '찜!!'}"></span>
                 </div>
             </div>
             <table class="restaurant-info-tbl">
@@ -410,32 +446,49 @@
         </div>
     </div>
     <hr />
-    <div th:if="${reviews.isEmpty()}" class="review-empty-div">
-        <span>작성된 리뷰가 없습니다.</span><br>
-        <span>해당 식당의 첫 번째 리뷰를 작성해주시겠어요?</span>
-    </div>
-    <div th:if="${!reviews.isEmpty()}" class="review-present-div">
-        <div th:each="review : ${reviews}" class="review-content">
-            <div th:if="${review.fileAttached == 1}" class="review-file">
-                <div th:each="fileName : ${review.storedName}" class="review-file-div">
-                    <img th:src="@{|/upload/${fileName}|}" class="review-file-div-img" alt="">
+    <div class="review-div">
+        <div th:if="${reviews.isEmpty()}" class="review-empty-div">
+            <span>작성된 리뷰가 없습니다.</span><br>
+            <span>해당 식당의 첫 번째 리뷰를 작성해주시겠어요?</span>
+        </div>
+        <div th:if="${!reviews.isEmpty()}" class="review-present-div">
+            <div th:each="review : ${reviews}" class="review-content">
+                <div th:if="${review.fileAttached == 1}" class="review-file">
+                    <div th:each="fileName : ${review.storedName}" class="review-file-div">
+                        <img th:src="@{|/upload/${fileName}|}" class="review-file-div-img" alt="">
+                    </div>
                 </div>
-            </div>
-            <div class="review-text-div">
-                <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
-                <div class="review-text-content">
-                    <div th:text="${review.createdAt}" class="review-createdAt"></div>
-                    <div th:text="${review.reviewText}" class="review-text-div-reviewText"></div>
+                <div class="review-text-div">
+                    <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
+                    <div class="review-text-content">
+                        <div th:text="${review.createdAt}" class="review-createdAt"></div>
+                        <div th:text="${review.reviewText}" class="review-text-div-reviewText"></div>
+                    </div>
+                </div>
+                <div th:if="${!review.recommendValues[0].isEmpty()}" class="review-recommend-wrap">
+                    <div th:each="recommend : ${review.recommendValues}" th:text="${recommend}" class="review-recommend-div"></div>
                 </div>
             </div>
         </div>
     </div>
-
 </section>
 
 
 </body>
 <script th:inline="javascript">
+    const searchBar = document.querySelector(".search-bar");
+    const search = () => {
+        console.log("클릭됨");
+        if(searchBar.value === ""){
+            alert("검색어를 입력해주세요");
+            searchBar.focus();
+            return false;
+        } else {
+            return true;
+            // document.searchForm.submit();
+        }
+    }
+
     const id = [[${restaurant.id}]];
     const member_id = [[${session.memberId}]];
     const restaurant_id = [[${restaurant.id}]];
@@ -462,7 +515,15 @@
                 success : function (res){
                     console.log("성공" , res);
                     const wishIconText = document.querySelector(".wish-icon-text");
+                    const wishIcon = document.querySelector(".wish-icon");
                     wishIconText.textContent = res === 0 ? "찜하기" : "찜!!"; // res 값 => 찜됐는지 안됐는지
+                    if(res === 1){
+                        wishIconText.style.color = '#5fc37c';
+                        wishIcon.style.filter = 'opacity(0.5) drop-shadow(0 0 0 #7afa9f)';
+                    }else {
+                        wishIconText.style.color = `grey`;
+                        wishIcon.style.filter = 'none';
+                    }
                 },
                 error : function () {
                     console.log("실패");
@@ -472,6 +533,20 @@
 
     }
 
+    const wishKeepCss = () => {
+        const wishIconText = document.querySelector(".wish-icon-text");
+        const wishIcon = document.querySelector(".wish-icon");
+        if(wishIconText.textContent === "찜!!"){
+
+            wishIconText.style.color = '#5fc37c';
+            wishIcon.style.filter = 'opacity(0.5) drop-shadow(0 0 0 #7afa9f)';
+        } else {
+            wishIconText.style.color = `grey`;
+            wishIcon.style.filter = 'none';
+        }
+    }
+
+    window.addEventListener('load', wishKeepCss);
     const goIndex = () => {
         location.href= "/restaurant";
     }
@@ -480,24 +555,17 @@
         location.href="/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
     }
 
-
-    // review-empty-div 요소와 review-present-div 요소를 가져옵니다.
-    const reviewEmptyDiv = document.querySelector('.review-empty-div');
-    const reviewPresentDiv = document.querySelector('.review-present-div');
+    // 페이지 높이 조절 위한 변수
+    const reviewDiv = document.querySelector(".review-div");
+    const infoWrap = document.querySelector(".restaurant-info-wrap");
     const section = document.querySelector('section');
 
     // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.
     function adjustSectionHeight() {
-        const isEmpty = reviewEmptyDiv.style.display !== 'none';
-        const isPresent = reviewPresentDiv.style.display !== 'none';
-
-        if (isEmpty) {
-            const emptyHeight = reviewEmptyDiv.clientHeight;
-            section.style.height = `${emptyHeight + 200}px`; // 리뷰가 없는 경우, section의 높이를 설정
-        } else if (isPresent) {
-            const reviewHeight = reviewPresentDiv.clientHeight;
-            section.style.height = `${reviewHeight + 100}px`; // 리뷰가 있는 경우, section의 높이를 리뷰 높이에 맞춤
-        }
+        const reviewDivHeight = reviewDiv.clientHeight;
+        const infoWrapHeight = infoWrap.clientHeight;
+        const resultHeight = reviewDivHeight + infoWrapHeight;
+        section.style.height = `${resultHeight + 100}px`;
     }
 
     // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.

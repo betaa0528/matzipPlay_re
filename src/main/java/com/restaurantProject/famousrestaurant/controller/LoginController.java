@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -91,6 +92,12 @@ public class LoginController {
     public String reg(Member dto) {
         loginService.reg(dto);
         return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session, HttpServletRequest request) {
+        session.invalidate();
+        return "redirect:/restaurant";
     }
 
     @PostMapping("dup")

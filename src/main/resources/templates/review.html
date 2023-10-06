@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>review</title>
     <style>
+        @font-face {
+            font-family: 'BMHannah'; /*font 이름*/
+            font-weight: normal; /* font 굵기 정의 */
+            src : url("/font/BMHANNAAir_ttf.ttf") format("truetype");
+        }
+
         *{
             margin: 0;
             padding: 0;
@@ -18,6 +24,7 @@
             width: 40vw;
             margin: 0 auto;
             background-color: white;
+            position: relative;
         }
 
         nav {
@@ -161,15 +168,27 @@
             src : url("/static/font/BMHANNAAir_ttf.ttf") format("truetype");
         }
 
+        .session-chk{
+             position: absolute;
+             right: 5%;
+         }
+
+        .session-chk a{
+            text-decoration: none;
+        }
+
     </style>
 </head>
 <body>
 <header>
-    <img src="/img/logo.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logo.png" id="logo" onclick="goIndex()" alt=""><br>
+    <span th:if="${session.isEmpty()}" class="session-chk"><a th:href="@{/login}">로그인</a></span>
+    <span th:if="${!session.isEmpty()}" class="session-chk">
+        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+            <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <section>
-
-    <form action="/review/restaurant" name="reviewForm" method="post" enctype="multipart/form-data">
+    <form action="/review/restaurant" name="reviewForm" class="reviewForm" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td><input type="hidden" name="restaurantId" th:value="${byId.id}"></td>
@@ -184,14 +203,15 @@
                 <td>
                     <div class="text-area-div">
                         <ul>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" type="button">맛있어요</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" type="button">맛없어요</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" type="button">매력적임</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" type="button">분위기가 좋아용</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" type="button">그저그래요</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" type="button">재밌어요</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" type="button">우하하</button></li>
+                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="1" type="button">맛있어요</button></li>
+                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="2" type="button">맛없어요</button></li>
+                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="3" type="button">매력적임</button></li>
+                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="4" type="button">분위기가 좋아용</button></li>
+                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="5" type="button">그저그래요</button></li>
+                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="6" type="button">재밌어요</button></li>
+                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="7" type="button">우하하</button></li>
                         </ul>
+                        <input type="hidden" name="recommendValues" id="recommendValues">
                         <input type="hidden" name="memberId" th:value="${memberId}">
                         <textarea name="reviewText" id="reviewText" th:placeholder="|${memberId}님, 음식은 어떠셨나요? 가게의 분위기도 궁금해요|" class="review-textarea"></textarea>
                         <p id="char-count">글자 수: <span id="charCount">0</span>/255</p>
@@ -214,6 +234,9 @@
 </section>
 
 <script th:inline="javascript">
+
+
+
     const id = [[${byId.id}]];
     const reviewText = document.getElementById("reviewText");
 
@@ -224,18 +247,22 @@
 
     // 버튼의 상태를 추적하기 위한 객체
     const buttonStates = {};
+    const buttonArr = {};
 
     // 버튼 스타일 토글 함수
     function toggleButtonStyle(button) {
         if (buttonStates[button.textContent] === 'active') {
+            console.log("해제 : " + button.value);
             // 버튼이 이미 활성 상태인 경우, 비활성 상태로 변경
             button.classList.remove('active');
             buttonStates[button.textContent] = 'inactive';
         } else {
+            console.log("선택 : " + button.value);
             // 버튼이 비활성 상태인 경우, 활성 상태로 변경
             button.classList.add('active');
             buttonStates[button.textContent] = 'active';
         }
+        console.log(buttonStates);
     }
 
     // textarea 요소와 글자 수를 표시할 요소를 가져옵니다.
@@ -253,6 +280,14 @@
             alert("리뷰내용을 입력해주세요");
             reviewText.focus();
         } else {
+
+            // 선택된 버튼들의 값을 가져옴
+            const selectedButtons = document.querySelectorAll('.review-recommend-btn.active');
+            // const selectedValues = Array.from(selectedButtons).map(button => button.value);
+            const selectedValues = Array.from(selectedButtons).map(button => button.textContent);
+            // 선택된 버튼 값을 hidden input에 설정
+            const recommendValuesInput = document.getElementById('recommendValues');
+            recommendValuesInput.value = selectedValues.join(',');
             document.reviewForm.submit();
         }
     }
@@ -260,6 +295,19 @@
     const reviewCancel = () => {
         location.href = `/restaurant/detail/${id}`;
     }
+
+    const reviewForm = document.querySelector(".reviewForm");
+    const section = document.querySelector('section');
+
+    // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.
+    function adjustSectionHeight() {
+        const reviewFormHeight = reviewForm.clientHeight;
+        section.style.height = `${reviewFormHeight + 100}px`;
+    }
+
+    // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.
+    window.addEventListener('load', adjustSectionHeight);
+    window.addEventListener('resize', adjustSectionHeight);
 </script>
 </body>
 </html>

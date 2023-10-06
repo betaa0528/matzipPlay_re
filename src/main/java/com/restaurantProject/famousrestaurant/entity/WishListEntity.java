@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@ToString
+@ToString(exclude = "restaurantEntity")
 @Table(name = "wishlist_table")
 @AllArgsConstructor
 @NoArgsConstructor
