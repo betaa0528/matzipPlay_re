@@ -36,6 +36,7 @@ public class Review {
 
     public static Review toReview(ReviewEntity reviewEntity, Long restaurantId) {
         Review review = new Review();
+        review.setId(reviewEntity.getId());
         review.setMemberId(reviewEntity.getMemberId());
         review.setReviewText(reviewEntity.getReviewText());
         review.setCreatedAt(String.valueOf(reviewEntity.getCreatedAt().toLocalDate()));

@@ -7,10 +7,10 @@
         @font-face {
             font-family: 'BMHannah'; /*font 이름*/
             font-weight: normal; /* font 굵기 정의 */
-            src : url("/font/BMHANNAAir_ttf.ttf") format("truetype");
+            src: url("/font/BMHANNAAir_ttf.ttf") format("truetype");
         }
 
-        *{
+        * {
             margin: 0;
             padding: 0;
             font-family: BMHannah;
@@ -49,7 +49,7 @@
             cursor: pointer;
         }
 
-        table{
+        table {
             border-collapse: collapse;
             width: 100%;
         }
@@ -61,31 +61,33 @@
             margin-left: 10px;
             color: #5fc37c;
         }
-        ul{
+
+        ul {
             list-style: none;
             display: flex;
             flex-wrap: wrap;
             padding: 10px;
         }
 
-        li{
+        li {
             margin-left: 10px;
             margin-top: 5px;
         }
 
-        .text-area-div{
+        .text-area-div {
             position: relative;
         }
 
-        tr:nth-child(2) td{
+        tr:nth-child(2) td {
             padding-bottom: 20px;
         }
-        tr:nth-child(3){
+
+        tr:nth-child(3) {
             border-top: 0.01cm solid grey;
             border-bottom: 0.01cm solid grey;
         }
 
-        .review-recommend-btn{
+        .review-recommend-btn {
             border: 0.05cm solid #424242;
             border-radius: 20px;
             padding: 5px 10px;
@@ -99,7 +101,7 @@
             background-color: whitesmoke;
         }
 
-        .review-textarea{
+        .review-textarea {
             box-sizing: border-box;
             width: 100%;
             padding: 10px 20px;
@@ -110,7 +112,7 @@
         }
 
 
-        input[type=file]::file-selector-button{
+        input[type=file]::file-selector-button {
             width: 100px;
             height: 35px;
             line-height: 35px;
@@ -121,11 +123,11 @@
             font-size: 16px;
         }
 
-        tr:nth-last-child(1){
+        tr:nth-last-child(1) {
             text-align: center;
         }
 
-        #submit-btn{
+        #submit-btn {
             border: 0.05cm solid #5fc37c;
             background-color: white;
             width: 20%;
@@ -137,7 +139,7 @@
             margin: 10px 5px;
         }
 
-        #cancel-btn{
+        #cancel-btn {
             border: 0.05cm solid lightgrey;
             color: #707070;
             background-color: white;
@@ -150,11 +152,11 @@
             margin: 10px 5px;
         }
 
-        input[type=file]::file-selector-button:hover, input[type=file]:hover, #cancel-btn:hover, #submit-btn:hover{
+        input[type=file]::file-selector-button:hover, input[type=file]:hover, #cancel-btn:hover, #submit-btn:hover {
             cursor: pointer;
         }
 
-        #char-count{
+        #char-count {
             position: absolute;
             font-size: 14px;
             color: #707070;
@@ -165,15 +167,15 @@
         @font-face {
             font-family: 'BMHannah'; /*font 이름*/
             font-weight: normal; /* font 굵기 정의 */
-            src : url("/static/font/BMHANNAAir_ttf.ttf") format("truetype");
+            src: url("/static/font/BMHANNAAir_ttf.ttf") format("truetype");
         }
 
-        .session-chk{
-             position: absolute;
-             right: 5%;
-         }
+        .session-chk {
+            position: absolute;
+            right: 5%;
+        }
 
-        .session-chk a{
+        .session-chk a {
             text-decoration: none;
         }
 
@@ -203,17 +205,76 @@
                 <td>
                     <div class="text-area-div">
                         <ul>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="1" type="button">맛있어요</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="2" type="button">맛없어요</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="3" type="button">매력적임</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="4" type="button">분위기가 좋아용</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="5" type="button">그저그래요</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="6" type="button">재밌어요</button></li>
-                            <li><button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="7" type="button">우하하</button></li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="1"
+                                        type="button">음식이 맛있어요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="2"
+                                        type="button">인테리어가 멋져요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="3"
+                                        type="button">친절해요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="4"
+                                        type="button">매장이 청결해요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="5"
+                                        type="button">음악이 좋아요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="6"
+                                        type="button">술이 다양해요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="7"
+                                        type="button">특별한 메뉴가 있어요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="8"
+                                        type="button">가성비가 좋아요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="9"
+                                        type="button">단체모임 하기 좋아요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="10"
+                                        type="button">대화하기 좋아요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="11"
+                                        type="button">화장실이 깨끗해요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="12"
+                                        type="button">혼밥하기 좋아요
+                                </button>
+                            </li>
+                            <li>
+                                <button class="review-recommend-btn" onclick="toggleButtonStyle(this)" value="13"
+                                        type="button">양이 많아요
+                                </button>
+                            </li>
                         </ul>
                         <input type="hidden" name="recommendValues" id="recommendValues">
                         <input type="hidden" name="memberId" th:value="${memberId}">
-                        <textarea name="reviewText" id="reviewText" th:placeholder="|${memberId}님, 음식은 어떠셨나요? 가게의 분위기도 궁금해요|" class="review-textarea"></textarea>
+                        <textarea name="reviewText" th:placeholder="|${memberId}님, 음식은 어떠셨나요? 가게의 분위기도 궁금해요|"
+                                  class="review-textarea"></textarea>
                         <p id="char-count">글자 수: <span id="charCount">0</span>/255</p>
                     </div>
                 </td>
@@ -234,14 +295,10 @@
 </section>
 
 <script th:inline="javascript">
-
-
-
     const id = [[${byId.id}]];
-    const reviewText = document.getElementById("reviewText");
 
     const goIndex = () => {
-        location.href= "/restaurant";
+        location.href = "/restaurant";
     }
 
 
@@ -266,25 +323,45 @@
     }
 
     // textarea 요소와 글자 수를 표시할 요소를 가져옵니다.
-    const textArea = document.getElementById('reviewText');
+    const textArea = document.querySelector(".review-textarea");
     const charCount = document.getElementById('charCount');
 
     // textarea의 input 이벤트에 대한 이벤트 리스너를 추가합니다.
     textArea.addEventListener('input', () => {
         // textarea에 입력된 글자 수를 세어 charCount 요소에 업데이트합니다.
         charCount.textContent = textArea.value.length;
+        if (textArea.value.length > 255) {
+            alert("255자 이내로 작성해주세요");
+            textArea.value = textArea.value.substring(0, 254); // 255자까지만 허용
+        }
     });
 
-    const reviewSave = () => {
-        if(reviewText.value === ""){
-            alert("리뷰내용을 입력해주세요");
-            reviewText.focus();
-        } else {
 
+    const reviewSave = () => {
+        let fileSize = document.querySelector("#file-btn");
+        let fileList = fileSize.files;
+        let fileOver = 0;
+
+        for (let i = 0; i < fileList.length; i++) {
+            console.log(fileList[i].size);
+            if (fileList[i].size >= 1048576) {
+                fileOver = 1;
+                console.log("fileOver : " + fileOver);
+            }
+        }
+
+        if (textArea.value === "") {
+            alert("리뷰내용을 입력해주세요");
+            textArea.focus();
+        } else if(fileOver === 1) {
+            alert("사진 한 장의 최대 첨부용량은 1MB입니다");
+        } else if(fileList.length > 5) {
+            alert("사진은 최대 5장까지 첨부 가능합니다.");
+        } else {
             // 선택된 버튼들의 값을 가져옴
             const selectedButtons = document.querySelectorAll('.review-recommend-btn.active');
             // const selectedValues = Array.from(selectedButtons).map(button => button.value);
-            const selectedValues = Array.from(selectedButtons).map(button => button.textContent);
+            const selectedValues = Array.from(selectedButtons).map(button => button.value);
             // 선택된 버튼 값을 hidden input에 설정
             const recommendValuesInput = document.getElementById('recommendValues');
             recommendValuesInput.value = selectedValues.join(',');
@@ -292,10 +369,12 @@
         }
     }
 
+    //취소버튼시 음식점 소개화면으로 되돌아감
     const reviewCancel = () => {
         location.href = `/restaurant/detail/${id}`;
     }
 
+    // 리뷰 작성화면 높이조절하기 위함
     const reviewForm = document.querySelector(".reviewForm");
     const section = document.querySelector('section');
 
