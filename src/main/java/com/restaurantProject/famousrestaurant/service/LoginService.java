@@ -32,7 +32,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final String apiResult = null;
+    private String apiResult = null;
     private final MemberRepository memberRepository;
     private final NaverLoginApi naverLoginApi;
     private final KakaoMapApi kakaoMapApi;
