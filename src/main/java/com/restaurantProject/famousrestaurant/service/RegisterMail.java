@@ -1,36 +1,33 @@
 package com.restaurantProject.famousrestaurant.service;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Random;
+import lombok.RequiredArgsConstructor;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import java.io.UnsupportedEncodingException;
+import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class RegisterMail{
 
-    @Autowired
-    JavaMailSender emailsender; // Bean 등록해둔 MailConfig 를 emailsender 라는 이름으로 autowired
+    private final JavaMailSender emailsender;
 
     private String ePw; // 인증번호
 
     // 메일 내용 작성
-    public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
-		System.out.println("보내는 대상 : " + to);
-		System.out.println("인증 번호 : " + ePw);
-
+    private MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = emailsender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);// 보내는 대상
         message.setSubject("임시 비밀번호 발급");// 제목
 
+        /* 본문 내용 html */
         String msgg = "";
         msgg += "<div style='background-color: #f2f2f2; padding: 20px;'>";
         msgg += "<div style='max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; background-color: #fff;'>";
@@ -42,8 +39,8 @@ public class RegisterMail{
         msgg += "</div>";
         msgg += "</div>";
         msgg += "</div>";
+
         message.setText(msgg, "utf-8", "html");// 내용, charset 타입, subtype
-        // 보내는 사람의 이메일 주소, 보내는 사람 이름
         message.setFrom(new InternetAddress("tjdgur981@naver.com", "tjdgur"));// 보내는 사람
 
         return message;
@@ -76,15 +73,9 @@ public class RegisterMail{
         return key.toString();
     }
 
-    // 메일 발송
-    // sendSimpleMessage 의 매개변수로 들어온 to 는 곧 이메일 주소가 되고,
-    // MimeMessage 객체 안에 내가 전송할 메일의 내용을 담는다.
-    // 그리고 bean 으로 등록해둔 javaMail 객체를 사용해서 이메일 send!!
+    // MimeMessage 객체 안에 내가 전송할 메일의 내용을 담고 bean 으로 등록해둔 javaMail 객체를 사용해서 이메일 send
     public String sendSimpleMessage(String to) throws Exception {
-
         ePw = createKey(); // 랜덤 인증번호 생성
-
-        // TODO Auto-generated method stub
         MimeMessage message = createMessage(to); // 메일 발송
         try {// 예외처리
             emailsender.send(message);

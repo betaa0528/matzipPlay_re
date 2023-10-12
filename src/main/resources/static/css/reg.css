@@ -1,0 +1,107 @@
+@font-face {
+    font-family: 'BMHANNAAir';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'BMHANNAAir';
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 96vh;
+    margin: 0;
+}
+
+form {
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 40vw;
+    height: 100vh;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h4 {
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+input[type="text"], input[type="password"] {
+    width: 76%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 1%;
+}
+
+input[type="button"] {
+    background-color: #5fc37c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: -1%;
+}
+
+input[type="button"]:hover {
+    background-color: #5fa87c;
+}
+
+input#sample6_postcode {
+    width: 77%;
+}
+
+input#sample6_address {
+    width: 97%;
+}
+
+input#sample6_detailAddress {
+    width: 97%;
+}
+
+button {
+    background-color: #5fc37c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #5fa87c;
+}
+
+#wrapImg img {
+    width: 100%;
+}
+
+#wrapImg {
+    width: 85%;
+    margin: 0 auto;
+}
+
+#wrapReg {
+    width: 85%;
+    margin: 0 auto;
+}
+
+hr {
+    width: 100%;
+    border: 0.5px solid lightgrey;
+    margin-bottom: 3%;
+}
+
+#dupCheck {
+    width: 18%;
+    margin-top: 1%;
+}
+
+#regbtn {
+    width: 100%;
+}

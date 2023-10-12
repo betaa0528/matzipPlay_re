@@ -1,0 +1,130 @@
+@font-face {
+    font-family: 'BMHANNAAir';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'BMHANNAAir';
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+form {
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 40vw;
+    height: 96vh;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* 요소 내의 텍스트를 가운데 정렬합니다. */
+}
+
+h4 {
+    margin-top: 10px;
+}
+
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-top: -20px;
+}
+
+button {
+    background-color: #5fc37c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #5fa87c;
+}
+
+#forgotpw {
+    display: none;
+}
+
+#wrapImg img {
+    width: 100%;
+}
+
+#wrapImg {
+    width: 100%;
+}
+
+.forbtn {
+    border: 0;
+    padding-bottom: 1%;
+    cursor: pointer;
+}
+
+#forgotbtn {
+    margin-top: 7%;
+    margin-bottom: 3%;
+    display: flex;
+}
+
+.fi {
+    border-bottom: 3px solid #5fc37c;
+    margin-right: 1%;
+}
+
+#mpn {
+    width: 82%;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 20% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+}
+
+#resultCon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 7%;
+}
+
+#resultCon button {
+    margin-bottom: 1%;
+    display: block;
+}
+
+/* 모달 닫기 버튼 스타일 */
+.close {
+    float: right;
+    font-size: 28px;
+}
+
+.close:hover,
+.close:focus {
+    text-decoration: none;
+    cursor: pointer;
+}

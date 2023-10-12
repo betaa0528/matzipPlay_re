@@ -31,7 +31,6 @@ public class RestaurantController {
 
     @GetMapping("")
     public String index(HttpSession session){
-//        session.setAttribute("memberId", memberService.getId(1L));
         log.info("session ID : " + session.getId());
         restaurantService.saveDistance(session);
 

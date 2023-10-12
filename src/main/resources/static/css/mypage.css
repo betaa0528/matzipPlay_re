@@ -1,0 +1,252 @@
+@font-face {
+    font-family: 'BMHANNAAir';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'BMHANNAAir';
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+#wrap {
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 40vw;
+    height: 96vh;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+#profile img {
+    border: 1px solid lightgrey;
+    border-radius: 50%;
+    max-width: 100%;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+#wishContainer {
+    display: none;
+}
+
+#reviewANDwish {
+    overflow-y: scroll;
+}
+
+#profile {
+    height: 20%;
+    display: flex;
+    position: relative;
+}
+
+#profile svg {
+    position: absolute;
+    right: 73%;
+    bottom: 15%;
+}
+
+#nav {
+    margin-top: 4%;
+    margin-bottom: 2%;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid #5fa87c;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 5%;
+}
+
+#nav span {
+    font-size: 20px;
+}
+
+#reviewANDwish {
+    height: 71%;
+}
+
+#review:hover {
+    cursor: pointer;
+}
+
+#wish {
+    color: lightgrey;
+}
+
+#wish:hover {
+    cursor: pointer;
+}
+
+#memberId {
+    font-size: 48px;
+}
+
+#memberReview, #memberWish {
+    font-size: 24px;
+}
+
+#profileText {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 3%;
+}
+
+#wishResName {
+    color: #5fc37c;
+    text-decoration: none;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#wishResName:hover {
+    cursor: pointer;
+    color: #5fa87c;
+}
+
+#category {
+    font-size: 16px;
+}
+
+#address {
+    font-size: 18px;
+}
+
+#wishWrap {
+    margin-top: 3%;
+    display: flex;
+    padding-bottom: 3%;
+    border-bottom: 1px solid lightgrey;
+    position: relative;
+}
+
+#wishInfo {
+    margin-left: 3%;
+}
+
+.wishDelete, .reviewDelete {
+    border: 0;
+    background-color: white;
+    width: 24px;
+    position: absolute;
+    top: 4%;
+    right: 2%;
+}
+
+.wishDelete:hover, .reviewDelete:hover {
+    cursor: pointer;
+}
+
+#reviewWrap {
+    height: 100%;
+    margin-top: 3%;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 3%;
+    border-bottom: 1px solid lightgrey;
+}
+
+#reviewImgWrap {
+    display: flex;
+    justify-content: flex-start;
+    overflow-x: scroll;
+}
+
+#reviewImg {
+    width: 150px;
+    height: 25%;
+    margin-right: 1%;
+}
+
+#reviewInfo {
+    width: 100%;
+    height: 75%;
+    position: relative;
+}
+
+#reviewRes {
+    color: #5fc37c;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+#reviewDetails {
+    font-size: 18px;
+    margin-top: 1%;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 20%;
+    text-align: center;
+}
+
+#openModalBtn:hover {
+    cursor: pointer;
+}
+
+#file {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+#fileUploadWrap {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+#fileUploadWrap img {
+    border: 1px solid lightgray;
+    border-radius: 50%;
+}
+
+#fileUploadWrap svg {
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+}
+
+#profileChange {
+    border: none;
+    background-color: #5fc37c;
+    width: 300px;
+    height: 50px;
+    font-size: 18px;
+    color: white;
+    border-radius: 3px;
+    margin-top: 5%;
+}
+
+#profileChange:hover {
+    cursor: pointer;
+    background-color: #5fa87c;
+}

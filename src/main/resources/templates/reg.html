@@ -1,224 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <style>
-        @font-face {
-            font-family: 'BMHANNAAir';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        body {
-            font-family: 'BMHANNAAir';
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        form {
-            background-color: #ffffff;
-            border-radius: 5px;
-            width: 40vw;
-            height: 96vh;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h4 {
-            margin-top: 10px;
-            margin-bottom: 0px;
-        }
-
-        input[type="text"], input[type="password"] {
-            width: 77%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            margin-right: 1%;
-        }
-
-        input[type="button"]{
-            background-color: #5fc37c;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin-left: -1%;
-        }
-
-        input[type="button"]:hover{
-            background-color: #5fa87c;
-        }
-
-        input#sample6_postcode {
-            width: 77%;
-        }
-
-        input#sample6_address {
-            width: 97%;
-        }
-
-        input#sample6_detailAddress {
-            width: 97%;
-        }
-
-        button {
-            background-color: #5fc37c;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #5fa87c;
-        }
-
-        #wrapImg img{
-            width: 100%;
-        }
-        #wrapImg{
-            width: 85%;
-            margin: 0 auto;
-        }
-        #wrapReg{
-            width: 85%;
-            margin: 0 auto;
-        }
-        hr{
-            width: 100%;
-            border: 0.5px solid lightgrey;
-            margin-bottom: 3%;
-        }
-        #dupCheck{
-            width: 18%;
-            margin-top: 1%;
-        }
-        #regbtn{
-            width: 100%;
-        }
-    </style>
-    <script>
-        let check = false;
-        let numberCheck = false;
-
-        function reg(){
-            let memberId = $('[name="memberId"]').val();
-            let memberPass = $('[name="memberPass"]').val();
-            let sample6_postcode = $('#sample6_postcode').val();
-            let memberAddress = $('[name="memberAddress').val();
-            if(!check){
-                alert("아이디 중복 확인을 해주세요")
-            }else if(!numberCheck){
-                alert("휴대전화 인증을 진행해주세요")
-            } else if(memberPass.length<8||memberId.length>16){
-                alert("비밀번호는 8자 이상 16자 이하 입니다.");
-                $('[name="memberPass"]').focus();
-            }else if(sample6_postcode==""||memberAddress==""){
-                alert("주소를 입력해주세요");
-            }else{
-                document.frm.submit();
-            }
-        }
-
-        function dup(){
-            let memberId = $('[name="memberId"]').val();
-            let pattern= /^[a-z0-9]+$/;
-
-            if(memberId.length<4||memberId.length>10) {
-                alert("아이디는 4자 이상 10자 이하 입니다.");
-                $('[name="memberId"]').focus();
-            }else if(!pattern.test(memberId)){
-                alert("아이디는 알파벳 소문자와 숫자로만 이루어져야 합니다.");
-                $('[name="memberId"]').focus();
-            }else {
-                $.ajax({
-                    url: "dup",
-                    type: "POST",
-                    dataType: "text",
-                    data: {"memberId": memberId},
-                    success: function (data) {
-                        if (data == 0) {
-                            alert("사용 가능한 아이디 입니다.");
-                            $('[name="memberId"]').prop("readonly", true);
-                            $('#dupCheck').prop("disabled", true);
-                            $('[name="memberPass"]').prop("disabled", false);
-                            $('[name="memberPhoneNumber"]').prop("disabled", false);
-                            $('[name="memberDetailAddr').prop("disabled", false);
-                            check = true;
-                        } else alert("이미 존재하는 아이디 입니다.")
-                    },
-                    error: function (xhr, status, error) {
-                    }
-                });
-            }
-        }
-
-        function tel(){
-            let to = $('[name="memberPhoneNumber"]').val();
-
-            $.ajax({
-                url: "send",
-                type: "POST",
-                dataType: "text",
-                data : { "to" : to },
-                success: function(data) {
-
-                    let resultContainer = $("#resultContainer");
-                    let number = $("<input>").attr("name", "number")
-                    let confirm = $("<button>").text("인증확인");
-
-                    resultContainer.append(number);
-                    resultContainer.append(confirm);
-
-                    number.attr("type","text");
-                    confirm.attr("onclick", "numberConfirm()");
-                    confirm.attr("id","confirm");
-                    confirm.attr("type","button");
-                    confirm.css("width","18%");
-                },
-                error: function(xhr, status, error) {
-                }
-            });
-        }
-
-        function numberConfirm(){
-            let memberPhoneNumber = $('[name="memberPhoneNumber"]').val();
-            let number = $('[name="number"]').val();
-
-            $.ajax({
-                url: "confirm",
-                type: "POST",
-                dataType: "text",
-                data : {
-                    "number" : number,
-                    "memberPhoneNumber" : memberPhoneNumber
-                },
-                success: function(data) {
-                    if(data==1){
-                        numberCheck = true;
-                        alert("인증이 완료되었습니다.");
-                        $('[name="number"]').prop("disabled",true);
-                        $('[name="memberPhoneNumber"]').prop("readonly",true);
-                        $('#telCheck').prop("disabled",true);
-                        $('#confirm').prop("disabled",true);
-                    }else{
-                        alert("올바른 인증번호를 입력해주세요.")
-                    }
-                },
-                error: function(xhr, status, error) {
-                }
-            });
-        }
-    </script>
+    <link rel="stylesheet" th:href="@{/css/reg.css}"/>
+    <script src="/js/reg.js"></script>
 </head>
 <body>
 <form name="frm" action="./reg" method="post">
@@ -227,12 +11,18 @@
     </div>
     <div id="wrapReg">
         <h4>아이디</h4>
-        <input type="text" name="memberId"><button id="dupCheck" onclick="dup()" type="button">중복확인</button><br><hr>
+        <input type="text" name="memberId">
+        <button id="dupCheck" onclick="dup()" type="button">중복확인</button>
+        <br>
+        <hr>
         <h4>비밀번호</h4>
-        <input type="password" name="memberPass" disabled><br><hr>
+        <input type="password" name="memberPass" disabled><br>
+        <hr>
         <h4>전화번호 ('-' 제외 입력)</h4>
         <div>
-            <input type="text" name="memberPhoneNumber" maxlength="11" disabled><button id="telCheck" onclick="tel()" type="button">인증번호발급</button><br><br>
+            <input type="text" name="memberPhoneNumber" maxlength="11" disabled>
+            <button id="telCheck" onclick="tel()" type="button">인증번호발급</button>
+            <br><br>
         </div>
         <div id="resultContainer"></div>
         <hr>
@@ -240,7 +30,8 @@
         <input type="text" id="sample6_postcode" placeholder="우편번호" readonly>
         <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
         <input type="text" name="memberAddress" id="sample6_address" placeholder="주소" readonly><br>
-        <input type="text" name="memberDetailAddr" id="sample6_detailAddress" placeholder="상세주소" disabled><br><hr>
+        <input type="text" name="memberDetailAddr" id="sample6_detailAddress" placeholder="상세주소" disabled><br>
+        <hr>
         <button id="regbtn" onclick="reg()" type="button">가입</button>
     </div>
 </form>
@@ -248,7 +39,7 @@
 <script>
     function sample6_execDaumPostcode() {
         new daum.Postcode({
-            oncomplete: function(data) {
+            oncomplete: function (data) {
                 var addr = '';
                 if (data.userSelectedType === 'R') {
                     addr = data.roadAddress;

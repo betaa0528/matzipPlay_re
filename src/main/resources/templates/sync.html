@@ -2,108 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            text-align: center;
-        }
-
-        form {
-            background-color: #ffffff;
-            border-radius: 5px;
-            width: 310px;
-            margin: 0 auto;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h4 {
-            margin-top: 10px;
-        }
-
-        input[type="text"] {
-            width: 96%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            margin-top: -20px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .links {
-            margin-top: 20px;
-        }
-
-        .links a {
-            margin-right: 10px;
-            text-decoration: none;
-            color: #007bff;
-        }
-        #naver_id_login{
-            margin-top: 10px;
-        }
-    </style>
-    <script>
-
-        alert("네이버 연동을 위해 로그인 해주세요");
-
-        function sync(){
-
-            let memberId = $('[name="memberId"]').val();
-            let memberPass = $('[name="memberPass"]').val();
-            let memberNaverId = $('#memberNaverId').val();
-
-            $.ajax({
-                url: "./sync", // 요청할 URL
-                type: "POST", // HTTP 요청 메서드 (GET, POST 등)
-                dataType: "text", // 응답 데이터 형식 (JSON, XML 등)
-                data : {
-                    "memberId" : memberId,
-                    "memberPass" : memberPass,
-                    "memberNaverId" : memberNaverId
-                },
-                success: function(data) {
-                    if(data==0) {
-                        alert("아이디 없음");
-                        return;
-                    }else if(data==1){
-                        alert("비밀번호 틀림");
-                        return;
-                    }else{
-                        alert("연동 성공")
-                        window.location.href = "./home";
-                    }
-                },
-                error: function(xhr, status, error) {
-                }
-            });
-        }
-    </script>
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+    <link rel="stylesheet" th:href="@{/css/sync.css}"/>
+    <script src="/js/sync.js"></script>
 </head>
 <body>
+<input id="memberNaverId" type="hidden" th:value="${naverId}">
 <form>
-    <input type="hidden" th:value="${naverId}" id="memberNaverId">
-    <h4>아이디</h4>
-    <input type="text" name="memberId"><br>
-    <h4>비밀번호</h4>
-    <input type="text" name="memberPass"><br>
-    <button onclick="sync()" type="button">연동하기</button>
+    <div id="wrapImg">
+        <img th:src="@{/img/logo.png}">
+    </div>
+    <div id="wrap">
+        <div id="idpwbtn">
+            <div id="idpw">
+                <input id="memberId" type="text" placeholder="아이디"><br>
+                <input type="password" placeholder="비밀번호"><br>
+            </div>
+            <div id="loginbtn">
+                <button type="button">로그인</button>
+            </div>
+        </div>
+        <!-- 네이버아이디로로그인 버튼 노출 영역 -->
+        <div class="links">
+            <a href="#">아이디찾기</a>
+            <a href="#">비밀번호찾기</a>
+            <a href="#">회원가입</a>
+        </div>
+        <div id="naver_id_login" style="text-align:center">
+            <span>네이버 아이디로 <b>편리하게 로그인하세요</b></span>
+            <a>
+                <img width="144" th:src="@{/img/btnW.png}" alt=""/>
+            </a>
+        </div>
+    </div>
 </form>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <input type="text" name="memberId" placeholder="아이디">
+        <input type="password" name="memberPass" placeholder="비밀번호">
+        <button onclick="sync()" type="button">연동하기</button>
+    </div>
+</div>
 </body>
 </html>

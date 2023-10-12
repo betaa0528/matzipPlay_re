@@ -84,6 +84,7 @@ public class NaverLoginApi {
     private String getSession(HttpSession session){
         return (String) session.getAttribute(SESSION_STATE);
     }
+
     /* Access Token을 이용하여 네이버 사용자 프로필 API를 호출 */
     public String getUserProfile(OAuth2AccessToken oauthToken) throws IOException{
 
@@ -91,7 +92,6 @@ public class NaverLoginApi {
                 .apiKey(CLIENT_ID)
                 .apiSecret(CLIENT_SECRET)
                 .callback(REDIRECT_URI).build(com.restaurantProject.famousrestaurant.naver.NaverLoginApi.instance());
-
         OAuthRequest request = new OAuthRequest(Verb.GET, PROFILE_API_URL, oauthService);
         oauthService.signRequest(oauthToken, request);
         Response response = request.send();

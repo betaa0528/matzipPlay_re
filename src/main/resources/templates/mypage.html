@@ -1,286 +1,87 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>마이페이지</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <style>
-        @font-face {
-            font-family: 'BMHANNAAir';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        body {
-            font-family: 'BMHANNAAir';
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 99vh;
-            margin: 0;
-        }
-
-        #wrap{
-            background-color: #ffffff;
-            border-radius: 5px;
-            width: 40vw;
-            height: 100vh;
-            margin: 0 auto;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        #profile img {
-            border: 1px solid lightgrey;
-            border-radius: 50%;
-            max-width: 100%;
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-        }
-
-        #wishContainer{
-            display: none;
-        }
-
-        #reviewANDwish{
-            overflow-y: scroll;
-        }
-
-        #profile{
-            height: 20%;
-            display: flex;
-        }
-
-        #nav{
-            margin-top: 4%;
-            margin-bottom: 2%;
-            border-top: 1px solid lightgrey;
-            border-bottom: 1px solid #5fa87c;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            height: 5%;
-        }
-
-        #nav span{
-            font-size: 20px;
-        }
-
-        #reviewANDwish{
-            height: 71%;
-        }
-
-        #review:hover{
-            cursor: pointer;
-        }
-
-        #wish{
-            color: lightgrey;
-        }
-
-        #wish:hover{
-            cursor: pointer;
-        }
-
-        #memberId{
-            font-size: 48px;
-        }
-
-        #memberReview, #memberWish{
-            font-size: 24px;
-        }
-
-        #profileText{
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            margin-left: 3%;
-        }
-
-        #wishResName{
-            color: #5fc37c;
-            text-decoration: none;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        #wishResName:hover{
-            cursor: pointer;
-            color: #5fa87c;
-        }
-        #category{
-            font-size: 16px;
-        }
-        #address{
-            font-size: 18px;
-        }
-        #wishWrap{
-            margin-top: 3%;
-            display: flex;
-            padding-bottom: 3%;
-            border-bottom: 1px solid lightgrey;
-            position: relative;
-        }
-        #wishInfo{
-            margin-left: 3%;
-        }
-        #wishDelete, #reviewDelete{
-            border: 0;
-            background-color: white;
-            width: 24px;
-            position: absolute;
-            top: 4%;
-            right: 2%;
-        }
-        #reviewWrap{
-            height: 180px;
-            margin-top: 3%;
-            display: flex;
-            padding-bottom: 3%;
-            border-bottom: 1px solid lightgrey;
-        }
-        #reviewImg{
-            width: 25%;
-            height: 100%;
-            text-align: center;
-        }
-        #reviewText{
-            width: 75%;
-            height: 100%;
-            position: relative;
-        }
-        #reviewRes{
-            color: #5fc37c;
-            font-size: 26px;
-            font-weight: bold;
-        }
-        #reviewDetails{
-            font-size: 18px;
-            margin-top: 1%;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 25%;
-            text-align: center;
-        }
-        #openModalBtn:hover{
-            cursor: pointer;
-        }
-    </style>
-    <script>
-        $(document).ready(function() {
-            $("#review").click(function() {
-                $("#reviewContainer").css("display", "block");
-                $("#review").css("color","black");
-                $("#wishContainer").css("display", "none");
-                $("#wish").css("color","lightgray");
-
-            });
-
-            $("#wish").click(function() {
-                $("#wishContainer").css("display", "block");
-                $("#wish").css("color","black");
-                $("#reviewContainer").css("display", "none");
-                $("#review").css("color","lightgray");
-            });
-
-            $("#openModalBtn").click(function() {
-                $("#myModal").css("display", "block");
-            });
-
-            // 모달 외부 클릭 시 모달 닫기
-            $(window).click(function(event) {
-                if (event.target == $("#myModal")[0]) {
-                    $("#myModal").css("display", "none");
-                }
-            });
-        });
-
-    </script>
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <script src="/js/mypage.js"></script>
+    <title>맛집플레이</title>
 </head>
 <body>
-    <!--프로필-->
-    <div id="wrap">
-        <div id="profile">
-            <img id="openModalBtn" width="200" th:src="@{|/profile/${member.getMemberProfile()}|}">
-            <div id="profileText">
-                <span id="memberId" th:text="${member.getMemberId()}"></span>
-                <div>
-                    <span id="memberReview">리뷰 <span th:text="${reviewCount}"></span></span>
-                    <span id="memberWish">찜 <span th:text="${wishCount}"></span></span>
-                </div>
+<!--프로필-->
+<div id="wrap">
+    <div id="profile">
+        <img id="openModalBtn" width="200" th:src="@{|/profile/${member.getMemberProfile()}|}">
+        <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M149.1 64.8L138.7 96H64C28.7 96 0 124.7 0 160V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H373.3L362.9 64.8C356.4 45.2 338.1 32 317.4 32H194.6c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/></svg>
+        <div id="profileText">
+            <span id="memberId" th:text="${member.getMemberId()}"></span>
+            <div>
+                <span id="memberReview">리뷰 <span id="reviewCount" th:text="${reviewCount}"></span></span>
+                <span id="memberWish">찜 <span id="wishCount" th:text="${wishCount}"></span></span>
             </div>
         </div>
-        <div id="nav">
-            <span id="review">리뷰</span>
-            <span id="wish">찜</span>
-        </div>
-        <div id="reviewANDwish">
-            <!--      리뷰 목록      -->
-            <div id="reviewContainer">
-                <div id="reviewWrap" th:each="items: ${reviewList}">
-                    <div id="reviewText">
-                        <span id="reviewRes" th:text="${items.restaurantEntity.getRestaurantName()}"></span>
-                        <p id="reviewDetails" th:text="${items.getReviewText()}"></p>
-                        <form action="mypage/reviewDelete" method="post">
-                            <input type="hidden" name="id" th:value="${items.getId()}">
-                            <button id="reviewDelete" onclick="reviewDelete()">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#5fc37c}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
-                            </button>
-                        </form>
-                    </div>
+    </div>
+    <div id="nav">
+        <span id="review">리뷰</span>
+        <span id="wish">찜</span>
+    </div>
+    <div id="reviewANDwish">
+        <!--      리뷰 목록      -->
+        <div id="reviewContainer">
+            <div id="reviewWrap" th:each="items: ${reviewList}">
+                <div id="reviewInfo">
+                    <span id="reviewRes" th:text="${items.restaurantEntity.getRestaurantName()}"></span>
+                    <span th:text="${#temporals.format(items.getCreatedAt(), 'yyyy-MM-dd')}"></span>
+                    <p id="reviewDetails" th:text="${items.getReviewText()}"></p>
+                    <input type="hidden" name="id" th:value="${items.getId()}">
+                    <button class="reviewDelete" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512">
+                            <style> #reviewInfo svg {
+                                fill: #5fc37c
+                            }</style>
+                            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="reviewImgWrap">
                     <div id="reviewImg" th:each="items2: ${items.getReviewFileEntity()}">
                         <img width="150px" height="150px" th:src="@{|/upload/${items2.getStoredName()}|}">
                     </div>
                 </div>
             </div>
-            <!--      찜 목록      -->
-            <div id="wishContainer">
-                <div id="wishWrap" th:each="item, itemStat : ${wishList}">
-                    <img th:src="${image[itemStat.index]}" width="150px" height="150px">
-                    <div id="wishInfo">
-                        <a th:href="@{|/restaurant/detail/${item.restaurantEntity.id}|}" id="wishResName" th:text="${item.restaurantEntity.getRestaurantName()}"></a>
-                        <span id="category" th:text="${item.restaurantEntity.getCategory()}"></span><br>
-                        <span id="address" th:text="${item.restaurantEntity.getRestaurantAddress()}"></span>
-                        <form action="mypage/wishListDelete" method="post">
-                            <input type="hidden" name="id" th:value="${item.id}">
-                            <button id="wishDelete" type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#5fc37c}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
-                            </button>
-                        </form>
-                    </div>
+        </div>
+        <!--      찜 목록      -->
+        <div id="wishContainer">
+            <div id="wishWrap" th:each="item, itemStat : ${wishList}">
+                <img th:src="${image[itemStat.index]}" width="150px" height="150px">
+                <div id="wishInfo">
+                    <a th:href="@{|/restaurant/detail/${item.restaurantEntity.id}|}" id="wishResName"
+                       th:text="${item.restaurantEntity.getRestaurantName()}"></a>
+                    <span id="category" th:text="${item.restaurantEntity.getCategory()}"></span><br>
+                    <span id="address" th:text="${item.restaurantEntity.getRestaurantAddress()}"></span>
+                    <input type="hidden" name="id" th:value="${item.id}">
+                    <button class="wishDelete" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512">
+                            <style> #wishInfo svg {
+                                fill: #5fc37c
+                            }</style>
+                            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <img width="400" th:src="@{|/profile/${member.getMemberProfile()}|}">
-            <form action="mypage/profile" method="post" enctype="multipart/form-data">
-                <input type="hidden" th:value="${member.getMemberId()}" name="memberId">
-                <input id="file" type="file" accept="image/*" name="file">
-                <button>변경하기</button>
-            </form>
+</div>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <input type="hidden" th:value="${member.getMemberId()}" name="memberId">
+        <div id="fileUploadWrap">
+            <img id="profileImg" width="300" height="300" th:src="@{|/profile/${member.getMemberProfile()}|}">
+            <input id="file" type="file" accept="image/*" name="file">
+            <svg xmlns="http://www.w3.org/2000/svg" height="2.3em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M149.1 64.8L138.7 96H64C28.7 96 0 124.7 0 160V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H373.3L362.9 64.8C356.4 45.2 338.1 32 317.4 32H194.6c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/></svg>
         </div>
+        <button type="button" id="profileChange">변경하기</button>
     </div>
-
+</div>
+</div>
 </body>
 </html>

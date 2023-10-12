@@ -1,0 +1,116 @@
+@font-face {
+    font-family: 'BMHANNAAir';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'BMHANNAAir';
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+form {
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 40vw;
+    height: 96vh;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* 요소 내의 텍스트를 가운데 정렬합니다. */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h4 {
+    margin-top: 10px;
+}
+
+input {
+    width: 96%;
+    height: 20%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#memberId {
+    margin-bottom: 2%;
+}
+
+button {
+    background-color: #5fc37c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+button:hover {
+    background-color: #5fa87c;
+}
+
+.links {
+    margin-top: 5%;
+}
+
+.links a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+#idpwbtn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#idpw {
+    width: 52%;
+    margin-right: 2%;
+}
+
+#loginbtn {
+    width: 30%;
+    display: flex;
+}
+
+#loginbtn button {
+    width: 100%;
+    margin-right: 2%;
+}
+
+#wrap {
+    margin-top: 5%;
+}
+
+#naver_id_login {
+    margin-top: 3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#naver_id_login span {
+    margin-right: 2%;
+}
+
+#wrapImg img {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#wrapImg {
+    width: 100%;
+}

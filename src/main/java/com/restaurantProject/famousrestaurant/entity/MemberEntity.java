@@ -1,6 +1,5 @@
 package com.restaurantProject.famousrestaurant.entity;
 
-import jdk.jshell.Snippet;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,7 +23,7 @@ public class MemberEntity {
     private String memberNaverId;
     @Column
     private String memberPass;
-    @Column
+    @Column(unique = true)
     private String memberPhoneNumber;
     @Column
     private String memberAddress;
