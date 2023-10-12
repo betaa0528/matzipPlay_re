@@ -1,19 +1,17 @@
 package com.restaurantProject.famousrestaurant.util;
 
-import java.io.IOException;
-import java.util.UUID;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.UUID;
 
 @Component
 public class NaverLoginApi {
@@ -64,8 +62,7 @@ public class NaverLoginApi {
                     .build(com.restaurantProject.famousrestaurant.naver.NaverLoginApi.instance());
 
             /* Scribe에서 제공하는 AccessToken 획득 기능으로 네아로 Access Token을 획득 */
-            OAuth2AccessToken accessToken = oauthService.getAccessToken(code);
-            return accessToken;
+            return oauthService.getAccessToken(code);
         }
         return null;
     }

@@ -32,17 +32,17 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private String apiResult = null;
+    private final String apiResult = null;
     private final MemberRepository memberRepository;
     private final NaverLoginApi naverLoginApi;
     private final KakaoMapApi kakaoMapApi;
     private final RegisterMail registerMail;
     private final SmsService smsService;
 
-    private LinkedHashMap<String,String> authKey = new LinkedHashMap<>();
+    private final LinkedHashMap<String,String> authKey = new LinkedHashMap<>();
 
     private String createNumber(Message dto) {
-        StringBuffer key = new StringBuffer();
+        StringBuilder key = new StringBuilder();
         Random rnd = new Random();
 
         // 인증코드 6자리
@@ -78,8 +78,7 @@ public class LoginService {
 
     private String getMemberIdByPhoneNumber(Member dto){
         Optional<MemberEntity> result = memberRepository.findByMemberPhoneNumber(dto.getMemberPhoneNumber());
-        if(result.isEmpty()) return null;
-        else return result.get().getMemberId();
+        return result.map(MemberEntity::getMemberId).orElse(null);
     }
 
     private void insertMember(Member dto) {
@@ -117,6 +116,7 @@ public class LoginService {
                 hexString.append(String.format("%02x", b));
             }
         } catch (NoSuchAlgorithmException e) {
+
         }
         return hexString;
     }

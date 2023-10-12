@@ -2,8 +2,6 @@ package com.restaurantProject.famousrestaurant.dto;
 
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 

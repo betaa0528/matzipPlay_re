@@ -48,7 +48,7 @@ public class RegisterMail{
 
     // 랜덤 인증 코드 전송
     public String createKey() {
-        StringBuffer key = new StringBuffer();
+        StringBuilder key = new StringBuilder();
         Random rnd = new Random();
 
         for (int i = 0; i < 8; i++) { // 인증코드 8자리
@@ -56,11 +56,11 @@ public class RegisterMail{
 
             switch (index) {
                 case 0:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 97));
+                    key.append((char)(rnd.nextInt(26) + 97));
                     // a~z (ex. 1+97=98 => (char)98 = 'b')
                     break;
                 case 1:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    key.append((char)(rnd.nextInt(26)) + 65));
                     // A~Z
                     break;
                 case 2:

@@ -13,10 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +27,11 @@ public class MyPageService {
     public String upload(MultipartFile file, String realPath) {
         if (!file.isEmpty()) {
             String fileRealName = file.getOriginalFilename(); // 파일명을 얻어낼 수 있는 메서드
-            String fileExtension = fileRealName.substring(fileRealName.lastIndexOf("."), fileRealName.length());
-            String uploadFolder = realPath;
+            String fileExtension = Objects.requireNonNull(fileRealName).substring(fileRealName.lastIndexOf("."));
             UUID uuid = UUID.randomUUID();
             String[] uuids = uuid.toString().split("-");
             String uniqueName = uuids[0];
-            String filePath = uploadFolder + "/" + uniqueName + fileExtension;
+            String filePath = realPath + "/" + uniqueName + fileExtension;
 
             File saveFile = new File(filePath); // 적용 후
 
@@ -47,9 +43,7 @@ public class MyPageService {
                 e.printStackTrace();
             }
 
-            String fileName = uniqueName + fileExtension;
-
-            return fileName;
+            return uniqueName + fileExtension;
 
         } else {
             return null;
@@ -100,15 +94,9 @@ public class MyPageService {
         }return false;
     }
 
-    public List<ReviewEntity> getMyRivew(String memberId) {
-        List<ReviewEntity> review = reviewRepository.findByMemberId(memberId);
-        return review;
-    }
+    public List<ReviewEntity> getMyRivew(String memberId) { return reviewRepository.findByMemberId(memberId);}
 
-    public List<WishListEntity> getMyWish(String memberId){
-        List<WishListEntity> wishList = wishListRepository.findByMemberWishId(memberId);
-        return wishList;
-    }
+    public List<WishListEntity> getMyWish(String memberId){ return wishListRepository.findByMemberWishId(memberId); }
 
     public List<String> getMyWishImage(List<WishListEntity> wishList){
         List<String> image = new ArrayList<>();
