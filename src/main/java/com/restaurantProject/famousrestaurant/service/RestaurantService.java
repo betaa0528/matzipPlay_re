@@ -1,6 +1,5 @@
 package com.restaurantProject.famousrestaurant.service;
 
-import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
@@ -14,15 +13,16 @@ import com.restaurantProject.famousrestaurant.naver.dto.SearchLocalRes;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +31,6 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final MemberRepository memberRepository;
     private final NaverClient naverClient;
-
 
     public List<Restaurant> findAll() {
         List<RestaurantEntity> restaurantEntityList = restaurantRepository.findAll();

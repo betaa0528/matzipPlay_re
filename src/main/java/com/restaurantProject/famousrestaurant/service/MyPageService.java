@@ -8,6 +8,7 @@ import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewRepository;
 import com.restaurantProject.famousrestaurant.repository.WishListRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,7 @@ public class MyPageService {
     private final ReviewRepository reviewRepository;
     private final RestaurantService restaurantService;
 
-    public String upload(MultipartFile file, String realPath) {
+    private String upload(MultipartFile file, String realPath) {
         if (!file.isEmpty()) {
             String fileRealName = file.getOriginalFilename(); // 파일명을 얻어낼 수 있는 메서드
             String fileExtension = Objects.requireNonNull(fileRealName).substring(fileRealName.lastIndexOf("."));
@@ -50,22 +51,27 @@ public class MyPageService {
         }
     }
 
+    private File realPath() throws IOException{
+        ClassPathResource classPathResourceProfile = new ClassPathResource("static/profile/");
+        return classPathResourceProfile.getFile();
+    }
+
     public void delete(String realPath, String fileName) {
         String filePath = realPath + fileName;
         File file = new File(filePath);
         file.delete();
     }
 
-    public boolean profileUpload(MultipartFile file, String memberId) {
+    public boolean profileUpload(MultipartFile file, String memberId) throws IOException {
         Optional<MemberEntity> memOptional = memberRepository.findByMemberId(memberId);
         if (memOptional.isPresent()) {
             MemberEntity mem = memOptional.get();
             if (mem.getMemberProfile().equals("default.jpeg")) {
-                String profile = upload(file, "/Users/yun/Desktop/profile/");
+                String profile = upload(file, realPath()+"/");
                 mem.setMemberProfile(profile);
             } else {
-                delete("/Users/yun/Desktop/profile/", mem.getMemberProfile());
-                String profile = upload(file, "/Users/yun/Desktop/profile/");
+                delete(realPath()+"/", mem.getMemberProfile());
+                String profile = upload(file, realPath()+"/");
                 mem.setMemberProfile(profile);
             }
             memberRepository.save(mem);

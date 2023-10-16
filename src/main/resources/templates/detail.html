@@ -161,7 +161,7 @@
         <span class="modal-before-btn">&lt;</span>
         <img src="" class="modal-img" alt=""><br>
         <div class="modal-user-info">
-            <img src="/img/userIcon.png" alt="">
+            <img th:src="@{|/profile/${member.getMemberProfile()}|}" alt="">
             <span class="modal-review-user-id"></span><br>
             <span class="modal-review-createAt"></span><br>
             <span class="modal-review-text"></span>
@@ -309,7 +309,7 @@
 
         console.log('Stored Names:', storedNames);
         modalDisplay("block");
-        modal_img.src = document.querySelector('.review-text-div-img').src;
+        modal_img.src = document.querySelector('.review-file-div-img').src;
         modal_userID.textContent = hidden_memberId.value;
         modal_review_text.textContent = hidden_reviewText.value;
         modal_review_createAt.textContent = hidden_review_createAt.value;

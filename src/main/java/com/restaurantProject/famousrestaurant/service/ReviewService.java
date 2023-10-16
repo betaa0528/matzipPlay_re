@@ -9,14 +9,13 @@ import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewFileRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +28,11 @@ public class ReviewService {
     private final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewFileRepository reviewFileRepository;
+
+    private File realPath() throws IOException {
+        ClassPathResource classPathResourceProfile = new ClassPathResource("static/review_img/");
+        return classPathResourceProfile.getFile();
+    }
 
     public void save(Review review) throws IOException {
         Optional<RestaurantEntity> optionalRestaurantEntity = restaurantRepository.findById(review.getRestaurantId());
@@ -45,8 +49,7 @@ public class ReviewService {
             for (MultipartFile reviewFile : review.getFileList()) {
                 String originalFileName = reviewFile.getOriginalFilename();
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
-//                String savePath = "/Users/yun/Desktop/review_img/" + storedFileName;
-                String savePath = "C:/review_img/" + storedFileName;
+                String savePath = realPath()+"/" + storedFileName;
                 reviewFile.transferTo(new File(savePath));
                 ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
                 reviewFileRepository.save(reviewFileEntity);
@@ -122,11 +125,6 @@ public class ReviewService {
 
     public Review findById(Long id) {
         ReviewEntity reviewEntity = reviewRepository.findById(id).get();
-//        System.out.println("reviewService : " + reviewEntity.getReviewFileEntity());
-//        if(!reviewEntity.getReviewFileEntity().isEmpty()){
-//            System.out.println("reviewService : " + reviewEntity.getReviewFileEntity().get(0).getStoredName());
-//        }
-
         return Review.toReview(reviewEntity, reviewEntity.getRestaurantEntity().getId());
     }
 
@@ -168,8 +166,7 @@ public class ReviewService {
             for (MultipartFile reviewFile : reviewUpdate.getFileList()) {
                 String originalFileName = reviewFile.getOriginalFilename();
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
-//                String savePath = "/Users/yun/Desktop/review_img/" + storedFileName;
-                String savePath = "C:/review_img/" + storedFileName;
+                String savePath = realPath()+"/" + storedFileName;
                 reviewFile.transferTo(new File(savePath));
                 ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
                 reviewFileRepository.save(reviewFileEntity);

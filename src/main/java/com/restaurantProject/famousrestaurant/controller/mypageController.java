@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,8 @@ public class mypageController {
 
     @PutMapping("mypage/profile/{memberId}")
     @ResponseBody
-    public boolean profile(@RequestPart("file") MultipartFile file, @PathVariable String memberId) { return myPageService.profileUpload(file, memberId); }
+    public boolean profile(@RequestPart("file") MultipartFile file, @PathVariable String memberId) throws IOException {
+        return myPageService.profileUpload(file, memberId);
+    }
 
 }
