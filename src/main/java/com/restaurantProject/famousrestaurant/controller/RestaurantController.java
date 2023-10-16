@@ -1,5 +1,6 @@
 package com.restaurantProject.famousrestaurant.controller;
 
+import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
 import com.restaurantProject.famousrestaurant.dto.Review;
 import com.restaurantProject.famousrestaurant.service.MemberService;
@@ -81,13 +82,14 @@ public class RestaurantController {
         }
         List<Review> reviews = reviewService.findByRestaurantId(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
         HashMap<Long, List<String>> recommend = reviewService.changeRecommend(reviews);
-
+        Member member = memberService.getByMemberId(session.getAttribute("memberId"));
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("wishListChk", wishListChk);
         model.addAttribute("reviews", reviews);
         model.addAttribute("recommend", recommend);
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("session", session.getAttribute("memberId"));
+        model.addAttribute("member", member);
         return "detail";
     }
 

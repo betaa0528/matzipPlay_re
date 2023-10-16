@@ -9,12 +9,14 @@ import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewFileRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,9 +155,11 @@ public class ReviewService {
         if (reviewUpdate.getFileList().get(0).getSize() == 0) {
             if(review.getStoredName() != null){
                 if (reviewUpdate.getDeleteFiles().length == review.getStoredName().size()) {
-                    review.setFileAttached(0);
+                    reviewEntity.setFileAttached(0);
+                } else {
+                    reviewEntity.setFileAttached(reviewUpdate.getDeleteFiles().length);
                 }
-            }
+             }
             reviewRepository.save(ReviewEntity.toSaveEntity(review, reviewEntity));
         } else {
             ReviewEntity.toSaveFileEntity(review, reviewEntity);
@@ -171,6 +175,5 @@ public class ReviewService {
                 reviewFileRepository.save(reviewFileEntity);
             }
         }
-
     }
 }

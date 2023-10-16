@@ -332,6 +332,7 @@ hr {
 .date-div a {
     color: #007bff;
     border-style: none;
+    text-decoration: none;
 }
 
 .review-createdAt {

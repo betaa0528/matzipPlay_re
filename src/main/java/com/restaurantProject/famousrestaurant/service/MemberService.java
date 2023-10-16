@@ -22,4 +22,5 @@ public class MemberService {
         MemberEntity memberEntity = repository.findByMemberId((String) memberId).get();
         return Member.toMember(memberEntity);
     }
+
 }

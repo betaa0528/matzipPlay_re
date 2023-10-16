@@ -124,7 +124,7 @@
             <div th:each="review : ${reviews}" class="review-content">
                 <div class="review-text-div">
                     <div class="review-text-div-userInfo">
-                        <img src="/img/userIcon.png" class="review-text-div-img">
+                        <img th:src="@{|/profile/${member.getMemberProfile()}|}" class="review-text-div-img">
                         <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
                     </div>
                     <div class="review-text-content">
@@ -309,7 +309,7 @@
 
         console.log('Stored Names:', storedNames);
         modalDisplay("block");
-        modal_img.src = "/upload/" + storedNames[0];
+        modal_img.src = document.querySelector('.review-text-div-img').src;
         modal_userID.textContent = hidden_memberId.value;
         modal_review_text.textContent = hidden_reviewText.value;
         modal_review_createAt.textContent = hidden_review_createAt.value;
