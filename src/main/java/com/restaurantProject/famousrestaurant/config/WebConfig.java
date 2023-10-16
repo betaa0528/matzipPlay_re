@@ -12,7 +12,6 @@ public class WebConfig implements WebMvcConfigurer {
     private String resourcePath2 = "/profile/**";
     private String savePath2 = "file:///Users/yun/Desktop/profile/";
 
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(resourcePath)

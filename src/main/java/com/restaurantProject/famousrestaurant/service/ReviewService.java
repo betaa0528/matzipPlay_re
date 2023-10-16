@@ -53,7 +53,6 @@ public class ReviewService {
         for(ReviewEntity reviewEntity : reviewEntities){
             reviews.add(Review.toReview(reviewEntity , restaurant_id));
         }
-
         return reviews;
     }
 }

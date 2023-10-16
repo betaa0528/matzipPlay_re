@@ -60,7 +60,6 @@ public class MyPageService {
         Optional<MemberEntity> memOptional = memberRepository.findByMemberId(memberId);
         if (memOptional.isPresent()) {
             MemberEntity mem = memOptional.get();
-            System.out.println(mem.getMemberProfile());
             if (mem.getMemberProfile().equals("default.jpeg")) {
                 String profile = upload(file, "/Users/yun/Desktop/profile/");
                 mem.setMemberProfile(profile);

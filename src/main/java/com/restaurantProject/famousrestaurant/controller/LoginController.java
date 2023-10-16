@@ -80,6 +80,7 @@ public class LoginController {
     @PostMapping("reg/send") /* sms 문자 보내기 */
     @ResponseBody
     public int sendSms(Message messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        System.out.println(messageDto.getTo());
         return loginService.sendVerificationCodeBySms(messageDto);
     }
 

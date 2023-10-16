@@ -8,10 +8,12 @@ import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import com.restaurantProject.famousrestaurant.sms.dto.Message;
-import com.restaurantProject.famousrestaurant.sms.dto.smsResponse;
+import com.restaurantProject.famousrestaurant.sms.dto.SmsResponse;
+import com.restaurantProject.famousrestaurant.sms.dto.VerificationCode;
 import com.restaurantProject.famousrestaurant.util.KakaoMapApi;
 import com.restaurantProject.famousrestaurant.util.NaverLoginApi;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.web.client.RestClientException;
@@ -23,10 +25,7 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,21 @@ public class LoginService {
     private final RegisterMail registerMail;
     private final SmsService smsService;
 
-    private final LinkedHashMap<String,String> authKey = new LinkedHashMap<>();
+    private final LinkedHashMap<String,VerificationCode> authKey = new LinkedHashMap<>();
+
+    @Scheduled(cron = "*/10 * * * *")
+    private void cleanExpiredCodes() {
+        long currentTime = System.currentTimeMillis();
+        long EXPIRATION_TIME = 3 * 60 * 1000;
+
+        Iterator<Map.Entry<String, VerificationCode>> iterator = authKey.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, VerificationCode> entry = iterator.next();
+            VerificationCode verificationCode = entry.getValue();
+            if (verificationCode.getTimestamp() + EXPIRATION_TIME <= currentTime) iterator.remove();
+        }
+    }
 
     private String createNumber(Message dto) {
         StringBuilder key = new StringBuilder();
@@ -48,7 +61,8 @@ public class LoginService {
         // 인증코드 6자리
         for (int i = 0; i < 6; i++) key.append((rnd.nextInt(10)));
 
-        authKey.put(dto.getTo(),key.toString());
+        VerificationCode verificationCode = new VerificationCode(key.toString());
+        authKey.put(dto.getTo(),verificationCode);
         return key.toString();
     }
 
@@ -158,17 +172,26 @@ public class LoginService {
     }
 
     public int confirm(String number, String memberPhoneNumber){
-        String key = authKey.get(memberPhoneNumber);
-        if(number.equals(key)) {
-            authKey.remove(memberPhoneNumber);
-            return 1;
+        VerificationCode key = authKey.get(memberPhoneNumber);
+        if(number!=null && number.equals(key.getCode())) {
+            long currentTime = System.currentTimeMillis();
+            long codeTimestamp = key.getTimestamp();
+            long EXPIRATION_TIME = 3 * 60 * 1000; // 3분을 밀리초로 변환
+
+            if (currentTime - codeTimestamp <= EXPIRATION_TIME) {
+                authKey.remove(memberPhoneNumber);
+                return 1;
+            } else {
+                authKey.remove(memberPhoneNumber);
+                return 2;
+            }
         }else return 0;
     }
 
     public int changePasswordBySms(Message messageDto, Member dto) throws Exception {
         String pw = registerMail.createKey();
         messageDto.setContent("임시 비밀번호 [" + pw + "]가 발급되었습니다.");
-        smsResponse response = smsService.sendSms(messageDto);
+        SmsResponse response = smsService.sendSms(messageDto);
         if (response.getStatusCode().equals("202")) {
             setNewPassword(dto, pw);
             return 1;
@@ -196,9 +219,10 @@ public class LoginService {
 
     public int sendVerificationCodeBySms(Message messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
         Optional<MemberEntity> memberPhoneNumber = memberRepository.findByMemberPhoneNumber(messageDto.getTo());
-        if(memberPhoneNumber.isEmpty()){
+        VerificationCode verificationCode = authKey.get(messageDto.getTo());
+        if(memberPhoneNumber.isEmpty()&&verificationCode==null){
             messageDto.setContent("인증번호 [" + createNumber(messageDto) + "]를 입력해주세요");
-            smsResponse response = smsService.sendSms(messageDto);
+            SmsResponse response = smsService.sendSms(messageDto);
             if (response.getStatusCode().equals("202")) return 1;
             else return 0;
         }else return 2;

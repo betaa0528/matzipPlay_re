@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class smsResponse {
+public class SmsResponse {
     String requestId;
     LocalDateTime requestTime;
     String statusCode;

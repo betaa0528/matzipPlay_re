@@ -118,7 +118,9 @@ function numberConfirm() {
                 document.querySelector('[name="memberPhoneNumber"]').readOnly = true;
                 document.getElementById('telCheck').disabled = true;
                 document.getElementById('confirm').disabled = true;
-            } else {
+            } else if(data==2){
+                alert("유효기간이 만료된 인증번호입니다.");
+            } else{
                 alert("올바른 인증번호를 입력해주세요.");
             }
 

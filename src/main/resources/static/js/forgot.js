@@ -137,7 +137,7 @@ function naverIdButton() {
 }
 
 function forgotId() {
-    let memberPhoneNumber = $('[name="memberPhoneNumber"]').val();
+    let memberPhoneNumber = document.querySelector('[name="memberPhoneNumber"]').value;
 
     let formData = new FormData();
     formData.append("memberPhoneNumber", memberPhoneNumber);

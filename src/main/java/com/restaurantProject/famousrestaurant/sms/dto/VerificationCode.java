@@ -5,17 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class smsRequest {
-    String type;
-    String contentType;
-    String countryCode;
-    String from;
-    String content;
-    List<Message> messages;
+public class VerificationCode {
+
+    private String code;
+    private long timestamp;
+
+    public VerificationCode(String code) {
+        this.code = code;
+        this.timestamp = System.currentTimeMillis();
+    }
 }

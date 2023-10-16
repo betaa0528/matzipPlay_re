@@ -3,8 +3,8 @@ package com.restaurantProject.famousrestaurant.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurantProject.famousrestaurant.sms.dto.Message;
-import com.restaurantProject.famousrestaurant.sms.dto.smsRequest;
-import com.restaurantProject.famousrestaurant.sms.dto.smsResponse;
+import com.restaurantProject.famousrestaurant.sms.dto.SmsRequest;
+import com.restaurantProject.famousrestaurant.sms.dto.SmsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -73,7 +73,7 @@ public class SmsService {
         return encodeBase64String;
     }
 
-    public smsResponse sendSms(Message messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public SmsResponse sendSms(Message messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
         Long time = System.currentTimeMillis();
 
         HttpHeaders headers = new HttpHeaders();
@@ -85,7 +85,7 @@ public class SmsService {
         List<Message> messages = new ArrayList<>();
         messages.add(messageDto);
 
-        smsRequest request = smsRequest.builder()
+        SmsRequest request = SmsRequest.builder()
                 .type("SMS")
                 .contentType("COMM")
                 .countryCode("82")
@@ -100,7 +100,7 @@ public class SmsService {
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        smsResponse response = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, smsResponse.class);
+        SmsResponse response = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, SmsResponse.class);
 
         return response;
     }

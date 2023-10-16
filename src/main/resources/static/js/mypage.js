@@ -121,7 +121,6 @@ window.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 alert("사진을 등록해주세요");
             });
-
     });
 
 });
