@@ -47,9 +47,7 @@ public class LoginController {
     }
 
     @GetMapping("reg") /* 회원가입 페이지 */
-    public String reg() {
-        return "reg";
-    }
+    public String reg() { return "reg"; }
 
     @GetMapping("login") /* 로그인 페이지 */
     public String login(Model model, HttpSession session) {
