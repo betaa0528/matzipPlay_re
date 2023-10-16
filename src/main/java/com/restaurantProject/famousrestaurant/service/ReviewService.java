@@ -1,6 +1,7 @@
 package com.restaurantProject.famousrestaurant.service;
 
 import com.restaurantProject.famousrestaurant.dto.Review;
+import com.restaurantProject.famousrestaurant.dto.ReviewUpdate;
 import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
 import com.restaurantProject.famousrestaurant.entity.ReviewEntity;
 import com.restaurantProject.famousrestaurant.entity.ReviewFileEntity;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,7 +59,6 @@ public class ReviewService {
         for (ReviewEntity reviewEntity : reviewEntities) {
             reviews.add(Review.toReview(reviewEntity, restaurant_id));
         }
-
         return reviews;
     }
 
@@ -115,5 +116,61 @@ public class ReviewService {
             }
         }
         return recommend;
+    }
+
+    public Review findById(Long id) {
+        ReviewEntity reviewEntity = reviewRepository.findById(id).get();
+//        System.out.println("reviewService : " + reviewEntity.getReviewFileEntity());
+//        if(!reviewEntity.getReviewFileEntity().isEmpty()){
+//            System.out.println("reviewService : " + reviewEntity.getReviewFileEntity().get(0).getStoredName());
+//        }
+
+        return Review.toReview(reviewEntity, reviewEntity.getRestaurantEntity().getId());
+    }
+
+
+    @Transactional
+    public void update(ReviewUpdate reviewUpdate) throws IOException {
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewUpdate.getId()).get();
+        String[] deleteFiles = reviewUpdate.getDeleteFiles();
+        System.out.println(deleteFiles.length);
+        // 삭제한 이미지들 Entity에서 제거
+        if (deleteFiles.length > 0) {
+            for (String deleteFile : deleteFiles) {
+                for (ReviewFileEntity reviewFileEntity : reviewEntity.getReviewFileEntity()) {
+                    if (reviewFileEntity.getStoredName().equals(deleteFile)) {
+                        reviewFileRepository.delete(reviewFileEntity);
+                    }
+                }
+            }
+        }
+
+        Review review = findById(reviewUpdate.getId());
+
+        review.setReviewText(reviewUpdate.getReviewText());
+        review.setRecommendValues(reviewUpdate.getRecommendValues());
+
+        if (reviewUpdate.getFileList().get(0).getSize() == 0) {
+            if(review.getStoredName() != null){
+                if (reviewUpdate.getDeleteFiles().length == review.getStoredName().size()) {
+                    review.setFileAttached(0);
+                }
+            }
+            reviewRepository.save(ReviewEntity.toSaveEntity(review, reviewEntity));
+        } else {
+            ReviewEntity.toSaveFileEntity(review, reviewEntity);
+            Long savedId = reviewRepository.save(reviewEntity).getId();
+            ReviewEntity reviewEntityGetId = reviewRepository.findById(savedId).get();
+            for (MultipartFile reviewFile : reviewUpdate.getFileList()) {
+                String originalFileName = reviewFile.getOriginalFilename();
+                String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
+//                String savePath = "/Users/yun/Desktop/review_img/" + storedFileName;
+                String savePath = "C:/review_img/" + storedFileName;
+                reviewFile.transferTo(new File(savePath));
+                ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
+                reviewFileRepository.save(reviewFileEntity);
+            }
+        }
+
     }
 }

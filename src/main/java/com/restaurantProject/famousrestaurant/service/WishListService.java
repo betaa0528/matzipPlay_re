@@ -20,8 +20,6 @@ public class WishListService {
     public int updateWishList(WishList wishList) {
         int chk = wishListCheck(wishList.getMemberWishId(), wishList.getRestaurantId());
         RestaurantEntity re = restaurantRepository.findById(wishList.getRestaurantId()).get();
-
-
         if(chk == 0){
             repository.save(WishListEntity.toWishListEntity(wishList,re)); // db에 없는경우, DTO객체를 Entity로 만들어서 새롭게 저장
             return 1;

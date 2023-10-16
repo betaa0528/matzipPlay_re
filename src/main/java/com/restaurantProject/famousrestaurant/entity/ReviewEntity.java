@@ -1,6 +1,7 @@
 package com.restaurantProject.famousrestaurant.entity;
 
 import com.restaurantProject.famousrestaurant.dto.Review;
+import com.restaurantProject.famousrestaurant.dto.ReviewUpdate;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 @Table(name = "review_table")
 public class ReviewEntity extends BaseEntity{
     @Id
@@ -67,5 +67,18 @@ public class ReviewEntity extends BaseEntity{
             }
         }
         return stringBuilder.toString();
+    }
+
+    public static ReviewEntity toSaveEntity(Review review, ReviewEntity reviewEntity) {
+        reviewEntity.setReviewText(review.getReviewText());
+        reviewEntity.setRecommendValues(RecommendTrans(review.getRecommendValues()));
+        return reviewEntity;
+    }
+
+    public static ReviewEntity toSaveFileEntity(Review review, ReviewEntity reviewEntity) {
+        reviewEntity.setReviewText(review.getReviewText());
+        reviewEntity.setRecommendValues(RecommendTrans(review.getRecommendValues()));
+        reviewEntity.setFileAttached(1);
+        return reviewEntity;
     }
 }

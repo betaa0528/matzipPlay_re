@@ -5,8 +5,6 @@ import com.restaurantProject.famousrestaurant.entity.ReviewFileEntity;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +18,7 @@ public class Review {
     private String memberId;
     private String reviewText;
     private String createdAt;
+    private String updatedAt;
     private Long restaurantId;
     private List<MultipartFile> fileList; // 파일 담는 용도
     private List<String> originalName; // 원본 파일 이름
@@ -40,6 +39,9 @@ public class Review {
         review.setMemberId(reviewEntity.getMemberId());
         review.setReviewText(reviewEntity.getReviewText());
         review.setCreatedAt(String.valueOf(reviewEntity.getCreatedAt().toLocalDate()));
+        if(reviewEntity.getUpdatedAt() != null){
+            review.setUpdatedAt(String.valueOf(reviewEntity.getUpdatedAt().toLocalDate()));
+        }
 //        review.setCreatedAt(reviewEntity.getCreatedAt());
         review.setRestaurantId(restaurantId);
         review.setRecommendValues(reviewEntity.getRecommendValues().split(","));

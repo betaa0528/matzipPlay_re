@@ -5,505 +5,8 @@
     <title>detail</title>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
             integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-
-    <style>
-        @font-face {
-            font-family: 'BMHannah'; /*font 이름*/
-            font-weight: normal; /* font 굵기 정의 */
-            src: url("/font/BMHANNAAir_ttf.ttf") format("truetype");
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            font-family: BMHannah;
-        }
-
-
-        body {
-            background-color: whitesmoke;
-        }
-
-        header {
-            width: 40vw;
-            margin: 0 auto;
-            background-color: white;
-            text-align: center;
-            position: relative;
-        }
-
-        nav {
-            width: 40vw;
-            margin: 0 auto;
-            padding-top: 30px;
-            background-color: white;
-        }
-
-        section {
-            width: 40vw;
-            height: 200vh;
-            margin: 0 auto;
-            padding-top: 20px;
-            background-color: white;
-        }
-
-        #logo {
-            width: 80%;
-            height: 100%;
-            margin-bottom: 10px;
-        }
-
-        #logo:hover {
-            cursor: pointer;
-        }
-
-        .search-box {
-            border: 2px solid #5fc37c;
-            width: 90%;
-            margin: 0 auto;
-            height: 50px;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-bar {
-            width: 80%;
-            height: 50px;
-            font-size: 16px;
-            box-sizing: border-box;
-            border: none;
-        }
-
-        .search-bar:focus {
-            outline: none;
-        }
-
-        .search-btn {
-            width: 15%;
-            height: 100%;
-            border: none;
-            background-color: #5fc37c;
-        }
-
-        .search-btn:hover {
-            cursor: pointer;
-        }
-
-        #searchIcon {
-            background-image: url("/img/searchIcon.png");
-            background-size: 20px;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding-left: 10px;
-            width: 34px;
-            height: 34px;
-        }
-
-        .category-wrap {
-            padding: 20px 20px;
-            width: 85%;
-            margin: 0 auto;
-            /*border: 1px solid black;*/
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .category-box {
-            /*border: 1px solid red;*/
-            text-align: center;
-        }
-
-        .category-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 100%;
-            text-align: center;
-            border: 2px solid black;
-        }
-
-        .category-box:hover {
-            transform: scale(105%);
-            cursor: pointer;
-        }
-
-        .div-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 100%;
-            object-fit: cover;
-        }
-
-        .restaurant-info-wrap {
-            /*border: 1px solid black;*/
-            display: flex;
-            width: 90%;
-            height: 30vh;
-            margin: 0 auto;
-        }
-
-        .restaurant-info-img-box {
-            /*border: 1px solid red;*/
-            width: 40%;
-        }
-
-        .restaurant-info-img {
-            width: 100%;
-            height: 100%;
-        }
-
-        .restaurant-info-box {
-            width: 60%;
-            padding-left: 1vw;
-            padding-top: 1vw;
-        }
-
-        .restaurant-name {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .restaurant-info-tbl {
-            margin-top: 1vw;
-        }
-
-        .restaurant-info-tbl td:nth-child(1) {
-            width: 20%;
-            font-size: 14px;
-            color: grey;
-        }
-
-        .restaurant-info-tbl td:nth-child(2) {
-            font-size: 14px;
-        }
-
-        .restaurant-info-box-first {
-            display: flex;
-            position: relative;
-            height: 25%;
-            width: 100%;
-            margin-top: 4px;
-        }
-
-        .review-img {
-            width: 100px;
-            height: 100px;
-        }
-
-        .wish-icon-box, .review-icon-box {
-            /*border: 1px solid black;*/
-            width: 15%;
-            text-align: center;
-        }
-
-        .review-icon-box {
-            position: absolute;
-            right: 15%;
-        }
-
-        .wish-icon-box {
-            position: absolute;
-            right: 0;
-        }
-
-        .review-icon-box:hover, .wish-icon-box:hover {
-            cursor: pointer;
-        }
-
-        .wish-icon, .review-icon {
-            width: 20px;
-            filter: opacity(0.5) drop-shadow(0 0 0 #707070);
-
-        }
-
-
-        .wish-icon-box:hover .wish-icon, .wish-icon-box:hover .wish-icon-text,
-        .review-icon-box:hover .review-icon, .review-icon-box:hover .review-icon-text {
-            filter: opacity(0.5) drop-shadow(0 0 0 #7afa9f);
-        }
-
-        .wish-icon-text, .review-icon-text {
-            font-size: 12px;
-            color: grey;
-        }
-
-        hr {
-            width: 98%;
-            margin: 40px auto;
-        }
-
-        .review-empty-div {
-            width: 100%;
-            height: 200px;
-            /*border: 1px solid black;*/
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .review-empty-div span:nth-child(1) {
-            font-size: 20px;
-            font-weight: bold;
-            color: grey;
-        }
-
-        .review-empty-div span:nth-child(2) {
-            font-size: 14px;
-            color: grey;
-        }
-
-        .review-present-div {
-            /*border : 1px solid black;*/
-        }
-
-        .review-content {
-            border-bottom: 0.4px solid grey;
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .review-content:hover {
-            background-color: rgba(225, 214, 214, 0.65);
-        }
-
-        .review-file {
-            /*border: 1px solid red;*/
-            width: 30%;
-            display: flex;
-            padding: 10px 10px;
-            box-sizing: border-box;
-        }
-
-        .review-file-div {
-            /*border: 1px solid blue;*/
-            width: 80%;
-            height: 100px;
-            margin: 20% auto;
-            position: relative;
-        }
-
-        .review-file-div-img {
-            /*border : 1px solid green;*/
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-            transition: 0.3s;
-        }
-
-        .review-file-size {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            padding: 5px 10px;
-            background-color: rgba(0, 0, 0, 0.70);
-            color: white;
-            font-weight: bold;
-        }
-
-        /*.review-file-size:hover{*/
-        /*    cursor: pointer;*/
-        /*}*/
-
-        .review-text-div {
-            /*border: 1px solid black;*/
-            width: 70%;
-            display: flex;
-            padding-top: 30px;
-            padding-bottom: 30px;
-        }
-
-        .review-text-div-userInfo {
-            width: 20%;
-        }
-
-        .review-text-div-img {
-            display: block;
-            width: 80%;
-            height: 80%;
-            margin: 0 auto;
-            object-fit: contain;
-        }
-
-        .review-text-div-memberID {
-            /*border: 1px solid red;*/
-            box-sizing: border-box;
-            font-size: 14px;
-            font-weight: 100;
-            padding: 5px 10px;
-        }
-
-        .review-text-content {
-            width: 80%;
-            padding: 0 10px;
-            box-sizing: border-box;
-            word-break: break-all;
-        }
-
-        .review-createdAt {
-            /*border: 1px solid purple;*/
-            color: grey;
-        }
-
-        .review-text-div-reviewText {
-            width: 100%;
-        }
-
-        .review-recommend-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 10px 20px;
-        }
-
-        .review-recommend-div {
-            border-radius: 5px;
-            width: auto;
-            padding: 5px 5px;
-            margin-bottom: 5px;
-            margin-right: 5px;
-            background-color: whitesmoke;
-        }
-
-        .session-chk {
-            position: absolute;
-            right: 5%;
-        }
-
-        .session-chk a {
-            text-decoration: none;
-        }
-
-        /* 이미지 클릭 시, 밝기 조절 */
-        .review-file-div-img:hover {
-            opacity: 0.8;
-        }
-
-        .modal {
-            display: none; /* 모달창 숨겨 놓기 */
-            position: fixed;
-            z-index: 1; /* 모달창을 제일 앞에 두기 */
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* 스크롤 허용 auto */
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        /* 모달창 이미지 */
-        .modal-img {
-            margin: auto;
-            display: block;
-            width: 50%;
-            height: auto;
-            max-width: 1000px;
-            border-radius: 10px;
-            animation-name: zoom;
-            animation-duration: 0.8s;
-        }
-
-        /* 모달창 애니메이션 추가 */
-        @keyframes zoom {
-            from {
-                transform: scale(0)
-            }
-            to {
-                transform: scale(1)
-            }
-        }
-
-        /* 닫기 버튼 꾸미기 */
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            padding: 20px 20px;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .modal-before-btn, .modal-after-btn {
-            position: absolute;
-            font-size: 40px;
-            font-weight: bold;
-            color: #f1f1f1;
-            transition: 0.3s;
-            padding: 100px 5px;
-        }
-
-        .modal-before-btn:hover, .modal-after-btn:hover {
-            color: #5fc37c;
-            transition: 0.3s;
-        }
-
-        .modal-before-btn {
-            top: 30%;
-            left: 20px;
-        }
-
-        .modal-after-btn {
-            top: 30%;
-            right: 20px;
-        }
-
-        .modal-close:hover, .modal-close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .modal-user-info {
-            height: 20%;
-            padding: 15px 0;
-            position: relative;
-        }
-
-        .modal-user-info img {
-            width: 5%;
-            height: 30%;
-            object-fit: contain;
-            display: block;
-            position: absolute;
-            left: 25%;
-        }
-
-        .modal-review-user-id {
-            font-size: 20px;
-            font-weight: bold;
-            color: #fefefe;
-        }
-
-        .modal-review-text, .modal-review-createAt {
-            font-size: 16px;
-            color: #bbbbbb;
-
-        }
-
-        .modal-review-user-id, .modal-review-createAt {
-            position: absolute;
-            left: 30%;
-            display: block;
-            width: 45%;
-            padding: 5px 20px;
-            box-sizing: border-box;
-        }
-
-        .modal-review-createAt {
-            top: 25%;
-        }
-
-        .modal-review-text {
-            display: block;
-            width: 50%;
-            margin: 40px auto;
-            padding: 5px 20px;
-            box-sizing: border-box;
-            word-break: break-all;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/detail.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
 </head>
 <body>
 <header>
@@ -625,7 +128,12 @@
                         <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
                     </div>
                     <div class="review-text-content">
-                        <div th:text="${review.createdAt}" class="review-createdAt"></div>
+                        <div class="date-div">
+                            <div th:text="|등록일 ${review.createdAt}|" class="review-createdAt"></div>
+                            <a th:if="${session.memberId == review.memberId}"
+                               th:href="@{|/review/update/${review.id}|}">수정</a>
+                        </div>
+                        <div th:if="${review.updatedAt != null}" th:text="|수정일 ${review.updatedAt}|" class="review-updateAt"></div>
                         <div th:text="${review.reviewText}" class="review-text-div-reviewText"></div>
                     </div>
                 </div>
@@ -650,7 +158,7 @@
 
     <div class="modal">
         <span class="modal-close">X</span>
-        <span class="modal-before-btn">이전</span>
+        <span class="modal-before-btn">&lt;</span>
         <img src="" class="modal-img" alt=""><br>
         <div class="modal-user-info">
             <img src="/img/userIcon.png" alt="">
@@ -658,7 +166,7 @@
             <span class="modal-review-createAt"></span><br>
             <span class="modal-review-text"></span>
         </div>
-        <span class="modal-after-btn">다음</span>
+        <span class="modal-after-btn">&gt;</span>
     </div>
 </section>
 
@@ -690,6 +198,20 @@
     const id = [[${restaurant.id}]];
     const member_id = [[${session.memberId}]];
     const restaurant_id = [[${restaurant.id}]];
+    const review_list = [[${reviews}]];
+
+    // 작성한 리뷰가 있으면 리뷰쓰기 버튼이 사라짐
+    const reviewChk = () => {
+        // console.log("memberId? " + member_id);
+        if (member_id != null) {
+            // console.log(review_list);
+            const reviewIconBox = document.querySelector(".review-icon-box");
+            if (review_list.some(item => item.memberId === member_id)) {
+                reviewIconBox.style.display = "none";
+            }
+        }
+    }
+    window.addEventListener('load', reviewChk);
     const saveReview = () => {
         if (member_id == null) {
             alert("로그인해주세요");
@@ -814,21 +336,9 @@
             }
         }
     }
-
-    // img.addEventListener('click', () => {
-    //     modalDisplay("block");
-    //     console.log()
-    //     modal_img.src = img.src;
-    // });
-
     span.addEventListener('click', () => {
         modalDisplay("none");
     });
-    //
-    // modal.addEventListener('click', () => {
-    //     modalDisplay("none");
-    // });
-
 
     function modalDisplay(text) {
         modal.style.display = text;
