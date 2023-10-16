@@ -56,6 +56,12 @@ public class LoginController {
         return "login";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/restaurant";
+    }
+
     @PostMapping("login") /* 로그인 */
     @ResponseBody
     public int login(Member dto, HttpSession session) {
