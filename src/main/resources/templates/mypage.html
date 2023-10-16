@@ -43,7 +43,7 @@
                 </div>
                 <div id="reviewImgWrap">
                     <div id="reviewImg" th:each="items2: ${items.getReviewFileEntity()}">
-                        <img width="150px" height="150px" th:src="@{|/upload/${items2.getStoredName()}|}">
+                        <img width="150px" height="150px" th:src="@{|/review_img/${items2.getStoredName()}|}">
                     </div>
                 </div>
             </div>

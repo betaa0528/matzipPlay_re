@@ -113,7 +113,7 @@
                         <button type="button" class="attached-file-imgs-delete" onclick="imgDelete(this)"
                                 th:value="${image}">x
                         </button>
-                        <img class="attached-file-imgs" th:src="@{|/upload/${image}|}" th:alt="${image}">
+                        <img class="attached-file-imgs" th:src="@{|/review_img/${image}|}" th:alt="${image}">
                     </div>
                 </td>
                 <input type="hidden" name="deleteFiles" class="deleteFiles">
