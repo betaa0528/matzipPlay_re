@@ -43,6 +43,7 @@ public class Member {
         member.setMemberPhoneNumber(entity.getMemberPhoneNumber());
         member.setMemberAddress(entity.getMemberAddress());
         member.setMemberDetailAddr("");
+        member.setMemberProfile(entity.getMemberProfile());
         member.setMapX(entity.getMapX());
         member.setMapY(entity.getMapY());
 

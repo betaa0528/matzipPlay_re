@@ -1,5 +1,6 @@
 package com.restaurantProject.famousrestaurant.controller;
 
+import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
 import com.restaurantProject.famousrestaurant.dto.Review;
 import com.restaurantProject.famousrestaurant.service.MemberService;
@@ -16,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -30,12 +33,10 @@ public class RestaurantController {
     private final MemberService memberService;
 
     @GetMapping("")
-    public String index(HttpSession session){
-        log.info("session ID : " + session.getId());
+    public String index(HttpSession session, Model model) {
         restaurantService.saveDistance(session);
-
+        model.addAttribute("session", session.getAttribute("memberId"));
         return "index";
-
     }
 
     @GetMapping("/search")
@@ -44,9 +45,11 @@ public class RestaurantController {
         List<Restaurant> restaurantList = restaurantService.search(keyword, session);
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", restaurantList);
-        log.info(String.valueOf(restaurantList.get(0).getDistance()));
+        model.addAttribute("session", session.getAttribute("memberId"));
+//        log.info(String.valueOf(restaurantList.get(0).getDistance()));
         return "search";
     }
+
     @GetMapping("/category/{category}/paging")
     public String restaurantCategory(
             @PageableDefault(page = 1) Pageable pageable,
@@ -55,35 +58,38 @@ public class RestaurantController {
 //        Member member = memberService.getByMemberId(session.getAttribute("memberId"));
         Page<Restaurant> restaurantsList = restaurantService.categoryPaging(category, pageable);
         int blockLimit = 3;
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
         int endPage = Math.min((startPage + blockLimit - 1), restaurantsList.getTotalPages());
         log.info("list.first : " + restaurantsList.isFirst());
         model.addAttribute("category", category);
-        model.addAttribute("list" , restaurantsList);
+        model.addAttribute("list", restaurantsList);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("session", session.getAttribute("memberId"));
 //        model.addAttribute("restaurantList", restaurantService.findByCategory(category));
         return "paging";
     }
 
 
     @GetMapping("/detail/{id}")
-    public String RestaurantDetail(@PageableDefault(page = 1)Pageable pageable,
+    public String RestaurantDetail(@PageableDefault(page = 1) Pageable pageable,
                                    @PathVariable Long id, Model model, HttpSession session) {
 //        session.setAttribute("memberId", memberService.getId(1L));
         Restaurant restaurant = restaurantService.findById(id); // 해당 {id} 음식점 정보를 가져옴
         int wishListChk = 0;
-        if(session.getAttribute("memberId") != null){
+        if (session.getAttribute("memberId") != null) {
             wishListChk = wishListService.wishListCheck(session.getAttribute("memberId").toString(), id);
         }
         List<Review> reviews = reviewService.findByRestaurantId(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
-        if(!reviews.isEmpty()){
-            System.out.println(reviews.get(0).getCreatedAt());
-        }
+        HashMap<Long, List<String>> recommend = reviewService.changeRecommend(reviews);
+        Member member = memberService.getByMemberId(session.getAttribute("memberId"));
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("wishListChk", wishListChk);
         model.addAttribute("reviews", reviews);
+        model.addAttribute("recommend", recommend);
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("session", session.getAttribute("memberId"));
+        model.addAttribute("member", member);
         return "detail";
     }
 

@@ -1,0 +1,167 @@
+body {
+    background-color: whitesmoke;
+}
+
+header {
+    width: 40vw;
+    margin: 0 auto;
+    background-color: white;
+    position: relative;
+}
+
+header a {
+    color: #007bff;
+    border-style: none;
+}
+
+nav {
+    width: 40vw;
+    margin: 0 auto;
+    background-color: white;
+}
+
+section {
+    width: 40vw;
+    height: 200vh;
+    margin: 0 auto;
+    padding-top: 20px;
+    background-color: white;
+}
+
+#logo {
+    width: 100%;
+}
+
+#logo:hover {
+    cursor: pointer;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+
+#review-restaurant-name {
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: #5fc37c;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+li {
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+.text-area-div {
+    position: relative;
+}
+
+tr:nth-child(2) td {
+    padding-bottom: 20px;
+}
+
+tr:nth-child(3) {
+    border-top: 0.01cm solid grey;
+    border-bottom: 0.01cm solid grey;
+}
+
+.review-recommend-btn {
+    border: 0.05cm solid #424242;
+    border-radius: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: whitesmoke;
+}
+
+.review-recommend-btn:hover,
+.review-recommend-btn.active {
+    border: 0.05cm solid #5fc37c;
+    background-color: whitesmoke;
+}
+
+.review-textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 20px;
+    resize: none;
+    border: none;
+    outline: none;
+    height: 150px;
+}
+
+
+input[type=file]::file-selector-button {
+    width: 100px;
+    height: 35px;
+    line-height: 35px;
+    border: 0.05cm solid #5fc37c;
+    background-color: white;
+    margin: 10px 10px;
+    border-radius: 30px;
+    font-size: 16px;
+}
+
+tr:nth-last-child(1) {
+    text-align: center;
+}
+
+#submit-btn {
+    border: 0.05cm solid #5fc37c;
+    background-color: white;
+    width: 20%;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 16px;
+    margin: 10px 5px;
+}
+
+#cancel-btn {
+    border: 0.05cm solid lightgrey;
+    color: #707070;
+    background-color: white;
+    width: 20%;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 16px;
+    margin: 10px 5px;
+}
+
+input[type=file]::file-selector-button:hover, input[type=file]:hover, #cancel-btn:hover, #submit-btn:hover {
+    cursor: pointer;
+}
+
+#char-count {
+    position: absolute;
+    font-size: 14px;
+    color: #707070;
+    bottom: 2px;
+    right: 30px;
+}
+
+@font-face {
+    font-family: 'BMHannah'; /*font 이름*/
+    font-weight: normal; /* font 굵기 정의 */
+    src: url("/static/font/BMHANNAAir_ttf.ttf") format("truetype");
+}
+
+.session-chk {
+    position: absolute;
+    right: 5%;
+}
+
+.session-chk a {
+    text-decoration: none;
+}

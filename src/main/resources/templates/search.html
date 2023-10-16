@@ -4,209 +4,23 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <style>
-        @font-face {
-            font-family: 'BMHannah'; /*font 이름*/
-            font-weight: normal; /* font 굵기 정의 */
-            src : url("/font/BMHANNAAir_ttf.ttf") format("truetype");
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            font-family: BMHannah;
-        }
-
-
-        body {
-            background-color: whitesmoke;
-        }
-
-        header {
-            width: 40vw;
-            height: 30vh;
-            margin: 0 auto;
-            background-color: white;
-            text-align: center;
-        }
-
-        nav {
-            width: 40vw;
-            margin: 0 auto;
-            background-color: white;
-        }
-
-        section {
-            width: 40vw;
-            height: 200vh;
-            margin: 0 auto;
-            padding-top: 20px;
-            background-color: white;
-        }
-
-        #logo {
-            width: 80%;
-            height: 100%;
-        }
-
-        #logo:hover {
-            cursor: pointer;
-        }
-
-        .search-box {
-            border: 2px solid #5fc37c;
-            width: 90%;
-            margin: 0 auto;
-            height: 50px;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-bar {
-            width: 80%;
-            height: 50px;
-            font-size: 16px;
-            box-sizing: border-box;
-            border: none;
-        }
-
-        .search-bar:focus {
-            outline: none;
-        }
-
-        .search-btn {
-            width: 15%;
-            height: 100%;
-            border: none;
-            background-color: #5fc37c;
-        }
-
-        .search-btn:hover{
-            cursor:pointer;
-        }
-
-        #searchIcon {
-            background-image: url("/img/searchIcon.png");
-            background-size: 20px;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding-left: 10px;
-            width: 34px;
-            height: 34px;
-        }
-
-        .category-wrap {
-            padding: 20px 20px;
-            width: 85%;
-            margin: 0 auto;
-            /*border: 1px solid black;*/
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .category-box {
-            /*border: 1px solid red;*/
-            text-align: center;
-        }
-
-        .category-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 100%;
-            text-align: center;
-            border: 2px solid black;
-        }
-
-        .category-box:hover {
-            transform: scale(105%);
-            cursor: pointer;
-        }
-
-        .div-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 100%;
-            object-fit: cover;
-        }
-
-        .search-result-text{
-            font-size: 20px;
-        }
-
-        .search-result-text:nth-child(1) {
-            margin-left: 20px;
-            font-weight: bold;
-        }
-
-        .search-result-text-box {
-            margin: 3% auto;
-            text-align: center;
-        }
-
-        .search-result {
-            /*border: 1px solid black;*/
-            display: flex;
-            /*justify-content: space-around;*/
-            flex-wrap: wrap;
-            margin-top: 5%;
-        }
-
-        .restaurant-box {
-            /*border: 1px solid black;*/
-            margin-left: 3%;
-            margin-bottom: 3%;
-            width: 45%;
-        }
-
-
-
-        .restaurant-box-div {
-            /*border: 1px solid red;*/
-            width: 80%;
-            height: 200px;
-            margin: 5px auto;
-        }
-
-        .restaurant-box-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .restaurant-box-info {
-            /*border: 1px solid blue;*/
-            text-align: center;
-        }
-
-        .restaurant-name{
-            text-decoration: none;
-            color: black;
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .restaurant-category {
-            font-size: 14px;
-            color: grey;
-        }
-
-        .restaurant-address {
-            font-size: 16px;
-        }
-
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/search.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
 </head>
 <body>
 <header>
-    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
+    <span th:if="${session.isEmpty()}" class="session-chk"><a th:href="@{/login}">로그인</a></span>
+    <span th:if="${!session.isEmpty()}" class="session-chk">
+        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+            <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <nav>
-    <form action="/restaurant/search" method="get" name="searchForm">
+    <form action="/restaurant/search" method="get" onsubmit="return search()" name="searchForm">
         <div class="search-box">
             <div id="searchIcon"></div>
             <input type="text" class="search-bar" placeholder="검색어를 입력해주세요!" name="keyword">
-            <input type="button" class="search-btn" onclick="search()" value="검색!">
+            <input type="button" class="search-btn" value="검색!">
         </div>
     </form>
     <div class="category-wrap">
@@ -310,5 +124,18 @@
     // 페이지 로드 시와 search-result가 변경될 때 높이를 조절합니다.
     window.addEventListener('load', adjustSectionHeight);
     window.addEventListener('resize', adjustSectionHeight);
+
+    const searchBar = document.querySelector(".search-bar");
+    const search = () => {
+        console.log("클릭됨");
+        if(searchBar.value === ""){
+            alert("검색어를 입력해주세요");
+            searchBar.focus();
+            return false;
+        } else {
+            return true;
+            // document.searchForm.submit();
+        }
+    }
 </script>
 </html>

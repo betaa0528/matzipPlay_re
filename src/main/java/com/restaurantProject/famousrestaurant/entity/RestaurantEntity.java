@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = "reviewEntity")
+@ToString(exclude = {"reviewEntity", "wishListEntity"})
 @Table(name = "restaurant_table")
 public class RestaurantEntity {
     @Id

@@ -1,6 +1,7 @@
 package com.restaurantProject.famousrestaurant.entity;
 
 import com.restaurantProject.famousrestaurant.dto.Review;
+import com.restaurantProject.famousrestaurant.dto.ReviewUpdate;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 @Table(name = "review_table")
 public class ReviewEntity extends BaseEntity{
     @Id
@@ -25,6 +25,8 @@ public class ReviewEntity extends BaseEntity{
     private String reviewText;
     @Column
     private int fileAttached; // 1 or 0
+    @Column
+    private String recommendValues;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
@@ -33,12 +35,14 @@ public class ReviewEntity extends BaseEntity{
     @OneToMany(mappedBy = "reviewEntity" , cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ReviewFileEntity> reviewFileEntity;
 
+
     public static ReviewEntity toSaveEntity(Review review, RestaurantEntity restaurantEntity) {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setMemberId(review.getMemberId());
         reviewEntity.setReviewText(review.getReviewText());
         reviewEntity.setRestaurantEntity(restaurantEntity);
         reviewEntity.setFileAttached(0);
+        reviewEntity.setRecommendValues(RecommendTrans(review.getRecommendValues()));
         return reviewEntity;
     }
 
@@ -47,6 +51,33 @@ public class ReviewEntity extends BaseEntity{
         reviewEntity.setMemberId(review.getMemberId());
         reviewEntity.setReviewText(review.getReviewText());
         reviewEntity.setRestaurantEntity(restaurantEntity);
+        reviewEntity.setFileAttached(1);
+        reviewEntity.setRecommendValues(RecommendTrans(review.getRecommendValues()));
+        return reviewEntity;
+    }
+
+    public static String RecommendTrans(String[] recommendValues) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if(recommendValues != null){
+            for(int i = 0 ; i<recommendValues.length; i++) {
+                stringBuilder.append(recommendValues[i]);
+                if(i != recommendValues.length-1){
+                    stringBuilder.append(",");
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    public static ReviewEntity toSaveEntity(Review review, ReviewEntity reviewEntity) {
+        reviewEntity.setReviewText(review.getReviewText());
+        reviewEntity.setRecommendValues(RecommendTrans(review.getRecommendValues()));
+        return reviewEntity;
+    }
+
+    public static ReviewEntity toSaveFileEntity(Review review, ReviewEntity reviewEntity) {
+        reviewEntity.setReviewText(review.getReviewText());
+        reviewEntity.setRecommendValues(RecommendTrans(review.getRecommendValues()));
         reviewEntity.setFileAttached(1);
         return reviewEntity;
     }

@@ -3,200 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style>
-        @font-face {
-            font-family: 'BMHannah'; /*font 이름*/
-            font-weight: normal; /* font 굵기 정의 */
-            src : url("/font/BMHANNAAir_ttf.ttf") format("truetype");
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            font-family: BMHannah;
-        }
-
-        body {
-            background-color: whitesmoke;
-        }
-
-        header {
-            width: 40vw;
-            height: 30vh;
-            margin: 0 auto;
-            background-color: white;
-            text-align: center;
-        }
-
-        nav {
-            width: 40vw;
-            margin: 0 auto;
-            background-color: white;
-        }
-
-        section {
-            width: 40vw;
-            height: 200vh;
-            margin: 0 auto;
-            padding-top: 20px;
-            background-color: white;
-        }
-
-        #logo {
-            width: 80%;
-            height: 100%;
-        }
-
-        #logo:hover {
-            cursor: pointer;
-        }
-
-        .search-box {
-            border: 2px solid #5fc37c;
-            width: 90%;
-            margin: 0 auto;
-            height: 50px;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-bar {
-            width: 80%;
-            height: 50px;
-            font-size: 16px;
-            box-sizing: border-box;
-            border: none;
-        }
-
-        .search-bar:focus {
-            outline: none;
-        }
-
-        .search-btn {
-            width: 15%;
-            height: 100%;
-            border: none;
-            background-color: #5fc37c;
-        }
-
-        .search-btn:hover{
-            cursor:pointer;
-        }
-
-        #searchIcon {
-            background-image: url("/img/searchIcon.png");
-            background-size: 20px;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding-left: 10px;
-            width: 34px;
-            height: 34px;
-        }
-
-        .category-wrap {
-            /*margin-top: 2%;*/
-            padding: 15px 20px;
-            width: 85%;
-            margin: 0 auto;
-            /*border: 1px solid black;*/
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .category-box {
-            /*border: 1px solid red;*/
-            text-align: center;
-        }
-
-        .category-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 100%;
-            text-align: center;
-            border: 2px solid black;
-        }
-
-        .category-box:hover {
-            transform: scale(105%);
-            cursor: pointer;
-        }
-
-        .div-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 100%;
-            object-fit: cover;
-        }
-
-        .restaurant-wrap{
-            display: flex;
-            width: 90%;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
-
-        .restaurant-div {
-            /*border: 1px solid black;*/
-            box-sizing: border-box;
-            width: 50%;
-            margin-bottom: 5px;
-        }
-
-        .restaurant-div-textBOX {
-            width: 90%;
-            margin: 5px auto;
-            /*border: 1px solid black;*/
-        }
-
-        .restaurant-div a{
-            text-decoration: none;
-            font-size: 20px;
-            /*border: 1px solid red;*/
-            display: block;
-            color: black;
-            margin-bottom: 2px;
-        }
-
-        .restaurant-div span{
-            color: grey;
-            font-size: 14px;
-        }
-
-        .restaurant-div-imgBOX{
-            width: 90%;
-            height: 200px;
-            margin: 10px auto;
-        }
-
-        .restaurant-div-img{
-            width: 100%;
-            height: 100%;
-        }
-
-        .page-div{
-            /*border: 1px solid black;*/
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .page-div a{
-            color: black;
-            /*text-decoration: none;*/
-        }
-
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/paging.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
 </head>
 <body>
 <header>
-    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
+    <span th:if="${session.isEmpty()}" class="session-chk"><a th:href="@{/login}">로그인</a></span>
+    <span th:if="${!session.isEmpty()}" class="session-chk">
+        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+            <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <nav>
-    <form action="/restaurant/search" method="get" name="searchForm">
+    <form action="/restaurant/search" method="get" onsubmit="return search()" name="searchForm">
         <div class="search-box">
             <div id="searchIcon"></div>
             <input type="text" class="search-bar" placeholder="검색어를 입력해주세요!" name="keyword">
-            <input type="button" class="search-btn" onclick="search()" value="검색!">
+            <input type="submit" class="search-btn" value="검색!">
         </div>
     </form>
     <div class="category-wrap">
@@ -293,6 +116,19 @@
 
     const category = (cate) => {
         location.href="/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
+    }
+
+    const searchBar = document.querySelector(".search-bar");
+    const search = () => {
+        console.log("클릭됨");
+        if(searchBar.value === ""){
+            alert("검색어를 입력해주세요");
+            searchBar.focus();
+            return false;
+        } else {
+            return true;
+            // document.searchForm.submit();
+        }
     }
 
     // search-result 요소와 section 요소를 가져옵니다.

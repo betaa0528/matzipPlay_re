@@ -4,145 +4,23 @@
     <meta charset="UTF-8">
     <title>index</title>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <style>
-        @font-face {
-            font-family: 'BMHannah'; /*font 이름*/
-            font-weight: normal; /* font 굵기 정의 */
-            src : url("/font/BMHANNAAir_ttf.ttf") format("truetype");
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            font-family: BMHannah;
-        }
-
-        body {
-            background-color: whitesmoke;
-        }
-
-        header {
-            width: 40vw;
-            height: 30vh;
-            margin: 0 auto;
-            background-color: white;
-            text-align: center;
-        }
-
-        section {
-            width: 40vw;
-            height: 68vh;
-            margin: 0 auto;
-            padding-top: 20px;
-            background-color: white;
-        }
-
-        #logo {
-            width: 80%;
-            height: 100%;
-        }
-
-        #logo:hover {
-            cursor: pointer;
-        }
-
-        .search-box{
-            border: 2px solid #5fc37c;
-            width: 90%;
-            margin: 10px auto;
-            height: 50px;
-            display: flex;
-            align-items: center;
-        }
-
-        #searchIcon {
-            background-image: url("/img/searchIcon.png");
-            background-size: 20px;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding-left: 10px;
-            width: 34px;
-            height: 34px;
-        }
-
-        .search-bar {
-            width: 80%;
-            height: 50px;
-            font-size: 16px;
-            box-sizing: border-box;
-            border: none;
-        }
-
-        .search-bar:focus {
-            outline: none;
-        }
-
-        .search-btn {
-            width: 20%;
-            height: 100%;
-            border: none;
-            background-color: #5fc37c;
-        }
-
-        .search-btn:hover {
-            cursor: pointer;
-        }
-
-        .category-wrap{
-            margin: 40px auto;
-            width: 80%;
-            height: 80%;
-        }
-
-        .category-line{
-            /*border: 1px solid red;*/
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            /*justify-content: space-between;*/
-        }
-
-        .category-wrap:nth-child(1) {
-            margin-bottom: 10px;
-        }
-
-        .category-line .category-box{
-            border-radius: 10%;
-            width: 22%; /* 각 카테고리 상자의 너비 설정 */
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .category-line .category-box:hover {
-            box-shadow: 2px 2px #cccccc;
-            transform: scale(120%);
-        }
-
-        .category-line .category-box:nth-child(2),
-        .category-line .category-box:nth-child(3),
-        .category-line .category-box:nth-child(4) {
-            margin-left: 3%;
-        }
-
-        .div-img{
-            border-radius: 100%;
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-        }
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
 </head>
 <body>
 <header>
-    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt="">
+    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
+    <span th:if="${session.isEmpty()}" class="session-chk"><a th:href="@{/login}">로그인</a></span>
+    <span th:if="${!session.isEmpty()}" class="session-chk">
+        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+            <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <section>
-    <form action="/restaurant/search" method="get" name="searchForm">
+    <form action="/restaurant/search" method="get" onsubmit="return search()" name="searchForm">
         <div class="search-box">
             <div id="searchIcon"></div>
             <input type="text" class="search-bar" placeholder="검색어를 입력해주세요!" name="keyword">
-            <input type="button" class="search-btn" onclick="search()" value="검색!">
+            <input type="submit" class="search-btn" value="검색!">
         </div>
     </form>
 
@@ -204,27 +82,19 @@
     }
     const category = (cate) => {
         location.href="/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
-        // $.ajax({
-        //     url: "/restaurant/category/",
-        //     type: "get",
-        //     data:{
-        //         "category" : cate.querySelector('p').textContent
-        //     },
-        //     success : function (res) {
-        //         location.href="/restaurant/category/" + cate.querySelector('p').textContent;
-        //     },
-        //     error : function (){
-        //         console.log("실패")
-        //     }
-        // });
     }
 
-    const keyword = document.getElementsByClassName("search-bar");
+
+    const searchBar = document.querySelector(".search-bar");
     const search = () => {
-        if(keyword.value === ""){
+        console.log("클릭됨");
+        if(searchBar.value === ""){
             alert("검색어를 입력해주세요");
+            searchBar.focus();
+            return false;
         } else {
-            document.searchForm.submit();
+            return true;
+            // document.searchForm.submit();
         }
     }
 </script>
