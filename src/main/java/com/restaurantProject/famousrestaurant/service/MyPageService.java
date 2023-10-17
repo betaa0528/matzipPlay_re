@@ -7,8 +7,8 @@ import com.restaurantProject.famousrestaurant.entity.WishListEntity;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewRepository;
 import com.restaurantProject.famousrestaurant.repository.WishListRepository;
+import com.restaurantProject.famousrestaurant.util.RealPath;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +24,7 @@ public class MyPageService {
     private final WishListRepository wishListRepository;
     private final ReviewRepository reviewRepository;
     private final RestaurantService restaurantService;
+    private final RealPath realPath;
 
     private String upload(MultipartFile file, String realPath) {
         if (!file.isEmpty()) {
@@ -51,11 +52,6 @@ public class MyPageService {
         }
     }
 
-    private File realPath() throws IOException{
-        ClassPathResource classPathResourceProfile = new ClassPathResource("static/profile/");
-        return classPathResourceProfile.getFile();
-    }
-
     public void delete(String realPath, String fileName) {
         String filePath = realPath + fileName;
         File file = new File(filePath);
@@ -67,11 +63,11 @@ public class MyPageService {
         if (memOptional.isPresent()) {
             MemberEntity mem = memOptional.get();
             if (mem.getMemberProfile().equals("default.jpeg")) {
-                String profile = upload(file, realPath()+"/");
+                String profile = upload(file, realPath.realPath()+"profile");
                 mem.setMemberProfile(profile);
             } else {
-                delete(realPath()+"/", mem.getMemberProfile());
-                String profile = upload(file, realPath()+"/");
+                delete(realPath.realPath()+"profile", mem.getMemberProfile());
+                String profile = upload(file, realPath.realPath()+"profile");
                 mem.setMemberProfile(profile);
             }
             memberRepository.save(mem);

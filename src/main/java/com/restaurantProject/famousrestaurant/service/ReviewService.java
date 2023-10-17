@@ -8,8 +8,8 @@ import com.restaurantProject.famousrestaurant.entity.ReviewFileEntity;
 import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewFileRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewRepository;
+import com.restaurantProject.famousrestaurant.util.RealPath;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,11 +28,7 @@ public class ReviewService {
     private final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewFileRepository reviewFileRepository;
-
-    private File realPath() throws IOException {
-        ClassPathResource classPathResourceProfile = new ClassPathResource("static/review_img/");
-        return classPathResourceProfile.getFile();
-    }
+    private final RealPath realPath;
 
     public void save(Review review) throws IOException {
         Optional<RestaurantEntity> optionalRestaurantEntity = restaurantRepository.findById(review.getRestaurantId());
@@ -49,7 +45,7 @@ public class ReviewService {
             for (MultipartFile reviewFile : review.getFileList()) {
                 String originalFileName = reviewFile.getOriginalFilename();
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
-                String savePath = realPath()+"/" + storedFileName;
+                String savePath = realPath.realPath()+"review_img/" + storedFileName;
                 reviewFile.transferTo(new File(savePath));
                 ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
                 reviewFileRepository.save(reviewFileEntity);
@@ -166,7 +162,7 @@ public class ReviewService {
             for (MultipartFile reviewFile : reviewUpdate.getFileList()) {
                 String originalFileName = reviewFile.getOriginalFilename();
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
-                String savePath = realPath()+"/" + storedFileName;
+                String savePath = realPath.realPath()+"review_img/" + storedFileName;
                 reviewFile.transferTo(new File(savePath));
                 ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
                 reviewFileRepository.save(reviewFileEntity);

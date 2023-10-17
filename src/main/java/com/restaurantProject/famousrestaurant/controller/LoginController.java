@@ -113,4 +113,5 @@ public class LoginController {
     public int forgotId(Member dto, Message messageDto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         return loginService.sendUserIdByPhoneNumber(dto,messageDto);
     }
+
 }
