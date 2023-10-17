@@ -124,7 +124,7 @@
             <div th:each="review : ${reviews}" class="review-content">
                 <div class="review-text-div">
                     <div class="review-text-div-userInfo">
-                        <img th:src="@{|/profile/${member.getMemberProfile()}|}" class="review-text-div-img">
+                        <img th:src="@{|/profile/${members.get(review.getMemberId()).getMemberProfile()}|}" class="review-text-div-img">
                         <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
                     </div>
                     <div class="review-text-content">
@@ -140,6 +140,7 @@
                 <div th:if="${review.fileAttached == 1}" class="review-file">
                     <div class="review-file-div" onclick="modalStart(this)">
                         <img th:src="@{|/review_img/${review.storedName.get(0)}|}" class="review-file-div-img" alt="">
+                        <img th:src="@{|/profile/${members.get(review.getMemberId()).getMemberProfile()}|}" style="display: none" class="hidden-review-text-div-img" alt="">
                         <span th:text="${review.storedName.size()}" class="review-file-size"></span>
                         <input type="hidden" th:value="${review.memberId}" class="hidden-review-memberId">
                         <input type="hidden" th:value="${review.createdAt}" class="hidden-review-createAt">
@@ -161,7 +162,7 @@
         <span class="modal-before-btn">&lt;</span>
         <img src="" class="modal-img" alt=""><br>
         <div class="modal-user-info">
-            <img th:src="@{|/profile/${member.getMemberProfile()}|}" alt="">
+            <img src="" alt="" class="modal-member-img">
             <span class="modal-review-user-id"></span><br>
             <span class="modal-review-createAt"></span><br>
             <span class="modal-review-text"></span>
@@ -293,12 +294,13 @@
     const modal_userID = document.querySelector(".modal-review-user-id");
     const modal_review_text = document.querySelector(".modal-review-text");
     const modal_review_createAt = document.querySelector(".modal-review-createAt");
-    const hidden_memberId = document.querySelector(".hidden-review-memberId");
-    const hidden_review_createAt = document.querySelector(".hidden-review-createAt");
-    const hidden_reviewText = document.querySelector(".hidden-review-reviewText");
+    const modal_user_img = document.querySelector(".modal-member-img")
     const beforeBtn = document.querySelector(".modal-before-btn");
     const afterBtn = document.querySelector(".modal-after-btn");
     const modalStart = (test) => {
+        const hidden_memberId = test.querySelector(".hidden-review-memberId");
+        const hidden_review_createAt = test.querySelector(".hidden-review-createAt");
+        const hidden_reviewText = test.querySelector(".hidden-review-reviewText");
         const storedNameInputs = test.querySelectorAll('.stored-name');
         const storedNames = [];
         let count = 0;
@@ -309,7 +311,8 @@
 
         console.log('Stored Names:', storedNames);
         modalDisplay("block");
-        modal_img.src = document.querySelector('.review-file-div-img').src;
+        modal_img.src = test.querySelector('.review-file-div-img').src;
+        modal_user_img.src = test.querySelector(".hidden-review-text-div-img").src;
         modal_userID.textContent = hidden_memberId.value;
         modal_review_text.textContent = hidden_reviewText.value;
         modal_review_createAt.textContent = hidden_review_createAt.value;

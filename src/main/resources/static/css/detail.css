@@ -376,6 +376,10 @@ hr {
     text-decoration: none;
 }
 
+.hidden-review-text-div-img{
+    display: none;
+}
+
 /* 이미지 클릭 시, 밝기 조절 */
 .review-file-div-img:hover {
     opacity: 0.8;
