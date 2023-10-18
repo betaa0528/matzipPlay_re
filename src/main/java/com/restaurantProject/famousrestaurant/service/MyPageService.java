@@ -43,17 +43,17 @@ public class MyPageService {
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
 
-            amazonS3.putObject(bucket,fileName,file.getInputStream(),metadata);
-            return amazonS3.getUrl(bucket, fileName).toString();
+            System.out.println(bucket);
+
+            amazonS3.putObject(bucket+"/profile",fileName,file.getInputStream(),metadata);
+            return fileName;
 
         } else {
             return null;
         }
     }
 
-    public void delete(String url) {
-        String[] parts = url.split("/");
-        String fileName = parts[parts.length - 1];
+    public void delete(String fileName) {
         amazonS3.deleteObject(bucket, fileName);
     }
 

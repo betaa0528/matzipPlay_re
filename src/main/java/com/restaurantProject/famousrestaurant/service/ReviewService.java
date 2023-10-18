@@ -1,5 +1,7 @@
 package com.restaurantProject.famousrestaurant.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.restaurantProject.famousrestaurant.dto.Review;
 import com.restaurantProject.famousrestaurant.dto.ReviewUpdate;
 import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
@@ -8,8 +10,8 @@ import com.restaurantProject.famousrestaurant.entity.ReviewFileEntity;
 import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewFileRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewRepository;
-import com.restaurantProject.famousrestaurant.util.RealPath;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +29,10 @@ public class ReviewService {
     private final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewFileRepository reviewFileRepository;
-    private final RealPath realPath;
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     public void save(Review review) throws IOException {
         Optional<RestaurantEntity> optionalRestaurantEntity = restaurantRepository.findById(review.getRestaurantId());
@@ -46,6 +51,16 @@ public class ReviewService {
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
 //                String savePath = realPath.realPath()+"review_img/" + storedFileName;
 //                reviewFile.transferTo(new File(savePath));
+
+
+                /* amazon S3 bucket 저장 */
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(reviewFile.getSize());
+                metadata.setContentType(reviewFile.getContentType());
+
+                amazonS3.putObject(bucket+"/review_img",storedFileName,reviewFile.getInputStream(),metadata);
+
+
                 ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
                 reviewFileRepository.save(reviewFileEntity);
             }
@@ -163,6 +178,15 @@ public class ReviewService {
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
 //                String savePath = realPath.realPath()+"review_img/" + storedFileName;
 //                reviewFile.transferTo(new File(savePath));
+
+                /* amazon S3 bucket 저장 */
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(reviewFile.getSize());
+                metadata.setContentType(reviewFile.getContentType());
+
+                amazonS3.putObject(bucket+"/review_img",storedFileName,reviewFile.getInputStream(),metadata);
+
+
                 ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
                 reviewFileRepository.save(reviewFileEntity);
             }

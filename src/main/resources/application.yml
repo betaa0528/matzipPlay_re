@@ -37,7 +37,7 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: 0restaurantbucket
+      bucket: elasticbeanstalk-ap-northeast-2-028662638933
     credentials:
       access-key: AKIAQNLDNFFKVHVFOUE5
       secret-key: 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
