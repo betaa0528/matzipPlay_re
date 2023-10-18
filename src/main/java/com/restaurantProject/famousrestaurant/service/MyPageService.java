@@ -1,5 +1,7 @@
 package com.restaurantProject.famousrestaurant.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.entity.ReviewEntity;
@@ -7,12 +9,11 @@ import com.restaurantProject.famousrestaurant.entity.WishListEntity;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import com.restaurantProject.famousrestaurant.repository.ReviewRepository;
 import com.restaurantProject.famousrestaurant.repository.WishListRepository;
-import com.restaurantProject.famousrestaurant.util.RealPath;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,38 +25,36 @@ public class MyPageService {
     private final WishListRepository wishListRepository;
     private final ReviewRepository reviewRepository;
     private final RestaurantService restaurantService;
-    private final RealPath realPath;
+    private final AmazonS3 amazonS3;
 
-    private String upload(MultipartFile file, String realPath) {
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    private String upload(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
             String fileRealName = file.getOriginalFilename(); // 파일명을 얻어낼 수 있는 메서드
             String fileExtension = Objects.requireNonNull(fileRealName).substring(fileRealName.lastIndexOf("."));
             UUID uuid = UUID.randomUUID();
             String[] uuids = uuid.toString().split("-");
             String uniqueName = uuids[0];
-            String filePath = realPath + "/" + uniqueName + fileExtension;
+            String fileName = uniqueName + fileExtension;
 
-            File saveFile = new File(filePath); // 적용 후
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+            metadata.setContentType(file.getContentType());
 
-            try {
-                file.transferTo(saveFile); // 실제 파일 저장메서드(filewriter 작업을 손쉽게 한방에 처리해준다.)
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return uniqueName + fileExtension;
+            amazonS3.putObject(bucket,fileName,file.getInputStream(),metadata);
+            return amazonS3.getUrl(bucket, fileName).toString();
 
         } else {
             return null;
         }
     }
 
-    public void delete(String realPath, String fileName) {
-        String filePath = realPath + fileName;
-        File file = new File(filePath);
-        file.delete();
+    public void delete(String url) {
+        String[] parts = url.split("/");
+        String fileName = parts[parts.length - 1];
+        amazonS3.deleteObject(bucket, fileName);
     }
 
     public boolean profileUpload(MultipartFile file, String memberId) throws IOException {
@@ -63,11 +62,11 @@ public class MyPageService {
         if (memOptional.isPresent()) {
             MemberEntity mem = memOptional.get();
             if (mem.getMemberProfile().equals("default.jpeg")) {
-                String profile = upload(file, realPath.realPath()+"profile");
+                String profile = upload(file);
                 mem.setMemberProfile(profile);
             } else {
-                delete(realPath.realPath()+"profile", mem.getMemberProfile());
-                String profile = upload(file, realPath.realPath()+"profile");
+                delete(mem.getMemberProfile());
+                String profile = upload(file);
                 mem.setMemberProfile(profile);
             }
             memberRepository.save(mem);

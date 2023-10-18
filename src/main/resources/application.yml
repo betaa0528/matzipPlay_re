@@ -1,5 +1,5 @@
 server:
-  port: 5000
+  port: 8080
 
 naver:
   url:
@@ -33,3 +33,16 @@ spring:
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
+
+cloud:
+  aws:
+    s3:
+      bucket: 0restaurantbucket
+    credentials:
+      access-key: AKIAQNLDNFFKVHVFOUE5
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false

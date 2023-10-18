@@ -24,7 +24,7 @@ public class mypageController {
     private final MyPageService myPageService;
 
     @GetMapping("mypage")
-    public String getMypage(Model model, HttpSession session) {
+    public String getMypage(Model model, HttpSession session) throws IOException {
         //아이디 확인
         String sessionId = (String) session.getAttribute("memberId");
         Optional<MemberEntity> member = myPageService.findByMemberId(sessionId);
