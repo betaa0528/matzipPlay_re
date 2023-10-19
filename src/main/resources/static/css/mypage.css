@@ -38,12 +38,13 @@ body {
 #profile {
     height: 20%;
     display: flex;
+    position: relative;
 }
 
 #profileImgWrap{
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 100%;
     display:flex;
     justify-content:center;
 }
@@ -257,4 +258,23 @@ body {
 #profileChange:hover {
     cursor: pointer;
     background-color: #5fa87c;
+}
+#profileLink{
+    position: absolute;
+    top: 2%;
+    left: 62%;
+    width: 200px
+}
+
+#profileLink span{
+    margin-right: 1%;
+}
+
+#profileLink span a{
+    text-decoration: none;
+    color: #5fc37c;
+}
+
+#profileLink span a:hover{
+    color: #5fa87c;
 }

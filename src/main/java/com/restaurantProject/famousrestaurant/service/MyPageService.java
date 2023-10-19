@@ -42,9 +42,6 @@ public class MyPageService {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
-
-            System.out.println(bucket);
-
             amazonS3.putObject(bucket+"/profile",fileName,file.getInputStream(),metadata);
             return fileName;
 
