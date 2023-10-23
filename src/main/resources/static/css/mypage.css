@@ -44,7 +44,7 @@ body {
 #profileImgWrap{
     position: relative;
     width: 250px;
-    height: 100%;
+    height: 250px;
     display:flex;
     justify-content:center;
 }
