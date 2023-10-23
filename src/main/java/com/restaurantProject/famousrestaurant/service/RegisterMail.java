@@ -41,7 +41,7 @@ public class RegisterMail{
         msgg += "</div>";
 
         message.setText(msgg, "utf-8", "html");// 내용, charset 타입, subtype
-        message.setFrom(new InternetAddress("tjdgur981@naver.com", "tjdgur"));// 보내는 사람
+        message.setFrom(new InternetAddress("", ""));// 보내는 사람
 
         return message;
     }
