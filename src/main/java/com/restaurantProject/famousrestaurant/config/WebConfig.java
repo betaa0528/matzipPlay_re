@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     private String reviewResourcePath = "/review_img/**";
     private String profileResourcePath = "/profile/**";
-    private String reviewSavePath = "https://elasticbeanstalk-ap-northeast-2-028662638933.s3.ap-northeast-2.amazonaws.com/review_img/";
-    private String profileSavePath = "https://elasticbeanstalk-ap-northeast-2-028662638933.s3.ap-northeast-2.amazonaws.com/profile/";
+    private String reviewSavePath = "";
+    private String profileSavePath = "";
 
 
     @Override
