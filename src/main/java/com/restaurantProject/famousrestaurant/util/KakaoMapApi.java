@@ -16,7 +16,7 @@ public class KakaoMapApi {
     public String[] map(String address) {
         String[] result = new String[2];
 
-        String REST_API_KEY = "4fb2e14196899532232a39b95c2a1218";
+        String REST_API_KEY = "";
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             // 쿼리 문자열을 URL 인코딩
             String encodedQuery = URLEncoder.encode(address, "UTF-8");
