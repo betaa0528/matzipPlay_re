@@ -1,3 +1,5 @@
+insert into member_table (`member_id`, `member_pass`,`role`) values ('minjoo', '1111','USER');
+
 insert into restaurant_table(`restaurant_name` , `restaurant_address`, `restaurant_road_address`, `category`,`mapX`, `mapy` ) values ('마싯는음식점', '서울시 구주소', '서울시 도로명', '한식' , 38.123, 128.123);
 insert into restaurant_table(`restaurant_name`, `restaurant_address`,`restaurant_road_address`, `category`, `mapX`, `mapy`) values ('치카바', '서울특별시 송파구 가락동 84-6', '서울특별시 송파구 송이로20길 12-1, 1층 101호 (가락동)', '일식', 124.85066314960501, 33.47803523020737);
 insert into restaurant_table(`restaurant_name`, `restaurant_address`,`restaurant_road_address`, `category`, `mapX`, `mapy`) values ('대치동그집1981', '서울특별시 강동구 성내동 537-3', '서울특별시 강동구 성내로5길 31, 1층 101호 (성내동)', '한식', 124.85066318401942, 33.47803554968765);
