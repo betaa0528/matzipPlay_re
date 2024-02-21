@@ -81,14 +81,14 @@ public class RestaurantService {
                 restaurantRepository.save(restaurantEntity);
             }
         }
-        System.out.println("restaurantEntities.getContent() : " + restaurantEntities.getContent()); // 요청페이지에 해당하는글
-        System.out.println("restaurantEntities.getTotalElements() : " + restaurantEntities.getTotalElements()); // 전체 글갯수
-        System.out.println("restaurantEntities.getNumber() : " + restaurantEntities.getNumber()); // DB로 요청한 페이지번호
-        System.out.println("restaurantEntities.getTotalPages : " + restaurantEntities.getTotalPages()); // 전체 페이지 갯수
-        System.out.println("restaurantEntities.getSize : " + restaurantEntities.getSize()); // 한 페이지에 보여지는 글 갯수
-        System.out.println("restaurantEntities.hasPrevious : " + restaurantEntities.hasPrevious()); // 이전 페이지 존재여부
-        System.out.println("restaurantEntities.isFirst : " + restaurantEntities.isFirst()); // 첫 페이지 여부
-        System.out.println("restaurantEntities.isLast : " + restaurantEntities.isLast()); // 마지막 페이지 여부
+//        System.out.println("restaurantEntities.getContent() : " + restaurantEntities.getContent()); // 요청페이지에 해당하는글
+//        System.out.println("restaurantEntities.getTotalElements() : " + restaurantEntities.getTotalElements()); // 전체 글갯수
+//        System.out.println("restaurantEntities.getNumber() : " + restaurantEntities.getNumber()); // DB로 요청한 페이지번호
+//        System.out.println("restaurantEntities.getTotalPages : " + restaurantEntities.getTotalPages()); // 전체 페이지 갯수
+//        System.out.println("restaurantEntities.getSize : " + restaurantEntities.getSize()); // 한 페이지에 보여지는 글 갯수
+//        System.out.println("restaurantEntities.hasPrevious : " + restaurantEntities.hasPrevious()); // 이전 페이지 존재여부
+//        System.out.println("restaurantEntities.isFirst : " + restaurantEntities.isFirst()); // 첫 페이지 여부
+//        System.out.println("restaurantEntities.isLast : " + restaurantEntities.isLast()); // 마지막 페이지 여부
 
         Page<Restaurant> restaurants = restaurantEntities.map(restaurantEntity -> {
             Restaurant restaurant = new Restaurant();
@@ -117,7 +117,7 @@ public class RestaurantService {
         GeoPoint memberPt = new GeoPoint(126.9783785, 37.5666612);
         if (session.getAttribute("memberId") != null) {
             String memberId = (String) session.getAttribute("memberId");
-            MemberEntity memberEntity = memberRepository.findByMemberId(memberId).get();
+            MemberEntity memberEntity = memberRepository.findByMemberId(memberId).get(0);
             memberPt = new GeoPoint(Double.parseDouble(memberEntity.getMapX()), Double.parseDouble(memberEntity.getMapY()));
         }
 
@@ -206,7 +206,7 @@ public class RestaurantService {
         if (session.getAttribute("memberId") != null) {
             String memberId = (String) session.getAttribute("memberId");
             System.out.println(memberId);
-            MemberEntity memberEntity = memberRepository.findByMemberId(memberId).get();
+            MemberEntity memberEntity = memberRepository.findByMemberId(memberId).get(0);
             double mapx = Double.parseDouble(memberEntity.getMapX());
             double mapy = Double.parseDouble(memberEntity.getMapY());
             GeoPoint userPt = new GeoPoint(mapx, mapy);

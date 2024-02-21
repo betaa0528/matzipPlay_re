@@ -80,40 +80,40 @@ public class LoginService {
                 .build();
     }
 
-    private void setNewPassword(Member dto, String pw) {
-        Optional<MemberEntity> user = memberRepository.findByMemberId(dto.getMemberId());
-        if (user.isPresent()) {
-            StringBuilder hexString = sha256(pw);
-            MemberEntity u = user.get();
-            MemberEntity m = update(u,u.getMemberNaverId(),hexString.toString());
-            memberRepository.save(m);
-        }
-    }
+//    private void setNewPassword(Member dto, String pw) {
+//        List<MemberEntity> user = memberRepository.findByMemberId(dto.getMemberId());
+//        if (user.isPresent()) {
+//            StringBuilder hexString = sha256(pw);
+//            MemberEntity u = user.get();
+//            MemberEntity m = update(u,u.getMemberNaverId(),hexString.toString());
+//            memberRepository.save(m);
+//        }
+//    }
 
     private String getMemberIdByPhoneNumber(Member dto){
         Optional<MemberEntity> result = memberRepository.findByMemberPhoneNumber(dto.getMemberPhoneNumber());
         return result.map(MemberEntity::getMemberId).orElse(null);
     }
 
-    private void insertMember(Member dto) {
-        StringBuilder hexString = sha256(dto.getMemberPass());
-        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
-
-        if (result.isEmpty()) {
-            String address = dto.getMemberAddress() + " " + dto.getMemberDetailAddr();
-            String[] map = kakaoMapApi.map(dto.getMemberAddress());
-            MemberEntity m = MemberEntity.builder()
-                    .memberId(dto.getMemberId())
-                    .memberPass(hexString.toString())
-                    .memberPhoneNumber(dto.getMemberPhoneNumber())
-                    .memberAddress(address)
-                    .memberProfile("default.jpeg")
-                    .mapX(map[0])
-                    .mapY(map[1])
-                    .build();
-            memberRepository.save(m);
-        }
-    }
+//    private void insertMember(Member dto) {
+//        StringBuilder hexString = sha256(dto.getMemberPass());
+//        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
+//
+//        if (result.isEmpty()) {
+//            String address = dto.getMemberAddress() + " " + dto.getMemberDetailAddr();
+//            String[] map = kakaoMapApi.map(dto.getMemberAddress());
+//            MemberEntity m = MemberEntity.builder()
+//                    .memberId(dto.getMemberId())
+//                    .memberPass(hexString.toString())
+//                    .memberPhoneNumber(dto.getMemberPhoneNumber())
+//                    .memberAddress(address)
+//                    .memberProfile("default.jpeg")
+//                    .mapX(map[0])
+//                    .mapY(map[1])
+//                    .build();
+//            memberRepository.save(m);
+//        }
+//    }
 
     private StringBuilder sha256(String pw) {
         StringBuilder hexString = new StringBuilder();
@@ -134,42 +134,42 @@ public class LoginService {
         }
         return hexString;
     }
+//
+//    public String reg(Member dto, Errors errors){
+//        if (errors.hasErrors()) { // 에러 발생시
+//            return "reg";
+//        } else {
+//            insertMember(dto);
+//            return "login";
+//        }
+//    }
 
-    public String reg(Member dto, Errors errors){
-        if (errors.hasErrors()) { // 에러 발생시
-            return "reg";
-        } else {
-            insertMember(dto);
-            return "login";
-        }
-    }
+//    public int login(Member dto) {
+//        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
+//        if (result.isEmpty()) return 0;
+//        else {
+//            StringBuilder hexString = sha256(dto.getMemberPass());
+//            if (!hexString.toString().equals(result.get().getMemberPass())) return 1;
+//            else {
+//                return 2;
+//            }
+//        }
+//    }
 
-    public int login(Member dto) {
-        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
-        if (result.isEmpty()) return 0;
-        else {
-            StringBuilder hexString = sha256(dto.getMemberPass());
-            if (!hexString.toString().equals(result.get().getMemberPass())) return 1;
-            else {
-                return 2;
-            }
-        }
-    }
-
-    public int sync(Member dto) {
-        Optional<MemberEntity> user = memberRepository.findByMemberId(dto.getMemberId());
-        if (user.isEmpty()) return 0;
-        else {
-            StringBuilder hexString = sha256(dto.getMemberPass());
-            if (!hexString.toString().equals(user.get().getMemberPass())) return 1;
-            else {
-                MemberEntity u = user.get();
-                MemberEntity m = update(u,dto.getMemberNaverId(),u.getMemberPass());
-                memberRepository.save(m);
-                return 2;
-            }
-        }
-    }
+//    public int sync(Member dto) {
+//        Optional<MemberEntity> user = memberRepository.findByMemberId(dto.getMemberId());
+//        if (user.isEmpty()) return 0;
+//        else {
+//            StringBuilder hexString = sha256(dto.getMemberPass());
+//            if (!hexString.toString().equals(user.get().getMemberPass())) return 1;
+//            else {
+//                MemberEntity u = user.get();
+//                MemberEntity m = update(u,dto.getMemberNaverId(),u.getMemberPass());
+//                memberRepository.save(m);
+//                return 2;
+//            }
+//        }
+//    }
 
     public int confirm(String number, String memberPhoneNumber){
         VerificationCode key = authKey.get(memberPhoneNumber);
@@ -188,24 +188,24 @@ public class LoginService {
         }else return 0;
     }
 
-    public int changePasswordBySms(Message messageDto, Member dto) throws Exception {
-        String pw = registerMail.createKey();
-        messageDto.setContent("임시 비밀번호 [" + pw + "]가 발급되었습니다.");
-        SmsResponse response = smsService.sendSms(messageDto);
-        if (response.getStatusCode().equals("202")) {
-            setNewPassword(dto, pw);
-            return 1;
-        } else return 0;
-    }
+//    public int changePasswordBySms(Message messageDto, Member dto) throws Exception {
+//        String pw = registerMail.createKey();
+//        messageDto.setContent("임시 비밀번호 [" + pw + "]가 발급되었습니다.");
+//        SmsResponse response = smsService.sendSms(messageDto);
+//        if (response.getStatusCode().equals("202")) {
+//            setNewPassword(dto, pw);
+//            return 1;
+//        } else return 0;
+//    }
 
-    public int changePasswordByEmail(Member dto) throws Exception {
-        String pw = registerMail.sendSimpleMessage(dto.getMemberNaverId());
-        if (pw == null || pw.isEmpty()) return 0;
-        else {
-            setNewPassword(dto, pw);
-            return 1;
-        }
-    }
+//    public int changePasswordByEmail(Member dto) throws Exception {
+//        String pw = registerMail.sendSimpleMessage(dto.getMemberNaverId());
+//        if (pw == null || pw.isEmpty()) return 0;
+//        else {
+//            setNewPassword(dto, pw);
+//            return 1;
+//        }
+//    }
 
     public int sendUserIdByPhoneNumber(Member dto, Message messageDto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         String memberId = getMemberIdByPhoneNumber(dto);
@@ -255,25 +255,25 @@ public class LoginService {
         }
     }
 
-    public int dup(Member dto) {
-        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
-        if (result.isEmpty()) return 0;
-        else return 1;
-    }
+//    public int dup(Member dto) {
+//        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
+//        if (result.isEmpty()) return 0;
+//        else return 1;
+//    }
 
     public String getAuthorizationUrl(HttpSession session) {
         return naverLoginApi.getAuthorizationUrl(session);
     }
 
-    public HashMap<String, String> getNaverIdAndPhoneNumberByUserId(Member dto) {
-        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
-        HashMap<String, String> map = new HashMap<>();
-        if(result.isPresent()){
-            map.put("phoneNumber", result.get().getMemberPhoneNumber());
-            map.put("naverId", result.get().getMemberNaverId());
-        }else {
-            map.put("result","false");
-        }
-        return map;
-    }
+//    public HashMap<String, String> getNaverIdAndPhoneNumberByUserId(Member dto) {
+//        Optional<MemberEntity> result = memberRepository.findByMemberId(dto.getMemberId());
+//        HashMap<String, String> map = new HashMap<>();
+//        if(result.isPresent()){
+//            map.put("phoneNumber", result.get().getMemberPhoneNumber());
+//            map.put("naverId", result.get().getMemberNaverId());
+//        }else {
+//            map.put("result","false");
+//        }
+//        return map;
+//    }
 }

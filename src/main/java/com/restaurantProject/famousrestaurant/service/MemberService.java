@@ -15,22 +15,22 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository repository;
+    private final MemberRepository memberRepository;
 
     public String getId(long l) {
-        Optional<MemberEntity> memberEntity = repository.findById(l);
+        Optional<MemberEntity> memberEntity = memberRepository.findById(l);
         return memberEntity.isPresent() ? memberEntity.get().getMemberId() : null;
     }
 
-    public Member getByMemberId(Object memberId) {
-        MemberEntity memberEntity = repository.findByMemberId((String) memberId).get();
-        return Member.toMember(memberEntity);
-    }
+//    public Member getByMemberId(Object memberId) {
+//        MemberEntity memberEntity = repository.findByMemberId((String) memberId).get();
+//        return Member.toMember(memberEntity);
+//    }
 
     public HashMap<String, Member> getByMemberIdList(List<Review> reviews) {
         List<Member> members = new ArrayList<>();
         for (Review review : reviews) {
-            MemberEntity memberEntity = repository.findByMemberId(review.getMemberId()).get();
+            MemberEntity memberEntity = memberRepository.getReferenceById(review.getMemberId());
             members.add(Member.toMember(memberEntity));
         }
 

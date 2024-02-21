@@ -54,24 +54,24 @@ public class MyPageService {
         amazonS3.deleteObject(bucket, fileName);
     }
 
-    public boolean profileUpload(MultipartFile file, String memberId) throws IOException {
-        Optional<MemberEntity> memOptional = memberRepository.findByMemberId(memberId);
-        if (memOptional.isPresent()) {
-            MemberEntity mem = memOptional.get();
-            if (mem.getMemberProfile().equals("default.jpeg")) {
-                String profile = upload(file);
-                mem.setMemberProfile(profile);
-            } else {
-                delete(mem.getMemberProfile());
-                String profile = upload(file);
-                mem.setMemberProfile(profile);
-            }
-            memberRepository.save(mem);
-            return true;
-        }else {
-            return false;
-        }
-    }
+//    public boolean profileUpload(MultipartFile file, String memberId) throws IOException {
+//        Optional<MemberEntity> memOptional = memberRepository.findByMemberId(memberId);
+//        if (memOptional.isPresent()) {
+//            MemberEntity mem = memOptional.get();
+//            if (mem.getMemberProfile().equals("default.jpeg")) {
+//                String profile = upload(file);
+//                mem.setMemberProfile(profile);
+//            } else {
+//                delete(mem.getMemberProfile());
+//                String profile = upload(file);
+//                mem.setMemberProfile(profile);
+//            }
+//            memberRepository.save(mem);
+//            return true;
+//        }else {
+//            return false;
+//        }
+//    }
 
     public boolean reviewDelete(Long id) {
         Optional<ReviewEntity> r = reviewRepository.findById(id);
@@ -105,7 +105,7 @@ public class MyPageService {
         return image;
     }
 
-    public Optional<MemberEntity> findByMemberId(String id){
-       return memberRepository.findByMemberId(id);
-    }
+//    public Optional<MemberEntity> findByMemberId(String id){
+//       return memberRepository.findByMemberId(id);
+//    }
 }

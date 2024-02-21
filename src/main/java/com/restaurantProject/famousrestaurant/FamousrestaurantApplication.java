@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication
 public class FamousrestaurantApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FamousrestaurantApplication.class, args);
