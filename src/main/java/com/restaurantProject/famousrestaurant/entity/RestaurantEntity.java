@@ -10,9 +10,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"reviewEntity", "wishListEntity"})
+@ToString(callSuper = true, exclude = {"reviewEntity", "wishListEntity"})
 @Table(name = "restaurant_table")
-public class RestaurantEntity {
+public class RestaurantEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

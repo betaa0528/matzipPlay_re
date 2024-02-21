@@ -8,12 +8,12 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "member_table")
-public class MemberEntity {
+public class MemberEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +34,6 @@ public class MemberEntity {
     private String mapX;
     @Column
     private String mapY;
+    private String role;
 
 }
