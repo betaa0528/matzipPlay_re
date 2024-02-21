@@ -32,7 +32,7 @@ public class RestaurantController {
     private final WishListService wishListService;
     private final MemberService memberService;
 
-    @GetMapping("")
+    @GetMapping
     public String index(HttpSession session, Model model) {
         restaurantService.saveDistance(session);
         model.addAttribute("session", session.getAttribute("memberId"));
@@ -60,7 +60,7 @@ public class RestaurantController {
         int blockLimit = 3;
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
         int endPage = Math.min((startPage + blockLimit - 1), restaurantsList.getTotalPages());
-        log.info("list.first : " + restaurantsList.isFirst());
+//        log.info("list.first : " + restaurantsList.isFirst());
         model.addAttribute("category", category);
         model.addAttribute("list", restaurantsList);
         model.addAttribute("startPage", startPage);
@@ -74,15 +74,14 @@ public class RestaurantController {
     @GetMapping("/detail/{id}")
     public String RestaurantDetail(@PageableDefault(page = 1) Pageable pageable,
                                    @PathVariable Long id, Model model, HttpSession session) {
-//        session.setAttribute("memberId", memberService.getId(1L));
         Restaurant restaurant = restaurantService.findById(id); // 해당 {id} 음식점 정보를 가져옴
         int wishListChk = 0;
         if (session.getAttribute("memberId") != null) {
             wishListChk = wishListService.wishListCheck(session.getAttribute("memberId").toString(), id);
         }
         List<Review> reviews = reviewService.findByRestaurantId(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
-        HashMap<Long, List<String>> recommend = reviewService.changeRecommend(reviews);
-        HashMap<String, Member> members = memberService.getByMemberIdList(reviews);
+        HashMap<Long, List<String>> recommend = reviewService.changeRecommend(reviews); // 리뷰의 추천 버튼들을 가져옴
+        HashMap<String, Member> members = memberService.getByMemberIdList(reviews); //
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("wishListChk", wishListChk);
         model.addAttribute("reviews", reviews);

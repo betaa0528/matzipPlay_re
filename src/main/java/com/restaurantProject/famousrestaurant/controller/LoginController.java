@@ -38,23 +38,23 @@ public class LoginController {
         }
     }
 
-    @GetMapping("sync")
+    @GetMapping("/sync")
     public String sync(){return "sync";}
 
-    @GetMapping("forgot") /* 아이디, 비밀번호 찾기 페이지 */
+    @GetMapping("/forgot") /* 아이디, 비밀번호 찾기 페이지 */
     public String forgotId() {
         return "forgot";
     }
 
-    @GetMapping("reg") /* 회원가입 페이지 */
+    @GetMapping("/reg") /* 회원가입 페이지 */
     public String reg() { return "reg"; }
 
-    @GetMapping("login") /* 로그인 페이지 */
-    public String login(Model model, HttpSession session) {
-        String naverAuthUrl = loginService.getAuthorizationUrl(session); /* 네이버아이디로 인증 URL을 생성하기 위하여 getAuthorizationUrl 메소드 호출 */
-        model.addAttribute("url", naverAuthUrl);
-        return "login";
-    }
+//    @GetMapping("/login") /* 로그인 페이지 */
+//    public String login() {
+////        String naverAuthUrl = loginService.getAuthorizationUrl(session); /* 네이버아이디로 인증 URL을 생성하기 위하여 getAuthorizationUrl 메소드 호출 */
+////        model.addAttribute("url", naverAuthUrl);
+//        return "login";
+//    }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
@@ -62,52 +62,52 @@ public class LoginController {
         return "redirect:/restaurant";
     }
 
-    @PostMapping("login") /* 로그인 */
-    @ResponseBody
-    public int login(Member dto, HttpSession session) {
-        int result = loginService.login(dto);
-        if (result == 2) session.setAttribute("memberId", dto.getMemberId());
-        return result;
-    }
+//    @PostMapping("/login") /* 로그인 */
+//    @ResponseBody
+//    public int login(Member dto, HttpSession session) {
+////        int result = loginService.login(dto);
+////        if (result == 2) session.setAttribute("memberId", dto.getMemberId());
+//        return result;
+//    }
 
-    @PostMapping("sync") /* 네이버 아이디 연동하기 */
-    @ResponseBody
-    public int sync(Member dto, HttpSession session) {
-        int result = loginService.sync(dto);
-        if (result == 2) session.setAttribute("memberId", dto.getMemberId());
-        return result;
-    }
+//    @PostMapping("/sync") /* 네이버 아이디 연동하기 */
+//    @ResponseBody
+//    public int sync(Member dto, HttpSession session) {
+//        int result = loginService.sync(dto);
+//        if (result == 2) session.setAttribute("memberId", dto.getMemberId());
+//        return result;
+//    }
 
-    @PostMapping("reg") /* 회원 가입 */
-    public String reg(@Valid Member dto, Errors errors) { return loginService.reg(dto, errors); }
+//    @PostMapping("/reg") /* 회원 가입 */
+//    public String reg(@Valid Member dto, Errors errors) { return loginService.reg(dto, errors); }
+//
+//    @PostMapping("/reg/send") /* sms 문자 보내기 */
+//    @ResponseBody
+//    public int sendSms(Message messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//        return loginService.sendVerificationCodeBySms(messageDto);
+//    }
+//
+//    @PostMapping("/reg/confirm") /* sms 인증번호 확인 */
+//    @ResponseBody
+//    public int confirm(String number, String memberPhoneNumber) { return loginService.confirm(number, memberPhoneNumber); }
+//
+//    @PostMapping("/reg/dup") /* 아이디 중복 체크 */
+//    @ResponseBody
+//    public int dup(Member dto) { return loginService.dup(dto);}
+//
+//    @PostMapping("/forgot/reset-pass-email") /* 임시 비밀번호 이메일로 발급 */
+//    @ResponseBody
+//    public int resetPassEmail(Member dto) throws Exception { return loginService.changePasswordByEmail(dto); }
+//
+//    @PostMapping("/forgot/reset-pass-phone") /* 임시 비밀번호 휴대전화로 발급 */
+//    @ResponseBody
+//    public int resetPassPhone(Message messageDto, Member dto) throws Exception { return loginService.changePasswordBySms(messageDto,dto);}
+//
+//    @PostMapping("/forgot/member-pw") /* 회원 아이디를 받아 네이버 아이디와 전화번호를 return */
+//    @ResponseBody
+//    public HashMap<String, String> forgotPw(Member dto) { return loginService.getNaverIdAndPhoneNumberByUserId(dto);}
 
-    @PostMapping("reg/send") /* sms 문자 보내기 */
-    @ResponseBody
-    public int sendSms(Message messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        return loginService.sendVerificationCodeBySms(messageDto);
-    }
-
-    @PostMapping("reg/confirm") /* sms 인증번호 확인 */
-    @ResponseBody
-    public int confirm(String number, String memberPhoneNumber) { return loginService.confirm(number, memberPhoneNumber); }
-
-    @PostMapping("reg/dup") /* 아이디 중복 체크 */
-    @ResponseBody
-    public int dup(Member dto) { return loginService.dup(dto);}
-
-    @PostMapping("forgot/reset-pass-email") /* 임시 비밀번호 이메일로 발급 */
-    @ResponseBody
-    public int resetPassEmail(Member dto) throws Exception { return loginService.changePasswordByEmail(dto); }
-
-    @PostMapping("forgot/reset-pass-phone") /* 임시 비밀번호 휴대전화로 발급 */
-    @ResponseBody
-    public int resetPassPhone(Message messageDto, Member dto) throws Exception { return loginService.changePasswordBySms(messageDto,dto);}
-
-    @PostMapping("forgot/member-pw") /* 회원 아이디를 받아 네이버 아이디와 전화번호를 return */
-    @ResponseBody
-    public HashMap<String, String> forgotPw(Member dto) { return loginService.getNaverIdAndPhoneNumberByUserId(dto);}
-
-    @PostMapping("forgot/member-id") /* 회원 전화번호를 받아 전화번호에 회원 아이디 전송 */
+    @PostMapping("/forgot/member-id") /* 회원 전화번호를 받아 전화번호에 회원 아이디 전송 */
     @ResponseBody
     public int forgotId(Member dto, Message messageDto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         return loginService.sendUserIdByPhoneNumber(dto,messageDto);
