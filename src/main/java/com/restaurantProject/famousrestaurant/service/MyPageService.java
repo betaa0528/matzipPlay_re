@@ -3,7 +3,6 @@ package com.restaurantProject.famousrestaurant.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
-import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.entity.ReviewEntity;
 import com.restaurantProject.famousrestaurant.entity.WishListEntity;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
@@ -91,7 +90,7 @@ public class MyPageService {
         }return false;
     }
 
-    public List<ReviewEntity> getMyRivew(String memberId) { return reviewRepository.findByMemberId(memberId);}
+    public List<ReviewEntity> getMyReview(String memberId) { return reviewRepository.findByMemberId(memberId);}
 
     public List<WishListEntity> getMyWish(String memberId){ return wishListRepository.findByMemberWishId(memberId); }
 
@@ -108,4 +107,5 @@ public class MyPageService {
 //    public Optional<MemberEntity> findByMemberId(String id){
 //       return memberRepository.findByMemberId(id);
 //    }
+
 }

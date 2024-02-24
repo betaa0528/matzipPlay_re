@@ -27,6 +27,10 @@ public class MemberService {
 //        return Member.toMember(memberEntity);
 //    }
 
+    public MemberEntity getMember() {
+        return memberRepository.getReferenceById("minjoo");
+    }
+
     public HashMap<String, Member> getByMemberIdList(List<Review> reviews) {
         List<Member> members = new ArrayList<>();
         for (Review review : reviews) {

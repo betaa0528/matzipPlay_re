@@ -33,11 +33,11 @@ class MemberRepositoryTest {
 
     @DisplayName("select test2")
     @Test
-    void givenTestData_whenSelectingRefernceById_thenWorksFine() {
+    void givenTestData_whenSelectingReferenceById_thenWorksFine() {
         // given
 
         // when
-        MemberEntity memberEntity = memberRepository.getReferenceById(1L);
+        MemberEntity memberEntity = memberRepository.getReferenceById("minjoo");
 
         // then
         assertThat(memberEntity.getMemberId()).isEqualTo("minjoo");
