@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
 
-    MemberEntity getReferenceById(String memberId);
+    MemberEntity getByMemberId(String memberId);
 
     Optional<MemberEntity> findByMemberNaverId(String email);
     List<MemberEntity> findByMemberId(String id);
