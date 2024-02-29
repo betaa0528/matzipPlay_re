@@ -85,6 +85,29 @@
             </div>
         </div>
     </div>
+    <div class="page-div" th:if="${!list.isEmpty()}">
+        <a th:href="@{|/restaurant/search?keyword=${keyword}|(page=1)}">First</a>
+        <!-- 이전 링크 활성화 비활성화 -->
+        <!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
+        <a th:href="${list.first} ? '#' : @{|/restaurant/search?keyword=${keyword}|(page=${list.number})}">prev</a>
+
+        <!-- 페이지 번호 링크(현재 페이지는 숫자만)
+                for(int page=startPage; page<=endPage; page++)-->
+        <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+            <!-- 현재페이지는 링크 없이 숫자만 -->
+            <span th:if="${page == list.number + 1}" th:text="${page}"></span>
+            <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+            <span th:unless="${page == list.number + 1}">
+                <a th:href="@{|/restaurant/search?keyword=${keyword}|(page=${page})}" th:text="${page}"></a>
+            </span>
+        </span>
+
+        <!-- 다음 링크 활성화 비활성화
+            사용자: 2페이지, getNumber: 1, 3페이지-->
+        <a th:href="${list.last} ? '#' : @{|/restaurant/search?keyword=${keyword}|(page=${list.number + 2})}">next</a>
+        <!-- 마지막 페이지로 이동 -->
+        <a th:href="@{|/restaurant/search?keyword=${keyword}|(page=${list.totalPages})}">Last</a>
+    </div>
 <!--    <table>-->
 <!--        <tr>-->
 <!--            <td>이미지</td>-->
