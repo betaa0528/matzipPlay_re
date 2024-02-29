@@ -5,22 +5,34 @@ import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
 import com.restaurantProject.famousrestaurant.geo.GeoPoint;
 import com.restaurantProject.famousrestaurant.geo.GeoTrans;
 import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@SpringBootTest
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+
+@DisplayName("비즈니스 로직 - 음식점")
+@ExtendWith(MockitoExtension.class)
 public class RestaurantServiceTest {
 
-    @Autowired
+    @InjectMocks
+    private RestaurantService sut;
+    @Mock
     private RestaurantRepository restaurantRepository;
 
     @Test
@@ -34,26 +46,26 @@ public class RestaurantServiceTest {
         System.out.println("restaurantEntities.getContent() : " + restaurantEntities.getContent()); // 요청페이지에 해당하는글
         System.out.println("restaurantEntities.getTotalElements() : " + restaurantEntities.getTotalElements()); // 전체 글갯수
         System.out.println("restaurantEntities.getNumber() : " + restaurantEntities.getNumber()); // DB로 요청한 페이지번호
-        System.out.println("restaurantEntities.getTotalPages : "  + restaurantEntities.getTotalPages()); // 전체 페이지 갯수
+        System.out.println("restaurantEntities.getTotalPages : " + restaurantEntities.getTotalPages()); // 전체 페이지 갯수
         System.out.println("restaurantEntities.getSize : " + restaurantEntities.getSize()); // 한 페이지에 보여지는 글 갯수
         System.out.println("restaurantEntities.hasPrevious : " + restaurantEntities.hasPrevious()); // 이전 페이지 존재여부
         System.out.println("restaurantEntities.isFirst : " + restaurantEntities.isFirst()); // 첫 페이지 여부
         System.out.println("restaurantEntities.isLast : " + restaurantEntities.isLast()); // 마지막 페이지 여부
-        GeoPoint userPt = new GeoPoint(127.45247758491,36.3186118269791);
+        GeoPoint userPt = new GeoPoint(127.45247758491, 36.3186118269791);
 
         Page<Restaurant> restaurants = restaurantEntities.map(restaurantEntity -> {
-                Restaurant restaurant = new Restaurant();
-                restaurant.setId(restaurantEntity.getId());
-                restaurant.setRestaurantName(restaurantEntity.getRestaurantName());
-                restaurant.setRestaurantAddress(restaurantEntity.getRestaurantAddress());
-                restaurant.setRestaurantRoadAddress(restaurantEntity.getRestaurantRoadAddress());
-                restaurant.setImgLink(restaurantEntity.getImgLink());
-                restaurant.setCategory(restaurantEntity.getCategory());
-                restaurant.setMapX(restaurantEntity.getMapX());
-                restaurant.setMapY(restaurantEntity.getMapY());
-                GeoPoint pt1= new GeoPoint(restaurant.getMapX(), restaurant.getMapY());
-                GeoPoint convert = GeoTrans.convert(GeoTrans.TM, GeoTrans.GEO, pt1);
-                restaurant.setDistance(GeoTrans.getDistancebyGeo(userPt, convert));
+            Restaurant restaurant = new Restaurant();
+            restaurant.setId(restaurantEntity.getId());
+            restaurant.setRestaurantName(restaurantEntity.getRestaurantName());
+            restaurant.setRestaurantAddress(restaurantEntity.getRestaurantAddress());
+            restaurant.setRestaurantRoadAddress(restaurantEntity.getRestaurantRoadAddress());
+            restaurant.setImgLink(restaurantEntity.getImgLink());
+            restaurant.setCategory(restaurantEntity.getCategory());
+            restaurant.setMapX(restaurantEntity.getMapX());
+            restaurant.setMapY(restaurantEntity.getMapY());
+            GeoPoint pt1 = new GeoPoint(restaurant.getMapX(), restaurant.getMapY());
+            GeoPoint convert = GeoTrans.convert(GeoTrans.TM, GeoTrans.GEO, pt1);
+            restaurant.setDistance(GeoTrans.getDistancebyGeo(userPt, convert));
             return restaurant;
         });
 
@@ -66,4 +78,54 @@ public class RestaurantServiceTest {
 
         restaurants.stream().forEach(System.out::println);
     }
+
+    @DisplayName("음식점 검색 - 음식점명이나 주소에 검색어가 포함되면 결과를 반환한다.")
+    @Test
+    void givenSearchParameter_whenSearchingRestaurants_thenRestaurantList() {
+        // Given
+        String keyword = "테스트";
+        Pageable pageable = Pageable.ofSize(10);
+
+        given(restaurantRepository.findByRestaurantNameOrAddress(keyword)).willReturn(List.of());
+
+        // When
+        Page<Restaurant> restaurantList = sut.search(keyword, pageable);
+
+        // Then
+        assertThat(restaurantList).isEmpty();
+    }
+
+
+    @DisplayName("음식점 검색 - 검색어 키워드 중 음식점이 있으면 음식점을 반환한다.")
+    @Test
+    public void givenSearchKeyword_whenSearchingParameterRestaurantsName_thenReturnsMatchingRestaurants() {
+        // Given
+        String keyword = "테스트";
+        RestaurantEntity restaurant1 = new RestaurantEntity();
+        restaurant1.setId(1L);
+        restaurant1.setRestaurantName("테스트 음식점");
+        restaurant1.setRestaurantAddress("그냥 주소");
+
+        RestaurantEntity restaurant2 = new RestaurantEntity();
+        restaurant2.setId(2L);
+        restaurant2.setRestaurantName("다른 음식점");
+        restaurant2.setRestaurantAddress("다른 주소");
+
+        RestaurantEntity restaurant3 = new RestaurantEntity();
+        restaurant3.setId(3L);
+        restaurant3.setRestaurantName("다른 음식점");
+        restaurant3.setRestaurantAddress("테스트 주소");
+
+        restaurantRepository.saveAll(List.of(restaurant1, restaurant2, restaurant3));
+        Pageable pageable = Pageable.ofSize(10);
+
+        // When
+        Page<RestaurantEntity> paging = restaurantRepository.findByRestaurantNameContaining(keyword, pageable);
+//        Page<Restaurant> result = sut.search(keyword, pageable);
+
+        // Then
+        assertEquals("테스트 음식점", paging.getContent().get(0).getRestaurantName());
+//        assertEquals(1, result.getTotalElements());
+    }
+
 }
