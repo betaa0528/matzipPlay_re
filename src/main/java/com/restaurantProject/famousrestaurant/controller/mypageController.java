@@ -3,6 +3,7 @@ package com.restaurantProject.famousrestaurant.controller;
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.entity.ReviewEntity;
 import com.restaurantProject.famousrestaurant.entity.WishListEntity;
+import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import com.restaurantProject.famousrestaurant.service.MemberService;
 import com.restaurantProject.famousrestaurant.service.MyPageService;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +22,14 @@ public class mypageController {
 
     private final MyPageService myPageService;
     private final MemberService memberService;
-
+    private final MemberRepository memberRepository;
 
 
     @GetMapping
     public String getMypage(Model model, HttpSession session) throws IOException {
         //아이디 확인
         String sessionId = (String) session.getAttribute("memberId");
-        MemberEntity member = memberService.getMember();
+        MemberEntity member = memberRepository.getByMemberId("minjoo");
 
         if (member.getMemberId() != null) {
             model.addAttribute("member", member);
