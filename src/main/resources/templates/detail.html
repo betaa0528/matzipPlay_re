@@ -124,7 +124,7 @@
             <div th:each="review : ${reviews}" class="review-content">
                 <div class="review-text-div">
                     <div class="review-text-div-userInfo">
-                        <img th:src="@{|/profile/${members.get(review.getMemberId()).getMemberProfile()}|}" class="review-text-div-img">
+                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}" class="review-text-div-img">
                         <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
                     </div>
                     <div class="review-text-content">
@@ -137,18 +137,18 @@
                         <div th:text="${review.reviewText}" class="review-text-div-reviewText"></div>
                     </div>
                 </div>
-                <div th:if="${review.fileAttached == 1}" class="review-file">
-                    <div class="review-file-div" onclick="modalStart(this)">
-                        <img th:src="@{|/review_img/${review.storedName.get(0)}|}" class="review-file-div-img" alt="">
-                        <img th:src="@{|/profile/${members.get(review.getMemberId()).getMemberProfile()}|}" style="display: none" class="hidden-review-text-div-img" alt="">
-                        <span th:text="${review.storedName.size()}" class="review-file-size"></span>
-                        <input type="hidden" th:value="${review.memberId}" class="hidden-review-memberId">
-                        <input type="hidden" th:value="${review.createdAt}" class="hidden-review-createAt">
-                        <input type="hidden" th:value="${review.reviewText}" class="hidden-review-reviewText">
-                        <input type="hidden" th:each="value : ${review.storedName}" th:value="${value}"
-                               class="stored-name">
-                    </div>
-                </div>
+<!--                <div th:if="${review.fileAttached == 1}" class="review-file">-->
+<!--                    <div class="review-file-div" onclick="modalStart(this)">-->
+<!--                        <img th:src="@{|/review_img/${review.storedName.get(0)}|}" class="review-file-div-img" alt="">-->
+<!--                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}" style="display: none" class="hidden-review-text-div-img" alt="">-->
+<!--                        <span th:text="${review.storedName.size()}" class="review-file-size"></span>-->
+<!--                        <input type="hidden" th:value="${review.memberId}" class="hidden-review-memberId">-->
+<!--                        <input type="hidden" th:value="${review.createdAt}" class="hidden-review-createAt">-->
+<!--                        <input type="hidden" th:value="${review.reviewText}" class="hidden-review-reviewText">-->
+<!--                        <input type="hidden" th:each="value : ${review.storedName}" th:value="${value}"-->
+<!--                               class="stored-name">-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div th:if="${recommend.size() != 0}" class="review-recommend-wrap">
                     <div th:each="value : ${recommend.get(review.id)}" th:text="${value}"
                          class="review-recommend-div"></div>

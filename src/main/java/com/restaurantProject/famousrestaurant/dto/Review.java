@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review {
@@ -62,5 +63,18 @@ public class Review {
             review.setStoredName(storedFileNameList);
         }
         return review;
+    }
+
+    public static Review from(ReviewEntity entity) {
+        return Review.builder()
+                .id(entity.getId())
+                .memberId(entity.getMemberId())
+                .reviewText(entity.getReviewText())
+                .fileAttached(entity.getFileAttached())
+                .createdAt(String.valueOf(entity.getCreatedAt()))
+                .restaurantId(entity.getRestaurantEntity().getId())
+                .recommendValues(entity.getRecommendValues().split(","))
+                .build();
+
     }
 }

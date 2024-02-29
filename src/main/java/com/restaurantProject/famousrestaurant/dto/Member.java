@@ -38,14 +38,14 @@ public class Member {
     public static Member toMember(MemberEntity entity) {
         Member member = new Member();
         member.setMemberId(entity.getMemberId());
-        member.setMemberNaverId(entity.getMemberNaverId());
+//        member.setMemberNaverId(entity.getMemberNaverId());
         member.setMemberPass(entity.getMemberPass());
-        member.setMemberPhoneNumber(entity.getMemberPhoneNumber());
-        member.setMemberAddress(entity.getMemberAddress());
-        member.setMemberDetailAddr("");
+//        member.setMemberPhoneNumber(entity.getMemberPhoneNumber());
+//        member.setMemberAddress(entity.getMemberAddress());
+//        member.setMemberDetailAddr("");
         member.setMemberProfile(entity.getMemberProfile());
-        member.setMapX(entity.getMapX());
-        member.setMapY(entity.getMapY());
+//        member.setMapX(entity.getMapX());
+//        member.setMapY(entity.getMapY());
 
         return member;
     }

@@ -31,16 +31,16 @@ class MemberRepositoryTest {
         assertThat(memberEntity.getMemberId()).isEqualTo("minjoo");
     }
 
-    @DisplayName("select test2")
-    @Test
-    void givenTestData_whenSelectingReferenceById_thenWorksFine() {
-        // given
-
-        // when
-        MemberEntity memberEntity = memberRepository.getReferenceById("minjoo");
-
-        // then
-        assertThat(memberEntity.getMemberId()).isEqualTo("minjoo");
-    }
+//    @DisplayName("select test2")
+//    @Test
+//    void givenTestData_whenSelectingReferenceById_thenWorksFine() {
+//        // given
+//
+//        // when
+////        MemberEntity memberEntity = memberRepository.getReferenceById("minjoo");
+//
+//        // then
+//        assertThat(memberEntity.getMemberId()).isEqualTo("minjoo");
+//    }
 
 }

@@ -26,15 +26,15 @@ public class MemberService {
 //        MemberEntity memberEntity = repository.findByMemberId((String) memberId).get();
 //        return Member.toMember(memberEntity);
 //    }
-
-    public MemberEntity getMember() {
-        return memberRepository.getReferenceById("minjoo");
-    }
+//
+//    public MemberEntity getMember() {
+//        return memberRepository.getReferenceById("minjoo");
+//    }
 
     public HashMap<String, Member> getByMemberIdList(List<Review> reviews) {
         List<Member> members = new ArrayList<>();
         for (Review review : reviews) {
-            MemberEntity memberEntity = memberRepository.getReferenceById(review.getMemberId());
+            MemberEntity memberEntity = memberRepository.getByMemberId(review.getMemberId());
             members.add(Member.toMember(memberEntity));
         }
 

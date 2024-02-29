@@ -56,14 +56,15 @@ public class Restaurant {
         this.mapY = mapY;
     }
 
-    public static Restaurant toRestaurant(RestaurantEntity restaurantEntity){
+    public static Restaurant from(RestaurantEntity restaurantEntity){
         Restaurant restaurant = new Restaurant();
         restaurant.setId(restaurantEntity.getId());
         restaurant.setRestaurantName(restaurantEntity.getRestaurantName());
         restaurant.setRestaurantAddress(restaurantEntity.getRestaurantAddress());
         restaurant.setRestaurantRoadAddress(restaurantEntity.getRestaurantRoadAddress());
         restaurant.setImgLink(restaurantEntity.getImgLink());
-        restaurant.setDistance(restaurantEntity.getDistance());
+//        restaurant.setDistance(restaurantEntity.getDistance());
+        restaurant.setDistance(1);
         restaurant.setMapX(restaurantEntity.getMapX());
         restaurant.setMapY(restaurantEntity.getMapY());
         restaurant.setCategory(restaurantEntity.getCategory());
