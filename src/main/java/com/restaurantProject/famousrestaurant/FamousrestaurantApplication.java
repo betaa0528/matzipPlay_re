@@ -12,7 +12,7 @@ public class FamousrestaurantApplication {
 		SpringApplication.run(FamousrestaurantApplication.class, args);
 	}
 
-	@Bean
-	public HiddenHttpMethodFilter hiddenHttpMethodFilter(){ return new HiddenHttpMethodFilter();}
+//	@Bean
+//	public HiddenHttpMethodFilter hiddenHttpMethodFilter(){ return new HiddenHttpMethodFilter();}
 
 }
