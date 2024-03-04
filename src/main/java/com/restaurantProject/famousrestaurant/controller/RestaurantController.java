@@ -3,6 +3,7 @@ package com.restaurantProject.famousrestaurant.controller;
 import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
 import com.restaurantProject.famousrestaurant.dto.Review;
+import com.restaurantProject.famousrestaurant.dto.security.BoardPrincipal;
 import com.restaurantProject.famousrestaurant.service.MemberService;
 import com.restaurantProject.famousrestaurant.service.RestaurantService;
 import com.restaurantProject.famousrestaurant.service.ReviewService;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +38,8 @@ public class RestaurantController {
 
 
     @GetMapping
-    public String index(HttpSession session, Model model) {
-        restaurantService.saveDistance(session);
-        model.addAttribute("session", session.getAttribute("memberId"));
+    public String index(@AuthenticationPrincipal BoardPrincipal principal, Model model) {
+        model.addAttribute("principal", principal);
         return "index";
     }
 
@@ -82,12 +83,10 @@ public class RestaurantController {
 
 
     @GetMapping("/detail/{id}")
-    public String RestaurantDetail(@PathVariable Long id, Model model, HttpSession session) {
+    public String RestaurantDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal BoardPrincipal principal) {
         Restaurant restaurant = restaurantService.findById(id); // 해당 {id} 음식점 정보를 가져옴
-        int wishListChk = 0;
-//        if (session.getAttribute("memberId") != null) {
-//            wishListChk = wishListService.wishListCheck(session.getAttribute("memberId").toString(), id);
-//        }
+        int wishListChk = wishListService.wishListCheck(principal.getUsername(), restaurant.getId());
+
         List<Review> reviews = reviewService.findByRestaurantId(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
         HashMap<Long, List<String>> recommend = reviewService.changeRecommend(reviews); // 리뷰의 추천 버튼들을 가져옴
         HashMap<String, Member> members = memberService.getByMemberIdList(reviews); //
@@ -95,7 +94,7 @@ public class RestaurantController {
         model.addAttribute("reviews", reviews);
         model.addAttribute("recommend", recommend);
         model.addAttribute("restaurant", restaurant);
-        model.addAttribute("session", session.getAttribute("memberId"));
+        model.addAttribute("principal", principal);
         model.addAttribute("members", members);
         return "detail";
     }

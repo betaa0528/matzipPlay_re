@@ -1,11 +1,14 @@
 package com.restaurantProject.famousrestaurant.controller;
 
+import com.restaurantProject.famousrestaurant.dto.security.BoardPrincipal;
 import com.restaurantProject.famousrestaurant.service.RestaurantService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 @Controller
 public class HomeController {
@@ -16,9 +19,8 @@ public class HomeController {
     }
 
     @GetMapping
-    public String index(HttpSession session, Model model) {
-//        restaurantService.saveDistance(session);
-        model.addAttribute("session", session.getAttribute("memberId"));
+    public String index(HttpSession session, Model model, @AuthenticationPrincipal BoardPrincipal principal) {
+        model.addAttribute("principal", principal);
         return "index";
     }
 }
