@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>detail</title>
@@ -11,9 +11,9 @@
 <body>
 <header>
     <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
-    <span th:if="${session.memberId==null}" class="session-chk"><a th:href="@{/login}">로그인</a></span>
-    <span th:if="${session.memberId!=null}" class="session-chk">
-        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+    <span sec:authorize="!isAuthenticated()" class="session-chk"><a th:href="@{/login}">로그인</a></span>
+    <span sec:authorize="isAuthenticated()" class="session-chk">
+        <span th:text="|${principal.getUsername()} 님 반갑습니다.!!|"></span>
             <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <nav>
@@ -84,11 +84,11 @@
         <div class="restaurant-info-box">
             <span class="restaurant-name" th:text="${restaurant.restaurantName}"></span>
             <div class="restaurant-info-box-first">
-                <div class="review-icon-box" onclick="saveReview()">
+                <div sec:authorize="isAuthenticated()" class="review-icon-box" onclick="saveReview()">
                     <img src="/img/reviewIcon.png" class="review-icon" alt=""><br>
                     <span class="review-icon-text">리뷰쓰기</span>
                 </div>
-                <div class="wish-icon-box" onclick="saveWish()">
+                <div sec:authorize="isAuthenticated()" class="wish-icon-box" onclick="saveWish()">
                     <img src="/img/wishIcon.png" class="wish-icon" alt=""><br>
                     <span class="wish-icon-text" onclick="wishKeepCss"
                           th:text="${wishListChk == 0 ? '찜하기' : '찜!!'}"></span>
@@ -124,31 +124,33 @@
             <div th:each="review : ${reviews}" class="review-content">
                 <div class="review-text-div">
                     <div class="review-text-div-userInfo">
-                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}" class="review-text-div-img">
+                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}"
+                             class="review-text-div-img">
                         <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
                     </div>
                     <div class="review-text-content">
                         <div class="date-div">
                             <div th:text="|등록일 ${review.createdAt}|" class="review-createdAt"></div>
-                            <a th:if="${session.memberId == review.memberId}"
+                            <a th:if="${principal.username == review.memberId}"
                                th:href="@{|/review/update/${review.id}|}">수정</a>
                         </div>
-                        <div th:if="${review.updatedAt != null}" th:text="|수정일 ${review.updatedAt}|" class="review-updateAt"></div>
+                        <div th:if="${review.updatedAt != null}" th:text="|수정일 ${review.updatedAt}|"
+                             class="review-updateAt"></div>
                         <div th:text="${review.reviewText}" class="review-text-div-reviewText"></div>
                     </div>
                 </div>
-<!--                <div th:if="${review.fileAttached == 1}" class="review-file">-->
-<!--                    <div class="review-file-div" onclick="modalStart(this)">-->
-<!--                        <img th:src="@{|/review_img/${review.storedName.get(0)}|}" class="review-file-div-img" alt="">-->
-<!--                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}" style="display: none" class="hidden-review-text-div-img" alt="">-->
-<!--                        <span th:text="${review.storedName.size()}" class="review-file-size"></span>-->
-<!--                        <input type="hidden" th:value="${review.memberId}" class="hidden-review-memberId">-->
-<!--                        <input type="hidden" th:value="${review.createdAt}" class="hidden-review-createAt">-->
-<!--                        <input type="hidden" th:value="${review.reviewText}" class="hidden-review-reviewText">-->
-<!--                        <input type="hidden" th:each="value : ${review.storedName}" th:value="${value}"-->
-<!--                               class="stored-name">-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div th:if="${review.fileAttached == 1}" class="review-file">-->
+                <!--                    <div class="review-file-div" onclick="modalStart(this)">-->
+                <!--                        <img th:src="@{|/review_img/${review.storedName.get(0)}|}" class="review-file-div-img" alt="">-->
+                <!--                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}" style="display: none" class="hidden-review-text-div-img" alt="">-->
+                <!--                        <span th:text="${review.storedName.size()}" class="review-file-size"></span>-->
+                <!--                        <input type="hidden" th:value="${review.memberId}" class="hidden-review-memberId">-->
+                <!--                        <input type="hidden" th:value="${review.createdAt}" class="hidden-review-createAt">-->
+                <!--                        <input type="hidden" th:value="${review.reviewText}" class="hidden-review-reviewText">-->
+                <!--                        <input type="hidden" th:each="value : ${review.storedName}" th:value="${value}"-->
+                <!--                               class="stored-name">-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <div th:if="${recommend.size() != 0}" class="review-recommend-wrap">
                     <div th:each="value : ${recommend.get(review.id)}" th:text="${value}"
                          class="review-recommend-div"></div>
@@ -197,60 +199,54 @@
     }
 
     const id = [[${restaurant.id}]];
-    const member_id = [[${session.memberId}]];
+    const member_id = [[${principal.username}]];
     const restaurant_id = [[${restaurant.id}]];
     const review_list = [[${reviews}]];
 
     // 작성한 리뷰가 있으면 리뷰쓰기 버튼이 사라짐
-    const reviewChk = () => {
-        // console.log("memberId? " + member_id);
-        if (member_id != null) {
-            // console.log(review_list);
-            const reviewIconBox = document.querySelector(".review-icon-box");
-            if (review_list.some(item => item.memberId === member_id)) {
-                reviewIconBox.style.display = "none";
-            }
-        }
-    }
-    window.addEventListener('load', reviewChk);
+    // const reviewChk = () => {
+    //     // console.log("memberId? " + member_id);
+    //     if (member_id != null) {
+    //         // console.log(review_list);
+    //         const reviewIconBox = document.querySelector(".review-icon-box");
+    //         if (review_list.some(item => item.memberId === member_id)) {
+    //             reviewIconBox.style.display = "none";
+    //         }
+    //     }
+    // }
+    // window.addEventListener('load', reviewChk);
     const saveReview = () => {
-        if (member_id == null) {
-            alert("로그인해주세요");
-        } else {
-            location.href = "/review/restaurant/" + id;
-        }
+        location.href = "/review/form/" + id;
     }
 
     const saveWish = () => {
-        if (member_id == null) {
-            alert("로그인해주세요");
-        } else {
-            $.ajax({
-                type: "post",
-                url: "/review/wishList",
-                data: {
-                    "id": id,
-                    "restaurantId": restaurant_id,
-                    "memberWishId": member_id
-                },
-                success: function (res) {
-                    console.log("성공", res);
-                    const wishIconText = document.querySelector(".wish-icon-text");
-                    const wishIcon = document.querySelector(".wish-icon");
-                    wishIconText.textContent = res === 0 ? "찜하기" : "찜!!"; // res 값 => 찜됐는지 안됐는지
-                    if (res === 1) {
-                        wishIconText.style.color = '#5fc37c';
-                        wishIcon.style.filter = 'opacity(0.5) drop-shadow(0 0 0 #7afa9f)';
-                    } else {
-                        wishIconText.style.color = `grey`;
-                        wishIcon.style.filter = 'opacity(0.5) drop-shadow(0 0 0 #707070);';
-                    }
-                },
-                error: function () {
-                    console.log("실패");
+        console.log("찜 누름")
+
+        $.ajax({
+            type: "post",
+            url: "/review/wishList",
+            data: {
+                "id": id,
+                "restaurantId": restaurant_id,
+                "memberWishId": member_id
+            },
+            success: function (res) {
+                console.log("성공", res);
+                const wishIconText = document.querySelector(".wish-icon-text");
+                const wishIcon = document.querySelector(".wish-icon");
+                wishIconText.textContent = res === 0 ? "찜하기" : "찜!!"; // res 값 => 찜됐는지 안됐는지
+                if (res === 1) {
+                    wishIconText.style.color = '#5fc37c';
+                    wishIcon.style.filter = 'opacity(0.5) drop-shadow(0 0 0 #7afa9f)';
+                } else {
+                    wishIconText.style.color = `grey`;
+                    wishIcon.style.filter = 'opacity(0.5) drop-shadow(0 0 0 #707070);';
                 }
-            })
-        }
+            },
+            error: function () {
+                console.log("실패");
+            }
+        })
 
     }
 
