@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,6 +18,7 @@ public class MemberEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "m_id")
     private Long id;
     @Column
     private String memberId;
@@ -35,5 +37,8 @@ public class MemberEntity extends BaseEntity{
     @Column
     private String mapY;
     private String role;
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    private Set<Authority> authorities;
+
 
 }
