@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {
@@ -34,6 +35,10 @@ public class Member {
     private String memberProfile;
     private String mapX;
     private String mapY;
+
+//    public static Member of() {
+//
+//    }
 
     public static Member toMember(MemberEntity entity) {
         Member member = new Member();

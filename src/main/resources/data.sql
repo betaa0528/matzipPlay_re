@@ -1,5 +1,9 @@
-insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo2', '1111','USER','https://coinpan.com/files/attach/images/308/787/664/314/edd06870864a7a37cd81139cf530d2ed.jpeg');
-insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo1', '1111','USER', 'https://mblogthumb-phinf.pstatic.net/MjAyMzAzMTJfMjQ4/MDAxNjc4NjIxMTI3MTE2.eE2smgcFqdEDV8qQppIOor8e0UBg4mCFE08FWItMPQgg.JT7SF74PUULq4P171lgCxkPB3Uyq4lsloXsd4D65fnAg.JPEG.rnsdltladl777/2.jpg?type=w800');
+insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo1', '1111','USER','https://coinpan.com/files/attach/images/308/787/664/314/edd06870864a7a37cd81139cf530d2ed.jpeg');
+insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo2', '1111','USER', 'https://mblogthumb-phinf.pstatic.net/MjAyMzAzMTJfMjQ4/MDAxNjc4NjIxMTI3MTE2.eE2smgcFqdEDV8qQppIOor8e0UBg4mCFE08FWItMPQgg.JT7SF74PUULq4P171lgCxkPB3Uyq4lsloXsd4D65fnAg.JPEG.rnsdltladl777/2.jpg?type=w800');
+
+insert into authority(`name`, `m_id`) values ('ROLE_USER', '1');
+insert into authority(`name`, `m_id`) values ('ROLE_ADMIN', '1');
+insert into authority(`name`, `m_id`) values ('ROLE_USER', '2');
 
 insert into restaurant_table(`restaurant_name`, `restaurant_address`,`restaurant_road_address`, `category`, `mapX`, `mapy`) values ('김밥을 담다', '서울특별시 구로구 구로동 81-3 스페스큐브', '서울특별시 구로구 가마산로 232, 지하1층 B111호 (구로동, 스페스큐브)', '분식', 126.88683920398901, 37.49361229284791);
 insert into restaurant_table(`restaurant_name` , `restaurant_address`, `restaurant_road_address`, `category`,`mapX`, `mapy` ) values ('마싯는음식점', '서울시 구주소', '서울시 도로명', '한식' , 38.123, 128.123);

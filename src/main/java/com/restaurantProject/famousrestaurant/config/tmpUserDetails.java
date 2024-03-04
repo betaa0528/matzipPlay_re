@@ -1,5 +1,7 @@
 package com.restaurantProject.famousrestaurant.config;
 
+import com.restaurantProject.famousrestaurant.dto.security.BoardPrincipal;
+import com.restaurantProject.famousrestaurant.entity.Authority;
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class tmpUserDetails implements UserDetailsService {
@@ -32,9 +35,18 @@ public class tmpUserDetails implements UserDetailsService {
         } else{
             userName = member.get(0).getMemberId();
             password = member.get(0).getMemberPass();
-            authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(member.get(0).getRole()));
+            authorities = getAuthorities(member.get(0).getAuthorities());
+//            authorities.add(new SimpleGrantedAuthority(member.get(0).getRole()));
         }
-        return new User(userName,password,authorities);
+         return new BoardPrincipal(userName, password, authorities);
     }
+
+    private List<GrantedAuthority> getAuthorities(Set<Authority> authorities) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for(Authority authority : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+        }
+        return grantedAuthorities;
+    }
+
 }

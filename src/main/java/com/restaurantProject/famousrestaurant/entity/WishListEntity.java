@@ -23,6 +23,7 @@ public class WishListEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "join_id")
+    @ToString.Exclude
     private RestaurantEntity restaurantEntity;
 
     public static WishListEntity toWishListEntity(WishList wishList, RestaurantEntity restaurantEntity) {

@@ -1,6 +1,8 @@
 package com.restaurantProject.famousrestaurant.controller;
 
 import com.restaurantProject.famousrestaurant.dto.*;
+import com.restaurantProject.famousrestaurant.dto.security.BoardPrincipal;
+import com.restaurantProject.famousrestaurant.entity.BaseEntity;
 import com.restaurantProject.famousrestaurant.service.RestaurantService;
 import com.restaurantProject.famousrestaurant.service.ReviewService;
 import com.restaurantProject.famousrestaurant.service.WishListService;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,28 +44,27 @@ public class ReviewController {
         return "review";
     }
 
-    @GetMapping("/restaurant/{id}")
-    public String reviewForm(@PathVariable Long id, Model model, HttpSession session) {
-        String memberId = session.getAttribute("memberId").toString();
-        Restaurant byId = restaurantService.findById(id);
-        model.addAttribute("byId", byId);
-        model.addAttribute("memberId", memberId);
-        model.addAttribute("session", session.getAttribute("memberId"));
+    @GetMapping("/form/{id}")
+    public String reviewForm(@PathVariable Long id, Model model, HttpSession session, @AuthenticationPrincipal BoardPrincipal principal) {
+        Restaurant restaurant = restaurantService.findById(id);
+        model.addAttribute("restaurant", restaurant);
+        model.addAttribute("principal", principal);
         return "reviewForm";
     }
 
-    @PostMapping("/restaurant")
-    public String reviewSave(@ModelAttribute Review review) throws IOException {
-        System.out.println(review);
+    @PostMapping("/form")
+    public String reviewSave(@ModelAttribute Review review, @AuthenticationPrincipal BoardPrincipal principal) throws IOException {
+//        System.out.println(review);
         reviewService.save(review);
         return "redirect:/restaurant/detail/" + review.getRestaurantId();
     }
 
     @PostMapping("/wishList")
-    public ResponseEntity getWishList(WishList wishList) {
+    public ResponseEntity<WishList> getWishList(WishList wishList) {
 //        System.out.println("wishList : " + wishList);
         int wishListChk = wishListService.updateWishList(wishList);
-        return new ResponseEntity<>(wishListChk, HttpStatus.OK);
+        ResponseEntity response = ResponseEntity.status(HttpStatus.OK).body("checked");
+        return response;
     }
 
     @GetMapping("/update/{id}")
