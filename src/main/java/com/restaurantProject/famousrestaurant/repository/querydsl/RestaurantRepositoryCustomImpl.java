@@ -1,15 +1,8 @@
 package com.restaurantProject.famousrestaurant.repository.querydsl;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.restaurantProject.famousrestaurant.entity.QRestaurantEntity;
 import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-//import static com.restaurantProject.famousrestaurant.entity.QRestaurantEntity.restaurantEntity;
 
 import java.util.List;
 
