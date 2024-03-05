@@ -85,12 +85,14 @@ public class RestaurantController {
     @GetMapping("/detail/{id}")
     public String RestaurantDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal BoardPrincipal principal) {
         Restaurant restaurant = restaurantService.findById(id); // 해당 {id} 음식점 정보를 가져옴
-        int wishListChk = wishListService.wishListCheck(principal.getUsername(), restaurant.getId());
-
+        if(principal != null) {
+            int wishListChk = wishListService.wishListCheck(principal.getUsername(), restaurant.getId());
+            model.addAttribute("wishListChk", wishListChk);
+        }
         List<Review> reviews = reviewService.findByRestaurantId(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
         HashMap<Long, List<String>> recommend = reviewService.changeRecommend(reviews); // 리뷰의 추천 버튼들을 가져옴
         HashMap<String, Member> members = memberService.getByMemberIdList(reviews); //
-        model.addAttribute("wishListChk", wishListChk);
+
         model.addAttribute("reviews", reviews);
         model.addAttribute("recommend", recommend);
         model.addAttribute("restaurant", restaurant);
