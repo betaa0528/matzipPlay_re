@@ -303,6 +303,15 @@ hr {
 /*    padding-bottom: 30px;*/
 /*    box-sizing: border-box;*/
 /*}*/
+.overall-div {
+    border: 1px solid red;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.overall-div .review-recommend-div:nth-child(1) {
+    border: 1px solid blue;
+}
 
 .review-file .review-text-div {
     /* review-file 클래스가 있는 경우의 스타일 */

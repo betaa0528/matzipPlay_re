@@ -120,6 +120,10 @@
             <span>작성된 리뷰가 없습니다.</span><br>
             <span>해당 식당의 첫 번째 리뷰를 작성해주시겠어요?</span>
         </div>
+        <div th:if="${overall !=null}" class="overall-div">
+            <div th:each="rec : ${overall.list}" th:text="|${overall.codeAndStr.get(rec)} : ${overall.hashMap.get(rec)}| "
+                  class="review-recommend-div"></div>
+        </div>
         <div th:if="${!reviews.isEmpty()}" class="review-present-div">
             <div th:each="review : ${reviews}" class="review-content">
                 <div class="review-text-div">
