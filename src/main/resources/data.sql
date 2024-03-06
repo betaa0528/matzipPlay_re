@@ -1,5 +1,5 @@
-insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo1', '1111','USER','https://coinpan.com/files/attach/images/308/787/664/314/edd06870864a7a37cd81139cf530d2ed.jpeg');
-insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo2', '1111','USER', 'https://mblogthumb-phinf.pstatic.net/MjAyMzAzMTJfMjQ4/MDAxNjc4NjIxMTI3MTE2.eE2smgcFqdEDV8qQppIOor8e0UBg4mCFE08FWItMPQgg.JT7SF74PUULq4P171lgCxkPB3Uyq4lsloXsd4D65fnAg.JPEG.rnsdltladl777/2.jpg?type=w800');
+insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo1', '1111','USER','https://cdn.imweb.me/thumbnail/20220508/88c0b73578141.jpeg');
+insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo2', '1111','USER', 'https://img.freepik.com/premium-photo/joker_910513-27.jpg');
 
 insert into authority(`name`, `m_id`) values ('ROLE_USER', '1');
 insert into authority(`name`, `m_id`) values ('ROLE_ADMIN', '1');
