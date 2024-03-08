@@ -6,7 +6,6 @@ import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import com.restaurantProject.famousrestaurant.repository.MemberRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,11 +16,11 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class tmpUserDetails implements UserDetailsService {
+public class matzipUserDetails implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    public tmpUserDetails(MemberRepository memberRepository) {
+    public matzipUserDetails(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
@@ -32,18 +31,17 @@ public class tmpUserDetails implements UserDetailsService {
         List<MemberEntity> member = memberRepository.findByMemberId(username);
         if (member.size() == 0) {
             throw new UsernameNotFoundException("User details not found for the user : " + username);
-        } else{
+        } else {
             userName = member.get(0).getMemberId();
             password = member.get(0).getMemberPass();
             authorities = getAuthorities(member.get(0).getAuthorities());
-//            authorities.add(new SimpleGrantedAuthority(member.get(0).getRole()));
         }
-         return new BoardPrincipal(userName, password, authorities);
+        return new BoardPrincipal(userName, password, authorities);
     }
 
     private List<GrantedAuthority> getAuthorities(Set<Authority> authorities) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for(Authority authority : authorities) {
+        for (Authority authority : authorities) {
             grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
         }
         return grantedAuthorities;

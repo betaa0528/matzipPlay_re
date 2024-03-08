@@ -28,7 +28,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests((request) -> request
                         .antMatchers("/review", "/mypage").authenticated()
                         .antMatchers("/restaurant", "/").permitAll()
-                        .antMatchers("/user").hasRole("USER")
                         .antMatchers("/admin").hasRole("ADMIN")
                         .antMatchers("/review/form").hasRole("USER")
 //                        .requestMatchers(PathRequest.toH2Console()).permitAll()

@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +39,8 @@ public class ReviewService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    private final String uploadPath = "C:/review_img/";
+
     public void save(Review review) throws IOException {
         Optional<RestaurantEntity> optionalRestaurantEntity = restaurantRepository.findById(review.getRestaurantId());
         RestaurantEntity restaurantEntity = optionalRestaurantEntity.get();
@@ -52,8 +57,8 @@ public class ReviewService {
                 String originalFileName = reviewFile.getOriginalFilename();
                 String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
 //                String savePath = realPath.realPath()+"review_img/" + storedFileName;
-//                reviewFile.transferTo(new File(savePath));
-
+                String savePath =  uploadPath + storedFileName;
+                reviewFile.transferTo(new File(savePath));
 
                 /* amazon S3 bucket 저장 */
 //                ObjectMetadata metadata = new ObjectMetadata();
@@ -63,18 +68,18 @@ public class ReviewService {
 //                amazonS3.putObject(bucket+"/review_img",storedFileName,reviewFile.getInputStream(),metadata);
 //
 //
-//                ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
-//                reviewFileRepository.save(reviewFileEntity);
+                ReviewFileEntity reviewFileEntity = ReviewFileEntity.toReviewFileEntity(reviewEntityGetId, originalFileName, storedFileName);
+                reviewFileRepository.save(reviewFileEntity);
             }
         }
     }
 
-    public List<Review> findByRestaurantId(Long restaurant_id) {
-        RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurant_id).get();
+    public List<Review> findByRestaurantId(Long restaurantId) {
+        RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId).get();
         List<ReviewEntity> reviewEntities = reviewRepository.findAllByRestaurantEntityOrderByIdDesc(restaurantEntity);
         List<Review> reviews = new ArrayList<>();
         for (ReviewEntity reviewEntity : reviewEntities) {
-            reviews.add(Review.toReview(reviewEntity, restaurant_id));
+            reviews.add(Review.toReview(reviewEntity, restaurantId));
         }
         return reviews;
     }
@@ -163,13 +168,13 @@ public class ReviewService {
         review.setRecommendValues(reviewUpdate.getRecommendValues());
 
         if (reviewUpdate.getFileList().get(0).getSize() == 0) {
-            if(review.getStoredName() != null){
+            if (review.getStoredName() != null) {
                 if (reviewUpdate.getDeleteFiles().length == review.getStoredName().size()) {
                     reviewEntity.setFileAttached(0);
                 } else {
                     reviewEntity.setFileAttached(reviewUpdate.getDeleteFiles().length);
                 }
-             }
+            }
             reviewRepository.save(ReviewEntity.toSaveEntity(review, reviewEntity));
         } else {
             ReviewEntity.toSaveFileEntity(review, reviewEntity);

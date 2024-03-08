@@ -86,7 +86,7 @@ public class RestaurantService {
         int page = pageable.getPageNumber() - 1;
         int pageLimit = 4;
         Page<RestaurantEntity> restaurantEntities =
-                restaurantRepository.findByCategory(category, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.ASC, "distance")));
+                restaurantRepository.findByCategory(category, PageRequest.of(page, pageLimit));
 
         for (RestaurantEntity restaurantEntity : restaurantEntities) {
             if (restaurantEntity.getImgLink() == null) {

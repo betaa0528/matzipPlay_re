@@ -90,7 +90,7 @@
                 </div>
                 <div sec:authorize="isAuthenticated()" class="wish-icon-box" onclick="saveWish()">
                     <img src="/img/wishIcon.png" class="wish-icon" alt=""><br>
-                    <span class="wish-icon-text" onclick="wishKeepCss"
+                    <span class="wish-icon-text" onclick="wishKeepCss()"
                           th:text="${wishListChk == 0 ? '찜하기' : '찜!!'}"></span>
                 </div>
             </div>
@@ -120,6 +120,10 @@
             <span>작성된 리뷰가 없습니다.</span><br>
             <span>해당 식당의 첫 번째 리뷰를 작성해주시겠어요?</span>
         </div>
+        <div th:if="${overall !=null}" class="overall-div">
+            <div th:each="rec : ${overall.list}" th:text="|${overall.codeAndStr.get(rec)} : ${overall.hashMap.get(rec)}| "
+                  class="review-recommend-div"></div>
+        </div>
         <div th:if="${!reviews.isEmpty()}" class="review-present-div">
             <div th:each="review : ${reviews}" class="review-content">
                 <div class="review-text-div">
@@ -131,26 +135,30 @@
                     <div class="review-text-content">
                         <div class="date-div">
                             <div th:text="|등록일 ${review.createdAt}|" class="review-createdAt"></div>
-                            <a th:if="${principal.username == review.memberId}"
-                               th:href="@{|/review/update/${review.id}|}">수정</a>
+                            <th:block sec:authorize="hasAuthority('USER')">
+                                <a th:if="${principal.username == review.memberId}"
+                                   th:href="@{|/review/update/${review.id}|}">수정</a>
+                            </th:block>
                         </div>
                         <div th:if="${review.updatedAt != null}" th:text="|수정일 ${review.updatedAt}|"
                              class="review-updateAt"></div>
                         <div th:text="${review.reviewText}" class="review-text-div-reviewText"></div>
                     </div>
                 </div>
-                <!--                <div th:if="${review.fileAttached == 1}" class="review-file">-->
-                <!--                    <div class="review-file-div" onclick="modalStart(this)">-->
-                <!--                        <img th:src="@{|/review_img/${review.storedName.get(0)}|}" class="review-file-div-img" alt="">-->
-                <!--                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}" style="display: none" class="hidden-review-text-div-img" alt="">-->
-                <!--                        <span th:text="${review.storedName.size()}" class="review-file-size"></span>-->
-                <!--                        <input type="hidden" th:value="${review.memberId}" class="hidden-review-memberId">-->
-                <!--                        <input type="hidden" th:value="${review.createdAt}" class="hidden-review-createAt">-->
-                <!--                        <input type="hidden" th:value="${review.reviewText}" class="hidden-review-reviewText">-->
-                <!--                        <input type="hidden" th:each="value : ${review.storedName}" th:value="${value}"-->
-                <!--                               class="stored-name">-->
-                <!--                    </div>-->
-                <!--                </div>-->
+                <div th:if="${review.fileAttached == 1}" class="review-file">
+                    <div class="review-file-div" onclick="modalStart(this)">
+                        <img th:src="@{|/upload/${review.storedName.get(0)}|}" class="review-file-div-img" alt="">
+                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}"
+                             style="display: none"
+                             class="hidden-review-text-div-img" alt="">
+                        <span th:text="${review.storedName.size()}" class="review-file-size"></span>
+                        <input type="hidden" th:value="${review.memberId}" class="hidden-review-memberId">
+                        <input type="hidden" th:value="${review.createdAt}" class="hidden-review-createAt">
+                        <input type="hidden" th:value="${review.reviewText}" class="hidden-review-reviewText">
+                        <input type="hidden" th:each="value : ${review.storedName}" th:value="${value}"
+                               class="stored-name">
+                    </div>
+                </div>
                 <div th:if="${recommend.size() != 0}" class="review-recommend-wrap">
                     <div th:each="value : ${recommend.get(review.id)}" th:text="${value}"
                          class="review-recommend-div"></div>
@@ -176,6 +184,7 @@
 
 </body>
 <script th:inline="javascript">
+
     const goIndex = () => {
         location.href = "/restaurant";
     }
@@ -199,7 +208,6 @@
     }
 
     const id = [[${restaurant.id}]];
-    const member_id = [[${principal.username}]];
     const restaurant_id = [[${restaurant.id}]];
     const review_list = [[${reviews}]];
 
@@ -220,6 +228,7 @@
     }
 
     const saveWish = () => {
+        const member_id = [[${principal?.username}]];
         console.log("찜 누름")
 
         $.ajax({
@@ -278,6 +287,12 @@
         section.style.height = `${resultHeight + 100}px`;
     }
 
+    function adjustReviewTextWidth() {
+        const reviewDivWidth = document.querySelector(".review-text-div");
+        reviewDivWidth.style.width = `100%`;
+    }
+
+    window.addEventListener('load', adjustReviewTextWidth);
     // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.
     window.addEventListener('load', adjustSectionHeight);
     window.addEventListener('resize', adjustSectionHeight);
@@ -342,5 +357,6 @@
     function modalDisplay(text) {
         modal.style.display = text;
     }
+
 </script>
 </html>

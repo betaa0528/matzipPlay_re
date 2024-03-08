@@ -1,20 +1,18 @@
 package com.restaurantProject.famousrestaurant.entity;
 
 import com.restaurantProject.famousrestaurant.dto.Review;
-import com.restaurantProject.famousrestaurant.dto.ReviewUpdate;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "review_table")
+@ToString
 public class ReviewEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +28,11 @@ public class ReviewEntity extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
+    @ToString.Exclude
     private RestaurantEntity restaurantEntity;
 
     @OneToMany(mappedBy = "reviewEntity" , cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<ReviewFileEntity> reviewFileEntity;
 
 
@@ -67,6 +67,11 @@ public class ReviewEntity extends BaseEntity{
             }
         }
         return stringBuilder.toString();
+//        List<String> recommends = new ArrayList<>();
+//        if(recommendValues != null) {
+//            recommends.addAll(Arrays.asList(recommendValues));
+//        }
+//        return recommends;
     }
 
     public static ReviewEntity toSaveEntity(Review review, ReviewEntity reviewEntity) {

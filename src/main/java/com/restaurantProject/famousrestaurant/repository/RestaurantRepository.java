@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.restaurantProject.famousrestaurant.entity.QRestaurantEntity;
 import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
+import com.restaurantProject.famousrestaurant.entity.ReviewEntity;
 import com.restaurantProject.famousrestaurant.repository.querydsl.RestaurantRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,10 +27,8 @@ public interface RestaurantRepository extends
 
     List<RestaurantEntity> findByCategory(String category);
 
-    Page<RestaurantEntity> findByCategory(String category, PageRequest id);
+    Page<RestaurantEntity> findByCategory(String category, Pageable pageable);
 
-    @Override
-    Optional<RestaurantEntity> findById(Long aLong);
 
     @Override
     default void customize(QuerydslBindings bindings, QRestaurantEntity root) {
@@ -38,4 +37,5 @@ public interface RestaurantRepository extends
         bindings.bind(root.restaurantName).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.restaurantAddress).first(StringExpression::containsIgnoreCase);
     }
+
 }

@@ -22,7 +22,7 @@ public class RestaurantEntity extends BaseEntity {
     private String restaurantAddress;
     @Column
     private String restaurantRoadAddress;
-    @Column
+    @Column(length = 500)
     private String imgLink;
     @Column
     private String category;

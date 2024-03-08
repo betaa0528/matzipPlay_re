@@ -6,9 +6,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    private String reviewResourcePath = "/review_img/**";
+    private String reviewResourcePath = "/upload/**";
     private String profileResourcePath = "/profile/**";
-    private String reviewSavePath = "";
+    private String reviewSavePath = "file:////C:/review_img/";
     private String profileSavePath = "";
 
 
