@@ -25,10 +25,10 @@ spring:
     init:
       mode: always # spring.sql.init.mode = always로 줘야 data.sql이 실행됨
   jpa:
-    show-sql: false # SQL 로그 출력
+    show-sql: true # SQL 로그 출력
     properties:
       hibernate:
-        format_sql: false # SQL 로그 출력
+        format_sql: true # SQL 로그 출력
     generate-ddl: true
     hibernate:
       ddl-auto: create
