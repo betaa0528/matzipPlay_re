@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" th:href="@{/css/paging.css}"/>
     <link rel="stylesheet" th:href="@{/css/font.css}"/>
 </head>
@@ -74,35 +75,126 @@
     </div>
 </nav>
 <section>
-    <div th:each="review : ${reviews}">
-        <a href="#" th:text="${review.getReviewText()}"></a>
-    </div>
-    <div class="page-div">
-        <a th:href="@{|/review|(page=1)}">First</a>
-        <!-- 이전 링크 활성화 비활성화 -->
-        <!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
-        <a th:href="${reviews.first} ? '#' : @{|/review|(page=${reviews.number})}">prev</a>
-
-        <!-- 페이지 번호 링크(현재 페이지는 숫자만)
-                for(int page=startPage; page<=endPage; page++)-->
-        <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
-            <!-- 현재페이지는 링크 없이 숫자만 -->
-            <span th:if="${page == reviews.number + 1}" th:text="${page}"></span>
-            <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
-            <span th:unless="${page == reviews.number + 1}">
-                <a th:href="@{|/review|(page=${page})}" th:text="${page}"></a>
-            </span>
-        </span>
-
-        <!-- 다음 링크 활성화 비활성화
-            사용자: 2페이지, getNumber: 1, 3페이지-->
-        <a th:href="${reviews.last} ? '#' : @{|/review|(page=${reviews.number + 2})}">next</a>
-        <!-- 마지막 페이지로 이동 -->
-        <a th:href="@{|/review|(page=${reviews.totalPages})}">Last</a>
+    <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
+    <!-- 댓글 출력 부분 -->
+    <div id="comment-list">
+        <table>
+            <tr>
+                <th>댓글번호</th>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>작성시간</th>
+            </tr>
+            <tr th:each="review : ${reviews}">
+                <td th:text="${review.id}"></td>
+                <td th:text="${review.memberId}"></td>
+                <td th:text="${review.reviewText}"></td>
+                <td th:text="${review.createdAt}"></td>
+            </tr>
+        </table>
+        <a href="#" onclick="movePage(1)" >1</a>
+        <a href="#" onclick="movePage(2)" >2</a>
+        <a href="#" onclick="movePage(3)" >3</a>
+        <a href="#" onclick="movePage(4)" >4</a>
+        <a href="#" onclick="movePage(5)" >5</a>
+<!--        <button onclick="movePage(1)">다음페이지</button>-->
     </div>
 </section>
 </body>
 <script th:inline="javascript">
+    const commentWrite = () => {
+        $.ajax({
+            type: "get",
+            url: "/review/list",
+            data: { page: 1 }, // 처음에는 첫 페이지의 리뷰를 가져옵니다.
+            success: function (res) {
+                console.log("요청성공", res);
+                renderReviews(res);
+            },
+            error: function (err) {
+                console.log("요청실패", err);
+            }
+        });
+    }
+
+    const movePage = (page) => {
+        // console.log("move : " + page);
+        // console.log(page);
+        $.ajax({
+            type: "get",
+            url: "/review/list",
+            data: { page : page + 1},
+            success: function (res) {
+                console.log("요청성공", res);
+                renderReviews(res);
+            },
+            error: function (err) {
+                console.log("요청실패", err);
+            }
+        });
+    }
+
+    const renderReviews = (res) => {
+        let output = "<table>";
+        output += "<tr><th>댓글번호</th>";
+        output += "<th>작성자</th>";
+        output += "<th>내용</th>";
+        output += "<th>작성시간</th></tr>";
+        for (let i in res.content) {
+            output += "<tr>";
+            output += "<td>" + res.content[i].id + "</td>";
+            output += "<td>" + res.content[i].memberId + "</td>";
+            output += "<td>" + res.content[i].reviewText + "</td>";
+            output += "<td>" + res.content[i].createdAt + "</td>";
+            output += "</tr>";
+        }
+        output += "</table>";
+
+        const pageInfo = res.pageable.pageNumber;
+        output += "<button onclick='movePage(" + (pageInfo + 1) + ")'>다음페이지</a>";
+        document.getElementById('comment-list').innerHTML = output;
+    }
+    // const commentWrite = () => {
+    //     $.ajax({
+    //         // 요청방식: post, 요청주소: /comment/save, 요청데이터: 작성자, 작성내용, 게시글번호
+    //         type: "get",
+    //         url: "/review/list",
+    //         success: function (res) {
+    //             console.log("요청성공", res);
+    //             let output = "<table>";
+    //             output += "<tr><th>댓글번호</th>";
+    //             output += "<th>작성자</th>";
+    //             output += "<th>내용</th>";
+    //             output += "<th>작성시간</th></tr>";
+    //             for (let i in res.content) {
+    //                 output += "<tr>";
+    //                 output += "<td>" + res.content[i].memberId + "</td>";
+    //                 // output += "<td>" + res[i].commentWriter + "</td>";
+    //                 output += "<td>" + res.content[i].reviewText + "</td>";
+    //                 output += "<td>" + res.content[i].createdAt + "</td>";
+    //                 output += "</tr>";
+    //             }
+    //             output += "</table>";
+    //
+    //             const pageInfo  = res.pageable.pageNumber;
+    //             console.log("pageInfo : " + pageInfo);
+    //             // output += "<a href='javascript:void(0);' onclick='moverPage(pageable.pageNumber + 1)'>다음페이지</a>"
+    //             output += "<button onclick='movePage(" + (pageInfo + 1) + ")'>다음페이지</button>";
+    //             document.getElementById('comment-list').innerHTML = output;
+    //             // document.getElementById('commentWriter').value = '';
+    //             // document.getElementById('commentContents').value = '';
+    //         },
+    //         error: function (err) {
+    //             console.log("요청실패", err);
+    //         }
+    //     });
+    //
+    // }
+    //
+    // const movePage = (page) => {
+    //     location.href = location.pathname + '/list?page=' + page;
+    // }
+
     const goIndex = () => {
         location.href = "/restaurant";
     }
