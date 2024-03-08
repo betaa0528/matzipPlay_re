@@ -3,11 +3,9 @@ package com.restaurantProject.famousrestaurant.controller;
 import com.restaurantProject.famousrestaurant.dto.Member;
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
 import com.restaurantProject.famousrestaurant.dto.Review;
+import com.restaurantProject.famousrestaurant.dto.ReviewSummaryDto;
 import com.restaurantProject.famousrestaurant.dto.security.BoardPrincipal;
-import com.restaurantProject.famousrestaurant.service.MemberService;
-import com.restaurantProject.famousrestaurant.service.RestaurantService;
-import com.restaurantProject.famousrestaurant.service.ReviewService;
-import com.restaurantProject.famousrestaurant.service.WishListService;
+import com.restaurantProject.famousrestaurant.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,7 +32,7 @@ public class RestaurantController {
     private final ReviewService reviewService;
     private final WishListService wishListService;
     private final MemberService memberService;
-
+    private final PaginationService paginationService;
 
 
     @GetMapping
@@ -49,55 +47,61 @@ public class RestaurantController {
             @PageableDefault(page = 1) Pageable pageable,
             Model model) {
         Page<Restaurant> restaurantList = restaurantService.search(keyword, pageable);
-        int blockLimit = 3;
-        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
-        int endPage = Math.min((startPage + blockLimit - 1), restaurantList.getTotalPages());
+        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(
+                pageable.getPageNumber(), restaurantList.getTotalPages());
+        log.info("number : " + restaurantList.getNumber());
+        log.info("page : " + pageable.getPageNumber());
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", restaurantList);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-//        model.addAttribute("session", session.getAttribute("memberId"));
-//        log.info(String.valueOf(restaurantList.get(0).getDistance()));
+        model.addAttribute("paginationBarNumbers", barNumbers);
         return "search";
     }
 
     @GetMapping("/category/{category}/paging")
     public String restaurantCategory(
-            @PageableDefault(page = 1) Pageable pageable,
-            @PathVariable(name = "category") String category, Model model, HttpSession session) {
-//        session.setAttribute("memberId", memberService.getId(1L));
-//        Member member = memberService.getByMemberId(session.getAttribute("memberId"));
-        Page<Restaurant> restaurantsList = restaurantService.categoryPaging(category, pageable);
-        int blockLimit = 3;
-        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
-        int endPage = Math.min((startPage + blockLimit - 1), restaurantsList.getTotalPages());
-//        log.info("list.first : " + restaurantsList.isFirst());
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC, page = 1)
+            Pageable pageable,
+            @PathVariable(name = "category") String category, Model model) {
+        Page<Restaurant> restaurantPage = restaurantService.categoryPaging(category, pageable);
+        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(
+                pageable.getPageNumber(), restaurantPage.getTotalPages());
+        model.addAttribute("paginationBarNumbers", barNumbers);
         model.addAttribute("category", category);
-        model.addAttribute("list", restaurantsList);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("session", session.getAttribute("memberId"));
-//        model.addAttribute("restaurantList", restaurantService.findByCategory(category));
+        model.addAttribute("list", restaurantPage);
         return "paging";
     }
 
 
     @GetMapping("/detail/{id}")
-    public String RestaurantDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal BoardPrincipal principal) {
+    public String RestaurantDetail(
+            @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @PathVariable Long id,
+            @AuthenticationPrincipal BoardPrincipal principal
+            , Model model) {
         Restaurant restaurant = restaurantService.findById(id); // 해당 {id} 음식점 정보를 가져옴
-        if(principal != null) {
+        if (principal != null) {
             int wishListChk = wishListService.wishListCheck(principal.getUsername(), restaurant.getId());
             model.addAttribute("wishListChk", wishListChk);
         }
-        List<Review> reviews = reviewService.findByRestaurantId(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
+        Page<Review> reviewPages = reviewService.findByRestaurantId(id, pageable); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
+        List<Review> reviews = reviewService.findByRestaurantIdList(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
         HashMap<Long, List<String>> recommend = reviewService.changeRecommend(reviews); // 리뷰의 추천 버튼들을 가져옴
         HashMap<String, Member> members = memberService.getByMemberIdList(reviews); //
-
-        model.addAttribute("reviews", reviews);
+        if (!reviews.isEmpty()) {
+            ReviewSummaryDto overallRecommend = reviewService.getOverallRecommend(reviews);
+            model.addAttribute("overall", overallRecommend);
+        }
+        int blockLimit = 3;
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
+        int endPage = Math.min((startPage + blockLimit - 1), reviewPages.getTotalPages());
+        model.addAttribute("reviews", reviewPages);
         model.addAttribute("recommend", recommend);
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("principal", principal);
         model.addAttribute("members", members);
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "detail";
     }
 
