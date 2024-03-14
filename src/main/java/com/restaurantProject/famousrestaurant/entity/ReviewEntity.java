@@ -19,7 +19,7 @@ public class ReviewEntity extends BaseEntity{
     private Long id;
     @Column
     private String memberId;
-    @Column(length = 255)
+    @Column(length = 500)
     private String reviewText;
     @Column
     private int fileAttached; // 1 or 0
