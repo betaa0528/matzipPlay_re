@@ -13,7 +13,7 @@
     <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
     <span sec:authorize="!isAuthenticated()" class="session-chk"><a th:href="@{/login}">로그인</a></span>
     <span sec:authorize="isAuthenticated()" class="session-chk">
-        <span th:text="|${principal.getUsername()} 님 반갑습니다.!!|"></span>
+        <span th:text="|${principal.username} 님 반갑습니다.!!|"></span>
             <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <nav>
@@ -109,21 +109,22 @@
                 </tr>
                 <tr>
                     <td>리뷰 수</td>
-                    <td th:text="${reviews.stream().count()}"></td>
+                    <td th:text="${reviews.getTotalElements()}"></td>
                 </tr>
             </table>
         </div>
     </div>
     <hr/>
-    <div class="review-div">
+    <div th:if="${overall != null}" class="overall-div">
+        <div th:each="rec : ${overall.list}" th:text="|${overall.codeAndStr.get(rec)} : ${overall.hashMap.get(rec)}| "
+             class="review-recommend-div"></div>
+    </div>
+    <div id="review-div" class="review-div">
         <div th:if="${reviews.isEmpty()}" class="review-empty-div">
             <span>작성된 리뷰가 없습니다.</span><br>
             <span>해당 식당의 첫 번째 리뷰를 작성해주시겠어요?</span>
         </div>
-        <div th:if="${overall !=null}" class="overall-div">
-            <div th:each="rec : ${overall.list}" th:text="|${overall.codeAndStr.get(rec)} : ${overall.hashMap.get(rec)}| "
-                  class="review-recommend-div"></div>
-        </div>
+
         <div th:if="${!reviews.isEmpty()}" class="review-present-div">
             <div th:each="review : ${reviews}" class="review-content">
                 <div class="review-text-div">
@@ -135,8 +136,8 @@
                     <div class="review-text-content">
                         <div class="date-div">
                             <div th:text="|등록일 ${review.createdAt}|" class="review-createdAt"></div>
-                            <th:block sec:authorize="hasAuthority('USER')">
-                                <a th:if="${principal.username == review.memberId}"
+                            <th:block sec:authorize="hasAuthority('ROLE_USER')">
+                                <a th:if="${principal.getUsername() == review.memberId}"
                                    th:href="@{|/review/update/${review.id}|}">수정</a>
                             </th:block>
                         </div>
@@ -164,6 +165,16 @@
                          class="review-recommend-div"></div>
                 </div>
             </div>
+        </div>
+        <div class="page-div" th:if="${paginationBarNumbers.size() > 1}">
+            <a href="javascript:void(0);" th:onclick="movePage([[${reviews.number}]])">prev</a>
+            <span th:each="pageNumber: ${paginationBarNumbers}">
+                <span th:if="${pageNumber == reviews.number + 1}" th:text="${pageNumber}"></span>
+                <span th:unless="${pageNumber == reviews.number + 1}">
+                    <a href="javascript:void(0);" th:onclick="movePage([[${pageNumber}]])" th:text="${pageNumber}"></a>
+                </span>
+            </span>
+            <a href="javascript:void(0);" th:onclick="movePage([[${reviews.number + 2}]])">next</a>
         </div>
     </div>
 
@@ -284,12 +295,33 @@
         const reviewDivHeight = reviewDiv.clientHeight;
         const infoWrapHeight = infoWrap.clientHeight;
         const resultHeight = reviewDivHeight + infoWrapHeight;
-        section.style.height = `${resultHeight + 100}px`;
+        section.style.height = `${resultHeight + 300}px`;
     }
 
     function adjustReviewTextWidth() {
         const reviewDivWidth = document.querySelector(".review-text-div");
         reviewDivWidth.style.width = `100%`;
+    }
+
+    const movePage = (page) => {
+        $.ajax({
+            type: "get",
+            url: "/review/list",
+            data: {page: page - 1, "id" : id},
+            success: function (res) {
+                console.log("요청성공", res);
+                $('#review-div').replaceWith(res);
+                var targetElement = document.getElementsByClassName("page-div");
+                if(targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                console.log("작동");
+                // renderPage(res.page, res.list, res.page.number);
+            },
+            error: function (err) {
+                console.log("요청실패", err);
+            }
+        });
     }
 
     window.addEventListener('load', adjustReviewTextWidth);

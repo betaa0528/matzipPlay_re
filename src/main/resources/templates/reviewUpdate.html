@@ -113,7 +113,7 @@
                         <button type="button" class="attached-file-imgs-delete" onclick="imgDelete(this)"
                                 th:value="${image}">x
                         </button>
-                        <img class="attached-file-imgs" th:src="@{|/review_img/${image}|}" th:alt="${image}">
+                        <img class="attached-file-imgs" th:src="@{|/upload/${image}|}" th:alt="${image}">
                     </div>
                 </td>
                 <input type="hidden" name="deleteFiles" class="deleteFiles">
@@ -165,7 +165,7 @@
     // 버튼 스타일 토글 함수
     const toggleButtonStyle = (button) => {
         if (buttonStates[button.textContent] === 'active') {
-            console.log("해제 : " + button.value);
+            // console.log("해제 : " + button.value);
             // 버튼이 이미 활성 상태인 경우, 비활성 상태로 변경
             button.classList.remove('active');
             buttonStates[button.textContent] = 'inactive';
@@ -175,7 +175,7 @@
             button.classList.add('active');
             buttonStates[button.textContent] = 'active';
         }
-        console.log(buttonStates);
+        // console.log(buttonStates);
     }
 
     // textarea 요소와 글자 수를 표시할 요소를 가져옵니다.
@@ -190,20 +190,22 @@
     textArea.addEventListener('input', () => {
         // textarea에 입력된 글자 수를 세어 charCount 요소에 업데이트합니다.
         charCount.textContent = textArea.value.length;
-        if (textArea.value.length > 255) {
-            alert("255자 이내로 작성해주세요");
-            textArea.value = textArea.value.substring(0, 254); // 255자까지만 허용
+        if (textArea.value.length > 500) {
+            alert("500자 이내로 작성해주세요");
+            textArea.value = textArea.value.substring(0, 499); // 255자까지만 허용
         }
     });
 
     const reviewId = [[${review.id}]];
     const deleteList = [];
     const imgDelete = (imgName) => {
-        deleteList.push(imgName.value);
+        deleteList.push(commaReplace(imgName.value));
         imgName.parentNode.style.display = 'none';
     }
 
-
+    const commaReplace = (imgName) => {
+        return imgName.replace(/,/g , ';');
+    }
 
     const reviewUpdate = () => {
         let fileSize = document.querySelector("#file-btn");
@@ -228,14 +230,14 @@
             // 선택된 버튼들의 값을 가져옴
             const selectedButtons = document.querySelectorAll('.review-recommend-btn.active');
             const selectedValues = Array.from(selectedButtons).map(button => button.value);
-            console.log(selectedValues);
-            console.log(deleteList);
+            // console.log(selectedValues);
+            // console.log(deleteList);
             // 선택된 버튼 값을 hidden input에 설정
             const recommendValuesInput = document.getElementById('recommendValues');
             const deleteFilesInput = document.querySelector('.deleteFiles');
             recommendValuesInput.value = selectedValues.join(',');
-            deleteFilesInput.value = deleteList.join(',');
-
+            deleteFilesInput.value = deleteList;
+            console.log(deleteFilesInput.value);
             document.reviewUpdateForm.submit();
         }
     }
