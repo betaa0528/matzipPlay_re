@@ -9,6 +9,7 @@ import com.restaurantProject.famousrestaurant.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -74,7 +75,6 @@ public class RestaurantController {
 
     @GetMapping("/detail/{id}")
     public String RestaurantDetail(
-            @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @PathVariable Long id,
             @AuthenticationPrincipal BoardPrincipal principal
             , Model model) {
@@ -83,25 +83,20 @@ public class RestaurantController {
             int wishListChk = wishListService.wishListCheck(principal.getUsername(), restaurant.getId());
             model.addAttribute("wishListChk", wishListChk);
         }
-        Page<Review> reviewPages = reviewService.findByRestaurantId(id, pageable); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
-        List<Review> reviews = reviewService.findByRestaurantIdList(id); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
-        HashMap<Long, List<String>> recommend = reviewService.changeRecommend(reviews); // 리뷰의 추천 버튼들을 가져옴
-        HashMap<String, Member> members = memberService.getByMemberIdList(reviews); //
-        if (!reviews.isEmpty()) {
-            ReviewSummaryDto overallRecommend = reviewService.getOverallRecommend(reviews);
+        Page<Review> reviewPages = reviewService.findByRestaurantId(id, PageRequest.of(0,4, Sort.by(Sort.Direction.DESC,"id"))); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
+        HashMap<Long, List<String>> recommend = reviewService.changeRecommend(id); // 리뷰의 추천 버튼들을 가져옴
+        HashMap<String, Member> members = memberService.getByMemberIdList(id);
+        if (!recommend.isEmpty()) {
+            ReviewSummaryDto overallRecommend = reviewService.getOverallRecommend(id);
             model.addAttribute("overall", overallRecommend);
         }
-        int blockLimit = 3;
-        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
-        int endPage = Math.min((startPage + blockLimit - 1), reviewPages.getTotalPages());
+        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(0, reviewPages.getTotalPages());
         model.addAttribute("reviews", reviewPages);
         model.addAttribute("recommend", recommend);
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("principal", principal);
         model.addAttribute("members", members);
-
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
+        model.addAttribute("paginationBarNumbers", barNumbers);
         return "detail";
     }
 

@@ -2,11 +2,7 @@ package com.restaurantProject.famousrestaurant.controller;
 
 import com.restaurantProject.famousrestaurant.dto.*;
 import com.restaurantProject.famousrestaurant.dto.security.BoardPrincipal;
-import com.restaurantProject.famousrestaurant.entity.BaseEntity;
-import com.restaurantProject.famousrestaurant.service.PaginationService;
-import com.restaurantProject.famousrestaurant.service.RestaurantService;
-import com.restaurantProject.famousrestaurant.service.ReviewService;
-import com.restaurantProject.famousrestaurant.service.WishListService;
+import com.restaurantProject.famousrestaurant.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -35,40 +32,30 @@ public class ReviewController {
     private final RestaurantService restaurantService;
     private final WishListService wishListService;
     private final PaginationService paginationService;
-
-    @GetMapping
-    public String reviewPage(Model model) {
-        Page<Review> reviews = reviewService.findAll(PageRequest.of(1, 10, Sort.by(Sort.Order.desc("createdAt"))));
-        model.addAttribute("reviews", reviews);
-        return "review";
-    }
+    private final MemberService memberService;
 
     @GetMapping("/list")
-    public ResponseEntity review(
-            @PageableDefault(page = 1, sort = "createdAt" , direction = Sort.Direction.DESC) Pageable pageable
-//            @RequestParam("page") int page
+    public String review(
+            @PageableDefault(page = 1, size = 4, sort = "id" , direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal BoardPrincipal principal,
+            @RequestParam("id") Long id,
+            Model model
     ) {
-//        Page<Review> reviews;
-//        System.out.println("page : " + page);
-//        if(page > 0) {
-//            reviews = reviewService.findAllMove(pageable, page);
-//        } else {
-//            reviews = reviewService.findAll(pageable);
-//        }
-        Page<Review> reviews = reviewService.findAll(pageable);
-        if(reviews != null) {
-            return new ResponseEntity<>(reviews, HttpStatus.OK);
+        Page<Review> reviewPages = reviewService.findByRestaurantId(id, pageable); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
+        HashMap<Long, List<String>> recommend = reviewService.changeRecommend(id); // 리뷰의 추천 버튼들을 가져옴
+        HashMap<String, Member> members = memberService.getByMemberIdList(id);
+        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber() + 1, reviewPages.getTotalPages());
+        model.addAttribute("reviews", reviewPages);
+        model.addAttribute("recommend", recommend);
+        model.addAttribute("members", members);
+        model.addAttribute("principal", principal);
+        model.addAttribute("paginationBarNumbers", barNumbers);
+        if(reviewPages != null) {
+            return "detail :: #review-div";
         } else {
-            return new ResponseEntity<>("리뷰가 엄써용", HttpStatus.NOT_FOUND);
+            return "리뷰없ㅇ므 ㅜㅜ";
         }
-//        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), reviews.getTotalPages());
-//        log.info("number : " + reviews.getNumber());
-//        log.info("page : " + pageable.getPageNumber());
-//        model.addAttribute("reviews", reviews);
-//        model.addAttribute("pageBarNumbers", barNumbers);
-//        return "review";
     }
-
     @GetMapping("/form/{id}")
     public String reviewForm(@PathVariable Long id, Model model, HttpSession session, @AuthenticationPrincipal BoardPrincipal principal) {
         Restaurant restaurant = restaurantService.findById(id);
@@ -79,14 +66,12 @@ public class ReviewController {
 
     @PostMapping("/form")
     public String reviewSave(@ModelAttribute Review review, @AuthenticationPrincipal BoardPrincipal principal) throws IOException {
-//        System.out.println(review);
         reviewService.save(review);
         return "redirect:/restaurant/detail/" + review.getRestaurantId();
     }
 
     @PostMapping("/wishList")
     public ResponseEntity<WishList> getWishList(WishList wishList) {
-//        System.out.println("wishList : " + wishList);
         int wishListChk = wishListService.updateWishList(wishList);
         ResponseEntity response = ResponseEntity.status(HttpStatus.OK).body("checked");
         return response;
@@ -103,7 +88,6 @@ public class ReviewController {
 
     @PostMapping("/update")
     public String reviewUpdate(@ModelAttribute ReviewUpdate reviewUpdate) throws IOException {
-//        System.out.println("reviewController reviewUpdate post : " + reviewUpdate);
         reviewService.update(reviewUpdate);
 
         return "redirect:/restaurant/detail/" + reviewUpdate.getRestaurantId();

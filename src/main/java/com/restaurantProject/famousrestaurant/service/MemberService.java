@@ -16,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ReviewService reviewService;
 
     public String getId(long l) {
         Optional<MemberEntity> memberEntity = memberRepository.findById(l);
@@ -31,7 +32,8 @@ public class MemberService {
 //        return memberRepository.getReferenceById("minjoo");
 //    }
 
-    public HashMap<String, Member> getByMemberIdList(List<Review> reviews) {
+    public HashMap<String, Member> getByMemberIdList(Long restId) {
+        List<Review> reviews = reviewService.findByRestaurantIdList(restId);
         List<Member> members = new ArrayList<>();
         for (Review review : reviews) {
             MemberEntity memberEntity = memberRepository.getByMemberId(review.getMemberId());

@@ -291,18 +291,11 @@ hr {
     font-weight: bold;
 }
 
-/*.review-file-size:hover{*/
-/*    cursor: pointer;*/
-/*}*/
+.review-file-size:hover{
+    cursor: pointer;
+}
 
-/*.review-text-div {*/
-/*    !*border: 1px solid black;*!*/
-/*    width: 70%;*/
-/*    display: flex;*/
-/*    padding-top: 30px;*/
-/*    padding-bottom: 30px;*/
-/*    box-sizing: border-box;*/
-/*}*/
+
 .overall-div {
     border: 1px solid red;
     display: flex;
@@ -313,8 +306,7 @@ hr {
     border: 1px solid blue;
 }
 
-.review-file .review-text-div {
-    /* review-file 클래스가 있는 경우의 스타일 */
+.review-text-div {
     border: 1px solid red;
     width: 70%;
     display: flex;
@@ -323,14 +315,6 @@ hr {
     box-sizing: border-box;
 }
 
-.review-text-div{
-    /*border: 1px solid black;*/
-    width: 100%;
-    display: flex;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    box-sizing: border-box;
-}
 
 .review-text-div-userInfo {
     width: 20%;

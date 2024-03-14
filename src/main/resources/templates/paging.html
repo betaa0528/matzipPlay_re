@@ -70,13 +70,13 @@
 <section>
     <div class="restaurant-wrap">
         <div th:each="restaurant : ${list}" class="restaurant-div">
-            <a th:href="@{|/restaurant/detail/${restaurant.id}|(page=${list.number + 1})}">
+            <a th:href="@{|/restaurant/detail/${restaurant.id}|}">
                 <div class="restaurant-div-imgBOX">
                     <img th:src="${restaurant.imgLink}" alt="" class="restaurant-div-img">
                 </div>
             </a>
             <div class="restaurant-div-textBOX">
-                <a th:href="@{|/restaurant/detail/${restaurant.id}|(page=${list.number + 1})}" th:text="${restaurant.restaurantName}"></a>
+                <a th:href="@{|/restaurant/detail/${restaurant.id}|}" th:text="${restaurant.restaurantName}"></a>
                 <span th:text="${restaurant.restaurantRoadAddress}"></span><br>
                 <span th:text="${restaurant.category}"></span> / <span th:text="${restaurant.distance} + km"></span>
             </div>

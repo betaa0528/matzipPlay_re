@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -72,6 +73,7 @@ public class Review {
                 .reviewText(entity.getReviewText())
                 .fileAttached(entity.getFileAttached())
                 .createdAt(String.valueOf(entity.getCreatedAt()))
+                .storedName(entity.getReviewFileEntity().stream().map(ReviewFileEntity::getStoredName).collect(Collectors.toList()))
                 .restaurantId(entity.getRestaurantEntity().getId())
                 .recommendValues(entity.getRecommendValues().split(","))
                 .build();
