@@ -1,5 +1,5 @@
-insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo1', '1111','USER','https://cdn.imweb.me/thumbnail/20220508/88c0b73578141.jpeg');
-insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo2', '1111','USER', 'https://img.freepik.com/premium-photo/joker_910513-27.jpg');
+insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo1', '1111','USER','carrot.png');
+insert into member_table (`member_id`, `member_pass`,`role`,`member_profile`) values ('minjoo2', '1111','USER', 'watermelon.png');
 
 insert into authority(`name`, `m_id`) values ('ROLE_USER', '1');
 insert into authority(`name`, `m_id`) values ('ROLE_ADMIN', '1');
@@ -2779,3 +2779,8 @@ insert into review_table (member_id, review_text, file_attached, restaurant_id, 
 insert into review_table (member_id, review_text, file_attached, restaurant_id, created_at, recommend_values) values ('minjoo2', 'vivamus vel nulla eget eros elementum pellentesque quisque porta volutpat erat', 0, 17, '2023-06-20 21:57:01', '2,8,9');
 insert into review_table (member_id, review_text, file_attached, restaurant_id, created_at, recommend_values) values ('minjoo1', 'congue vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci', 0, 17, '2024-02-09 00:58:02', '3,5,10');
 insert into review_table (member_id, review_text, file_attached, restaurant_id, created_at, recommend_values) values ('minjoo2', 'scelerisque mauris sit amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis egestas metus aenean fermentum', 0, 17, '2023-06-08 02:29:46', '3,5,11');
+
+insert into wishlist_table (member_wish_id, restaurant_id) values ('minjoo1', 1);
+insert into wishlist_table (member_wish_id, restaurant_id) values ('minjoo1', 2);
+insert into wishlist_table (member_wish_id, restaurant_id) values ('minjoo1', 3);
+insert into wishlist_table (member_wish_id, restaurant_id) values ('minjoo1', 4);

@@ -9,7 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
     private String reviewResourcePath = "/upload/**";
     private String profileResourcePath = "/profile/**";
     private String reviewSavePath = "file:////C:/review_img/";
-    private String profileSavePath = "";
+    private String profileSavePath = "file:////C:/profile/";
 
 
     @Override

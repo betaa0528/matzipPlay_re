@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/css/mypage.css}">
-    <script src="/js/mypage.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="/js/mypage.js" th:inline="javascript"></script>
     <title>맛집플레이</title>
 </head>
 <body>
@@ -10,7 +12,7 @@
 <div id="wrap">
     <div id="profile">
         <div id="profileImgWrap">
-            <img id="openModalBtn" width="250px" th:src="@{|/profile/${member.getMemberProfile()}|}">
+            <img id="openModalBtn" th:src="@{|/profile/${member.getMemberProfile()}|}">
             <svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M149.1 64.8L138.7 96H64C28.7 96 0 124.7 0 160V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H373.3L362.9 64.8C356.4 45.2 338.1 32 317.4 32H194.6c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/></svg>
         </div>
         <div id="profileText">
@@ -33,12 +35,13 @@
     <div id="reviewANDwish">
         <!--      리뷰 목록      -->
         <div id="reviewContainer">
-            <div id="reviewWrap" th:each="items: ${reviewList}">
+            <div id="reviewWrap" th:each="review: ${reviews}">
                 <div id="reviewInfo">
-                    <span id="reviewRes" th:text="${items.restaurantEntity.getRestaurantName()}"></span>
-                    <span th:text="${#temporals.format(items.getCreatedAt(), 'yyyy-MM-dd')}"></span>
-                    <p id="reviewDetails" th:text="${items.getReviewText()}"></p>
-                    <input type="hidden" name="id" th:value="${items.getId()}">
+                    <a th:href="@{|/restaurant/detail/${review.restaurantId}|}" id="reviewRes"
+                       th:text="${review.getRestaurantName()}"></a>
+                    <span th:text="${review.getCreatedAt()}"></span>
+                    <p id="reviewDetails" th:text="${review.getReviewText()}"></p>
+                    <input type="hidden" name="id" th:value="${review.getId()}">
                     <button class="reviewDelete" type="button">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512">
                             <style> #reviewInfo svg {
@@ -49,8 +52,8 @@
                     </button>
                 </div>
                 <div id="reviewImgWrap">
-                    <div id="reviewImg" th:each="items2: ${items.getReviewFileEntity()}">
-                        <img width="150px" height="150px" th:src="@{|/review_img/${items2.getStoredName()}|}">
+                    <div id="reviewImg" th:each="imgName: ${review.getStoredName()}">
+                        <img width="150px" height="150px" th:src="@{|/upload/${imgName}|}">
                     </div>
                 </div>
             </div>
@@ -60,10 +63,10 @@
             <div id="wishWrap" th:each="item, itemStat : ${wishList}">
                 <img th:src="${image[itemStat.index]}" width="150px" height="150px">
                 <div id="wishInfo">
-                    <a th:href="@{|/restaurant/detail/${item.restaurantEntity.id}|}" id="wishResName"
-                       th:text="${item.restaurantEntity.getRestaurantName()}"></a>
-                    <span id="category" th:text="${item.restaurantEntity.getCategory()}"></span><br>
-                    <span id="address" th:text="${item.restaurantEntity.getRestaurantAddress()}"></span>
+                    <a th:href="@{|/restaurant/detail/${item.restaurantId}|}" id="wishResName"
+                       th:text="${item.getRestaurantName()}"></a>
+                    <span id="category" th:text="${item.getCategory()}"></span><br>
+                    <span id="address" th:text="${item.getAddress()}"></span>
                     <input type="hidden" name="id" th:value="${item.id}">
                     <button class="wishDelete" type="button">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512">

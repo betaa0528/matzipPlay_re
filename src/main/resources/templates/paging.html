@@ -11,7 +11,7 @@
     <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
     <span sec:authorize="!isAuthenticated()" class="session-chk"><a th:href="@{/login}">로그인</a></span>
     <span sec:authorize="isAuthenticated()" class="session-chk">
-        <span th:text="|${session.memberId} 님 반갑습니다.!!|"></span>
+        <span th:text="|${principal.memberId} 님 반갑습니다.!!|"></span>
             <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <nav>

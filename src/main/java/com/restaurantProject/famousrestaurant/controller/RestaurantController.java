@@ -83,7 +83,7 @@ public class RestaurantController {
             int wishListChk = wishListService.wishListCheck(principal.getUsername(), restaurant.getId());
             model.addAttribute("wishListChk", wishListChk);
         }
-        Page<Review> reviewPages = reviewService.findByRestaurantId(id, PageRequest.of(0,4, Sort.by(Sort.Direction.DESC,"id"))); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
+        Page<Review> reviewPages = reviewService.findByRestaurantId(id, PageRequest.of(0,4, Sort.by(Sort.Direction.DESC,"createdAt"))); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
         HashMap<Long, List<String>> recommend = reviewService.changeRecommend(id); // 리뷰의 추천 버튼들을 가져옴
         HashMap<String, Member> members = memberService.getByMemberIdList(id);
         if (!recommend.isEmpty()) {

@@ -43,8 +43,8 @@ body {
 
 #profileImgWrap{
     position: relative;
-    width: 250px;
-    height: 250px;
+    width: 30%;
+    height: 100%;
     display:flex;
     justify-content:center;
 }
@@ -185,11 +185,17 @@ body {
     color: #5fc37c;
     font-size: 26px;
     font-weight: bold;
+    text-decoration-line: none;
 }
 
 #reviewDetails {
     font-size: 18px;
     margin-top: 1%;
+}
+
+.page-div{
+    width: fit-content;
+    margin: 5px auto;
 }
 
 .modal {
