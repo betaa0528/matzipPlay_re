@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/review")
+@RequestMapping("/reviews")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -34,7 +34,7 @@ public class ReviewController {
     private final PaginationService paginationService;
     private final MemberService memberService;
 
-    @GetMapping("/list")
+    @GetMapping
     public String review(
             @PageableDefault(page = 1, size = 4, sort = "createdAt" , direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal BoardPrincipal principal,
@@ -53,7 +53,7 @@ public class ReviewController {
         return "detail :: #review-div";
     }
 
-    @GetMapping("/form/{id}")
+    @GetMapping("/create/{id}")
     public String reviewForm(@PathVariable Long id, Model model, HttpSession session, @AuthenticationPrincipal BoardPrincipal principal) {
         Restaurant restaurant = restaurantService.findById(id);
         model.addAttribute("restaurant", restaurant);
@@ -61,13 +61,13 @@ public class ReviewController {
         return "reviewForm";
     }
 
-    @PostMapping("/form")
+    @PostMapping("/create")
     public String reviewSave(@ModelAttribute Review review, @AuthenticationPrincipal BoardPrincipal principal) throws IOException {
         reviewService.save(review);
-        return "redirect:/restaurant/detail/" + review.getRestaurantId();
+        return "redirect:/restaurant/" + review.getRestaurantId();
     }
 
-    @PostMapping("/wishList")
+    @PostMapping("/wishlist")
     public ResponseEntity<WishList> getWishList(WishList wishList) {
         int wishListChk = wishListService.updateWishList(wishList);
         ResponseEntity response = ResponseEntity.status(HttpStatus.OK).body("checked");
@@ -87,7 +87,7 @@ public class ReviewController {
     public String reviewUpdate(@ModelAttribute ReviewUpdate reviewUpdate) throws IOException {
         reviewService.update(reviewUpdate);
 
-        return "redirect:/restaurant/detail/" + reviewUpdate.getRestaurantId();
+        return "redirect:/restaurant/" + reviewUpdate.getRestaurantId();
     }
 
 }

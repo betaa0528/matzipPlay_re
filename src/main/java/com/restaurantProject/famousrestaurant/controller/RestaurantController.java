@@ -58,14 +58,16 @@ public class RestaurantController {
         return "search";
     }
 
-    @GetMapping("/category/{category}/paging")
+    @GetMapping("/category/{category}")
     public String restaurantCategory(
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC, page = 1)
             Pageable pageable,
-            @PathVariable(name = "category") String category, Model model) {
+            @PathVariable(name = "category") String category, Model model,
+            @AuthenticationPrincipal BoardPrincipal principal) {
         Page<Restaurant> restaurantPage = restaurantService.categoryPaging(category, pageable);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(
                 pageable.getPageNumber(), restaurantPage.getTotalPages());
+        model.addAttribute("principal", principal);
         model.addAttribute("paginationBarNumbers", barNumbers);
         model.addAttribute("category", category);
         model.addAttribute("list", restaurantPage);
@@ -73,7 +75,7 @@ public class RestaurantController {
     }
 
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}")
     public String RestaurantDetail(
             @PathVariable Long id,
             @AuthenticationPrincipal BoardPrincipal principal
