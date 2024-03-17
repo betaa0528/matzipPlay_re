@@ -15,7 +15,7 @@
             <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <section>
-    <form action="/review/form" name="reviewForm" class="reviewForm" method="post" enctype="multipart/form-data">
+    <form action="/reviews/create" name="reviewForm" class="reviewForm" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td><input type="hidden" name="restaurantId" th:value="${restaurant.id}"></td>
@@ -196,7 +196,7 @@
 
     //취소버튼시 음식점 소개화면으로 되돌아감
     const reviewCancel = () => {
-        location.href = `/restaurant/detail/${id}`;
+        location.href = `/restaurant/${id}`;
     }
 
     // 리뷰 작성화면 높이조절하기 위함
