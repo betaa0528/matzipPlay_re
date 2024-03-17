@@ -14,5 +14,6 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
     List<ReviewEntity> findByMemberId(String memberId);
     Page<ReviewEntity> findAllByRestaurantEntityOrderByIdDesc(RestaurantEntity entity, Pageable pageable);
+    List<ReviewEntity> findAllByMemberId(String memberId);
     List<ReviewEntity> findAllByRestaurantEntity(RestaurantEntity restaurantEntity);
 }

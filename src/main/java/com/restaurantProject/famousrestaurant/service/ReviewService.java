@@ -1,8 +1,6 @@
 package com.restaurantProject.famousrestaurant.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.restaurantProject.famousrestaurant.dto.Restaurant;
 import com.restaurantProject.famousrestaurant.dto.Review;
 import com.restaurantProject.famousrestaurant.dto.ReviewSummaryDto;
 import com.restaurantProject.famousrestaurant.dto.ReviewUpdate;
@@ -24,10 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -301,4 +296,5 @@ public class ReviewService {
 
         return list;
     }
+
 }
