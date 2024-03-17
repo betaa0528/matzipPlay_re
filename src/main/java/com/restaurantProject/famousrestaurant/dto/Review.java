@@ -22,6 +22,7 @@ public class Review {
     private String createdAt;
     private String updatedAt;
     private Long restaurantId;
+    private String restaurantName;
     private List<MultipartFile> fileList; // 파일 담는 용도
     private List<String> originalName; // 원본 파일 이름
     private List<String> storedName; // 서버 저장 파일이름
@@ -46,6 +47,7 @@ public class Review {
         }
 //        review.setCreatedAt(reviewEntity.getCreatedAt());
         review.setRestaurantId(restaurantId);
+        review.setRestaurantName(reviewEntity.getRestaurantEntity().getRestaurantName());
         review.setRecommendValues(reviewEntity.getRecommendValues().split(","));
         if(reviewEntity.getFileAttached() == 0){
             review.setFileAttached(reviewEntity.getFileAttached());
@@ -75,6 +77,7 @@ public class Review {
                 .createdAt(String.valueOf(entity.getCreatedAt()))
                 .storedName(entity.getReviewFileEntity().stream().map(ReviewFileEntity::getStoredName).collect(Collectors.toList()))
                 .restaurantId(entity.getRestaurantEntity().getId())
+                .restaurantName(entity.getRestaurantEntity().getRestaurantName())
                 .recommendValues(entity.getRecommendValues().split(","))
                 .build();
 
