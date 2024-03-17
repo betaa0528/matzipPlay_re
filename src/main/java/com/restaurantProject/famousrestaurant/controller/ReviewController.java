@@ -36,7 +36,7 @@ public class ReviewController {
 
     @GetMapping("/list")
     public String review(
-            @PageableDefault(page = 1, size = 4, sort = "id" , direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(page = 1, size = 4, sort = "createdAt" , direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal BoardPrincipal principal,
             @RequestParam("id") Long id,
             Model model
@@ -50,12 +50,9 @@ public class ReviewController {
         model.addAttribute("members", members);
         model.addAttribute("principal", principal);
         model.addAttribute("paginationBarNumbers", barNumbers);
-        if(reviewPages != null) {
-            return "detail :: #review-div";
-        } else {
-            return "리뷰없ㅇ므 ㅜㅜ";
-        }
+        return "detail :: #review-div";
     }
+
     @GetMapping("/form/{id}")
     public String reviewForm(@PathVariable Long id, Model model, HttpSession session, @AuthenticationPrincipal BoardPrincipal principal) {
         Restaurant restaurant = restaurantService.findById(id);
