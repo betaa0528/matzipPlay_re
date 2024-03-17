@@ -129,7 +129,7 @@
             <div th:each="review : ${reviews}" class="review-content">
                 <div class="review-text-div">
                     <div class="review-text-div-userInfo">
-                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}"
+                        <img th:src="@{|/profile/${members.get(review.getMemberId()).getMemberProfile()}|}"
                              class="review-text-div-img">
                         <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
                     </div>

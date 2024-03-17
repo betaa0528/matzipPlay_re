@@ -46,9 +46,9 @@ window.addEventListener("DOMContentLoaded", function () {
 
             let formData = new FormData();
             formData.append("id", id);
-            formData.append("_method","delete");
+            formData.append("_method", "delete");
 
-            fetch("./mypage/wish/"+id, {
+            fetch("./mypage/wish/" + id, {
                 method: "POST",
                 body: formData
             }).then(response => response.text())
@@ -72,9 +72,9 @@ window.addEventListener("DOMContentLoaded", function () {
 
             let formData = new FormData();
             formData.append("id", id);
-            formData.append("_method","delete");
+            formData.append("_method", "delete");
 
-            fetch("./mypage/review/"+id, {
+            fetch("./mypage/review/" + id, {
                 method: "POST",
                 body: formData
             }).then(response => response.text())
@@ -85,7 +85,7 @@ window.addEventListener("DOMContentLoaded", function () {
                     }
                 })
                 .catch(error => {
-                    // 오류 처리
+                    console.log(error)
                 });
         });
     });
@@ -98,24 +98,24 @@ window.addEventListener("DOMContentLoaded", function () {
         reader.readAsDataURL(file);
     });
 
-    document.getElementById("profileChange").addEventListener("click", function (){
+    document.getElementById("profileChange").addEventListener("click", function () {
         let memberId = document.getElementsByName("memberId")[0].value;
         let file = document.getElementById('file').files[0];
 
         let formData = new FormData();
-        formData.append("file",file);
+        formData.append("file", file);
 
-        fetch("./mypage/profile/"+memberId, {
-            method: "PUT",
+        fetch("./mypage/profile", {
+            method: "POST",
             body: formData
         }).then(response => {
             if (response.status === 400) throw new Error("400 Bad Request");
             return response.json();
         })
             .then(data => {
-                if(data==true){
+                if (data === true) {
                     alert("프로필 사진이 변경되었습니다");
-                    window.location.href="mypage";
+                    window.location.href = "mypage";
                 }
             })
             .catch(error => {
@@ -124,3 +124,22 @@ window.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+
+const movePage = (page) => {
+    $.ajax({
+        type: "get",
+        url: "/mypage/review/list",
+        data: {page: page - 1},
+        success: function (res) {
+            console.log("요청성공", res);
+            $('#reviewContainer').replaceWith(res);
+            var targetElement = document.getElementsByClassName("page-div");
+            if (targetElement) {
+                targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        },
+        error: function (err) {
+            console.log("요청실패", err);
+        }
+    });
+}
