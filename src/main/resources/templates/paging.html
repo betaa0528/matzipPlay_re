@@ -11,7 +11,7 @@
     <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
     <span sec:authorize="!isAuthenticated()" class="session-chk"><a th:href="@{/login}">로그인</a></span>
     <span sec:authorize="isAuthenticated()" class="session-chk">
-        <span th:text="|${principal.memberId} 님 반갑습니다.!!|"></span>
+        <span th:text="|${principal.getUsername()} 님 반갑습니다.!!|"></span>
             <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
 </header>
 <nav>
@@ -70,13 +70,13 @@
 <section>
     <div class="restaurant-wrap">
         <div th:each="restaurant : ${list}" class="restaurant-div">
-            <a th:href="@{|/restaurant/detail/${restaurant.id}|}">
+            <a th:href="@{|/restaurant/${restaurant.id}|}">
                 <div class="restaurant-div-imgBOX">
                     <img th:src="${restaurant.imgLink}" alt="" class="restaurant-div-img">
                 </div>
             </a>
             <div class="restaurant-div-textBOX">
-                <a th:href="@{|/restaurant/detail/${restaurant.id}|}" th:text="${restaurant.restaurantName}"></a>
+                <a th:href="@{|/restaurant/${restaurant.id}|}" th:text="${restaurant.restaurantName}"></a>
                 <span th:text="${restaurant.restaurantRoadAddress}"></span><br>
                 <span th:text="${restaurant.category}"></span> / <span th:text="${restaurant.distance} + km"></span>
             </div>
@@ -88,7 +88,7 @@
 <!--        <a th:href="@{|/restaurant/category/${category}/paging|(page=1)}">First</a>-->
         <!-- 이전 링크 활성화 비활성화 -->
         <!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
-        <a th:href="${list.first} ? '#' : @{|/restaurant/category/${category}/paging|(page=${list.number})}">prev</a>
+        <a th:href="${list.first} ? '#' : @{|/restaurant/category/${category}|(page=${list.number})}">prev</a>
 
         <!-- 페이지 번호 링크(현재 페이지는 숫자만)
                 for(int page=startPage; page<=endPage; page++)-->
@@ -97,13 +97,13 @@
             <span th:if="${pageNumber == list.number + 1}" th:text="${pageNumber}"></span>
                 <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
             <span th:unless="${pageNumber == list.number + 1}">
-                <a th:href="@{|/restaurant/category/${category}/paging|(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                <a th:href="@{|/restaurant/category/${category}|(page=${pageNumber})}" th:text="${pageNumber}"></a>
             </span>
         </span>
 
         <!-- 다음 링크 활성화 비활성화
             사용자: 2페이지, getNumber: 1, 3페이지-->
-        <a th:href="${list.last} ? '#' : @{|/restaurant/category/${category}/paging|(page=${list.number + 2})}">next</a>
+        <a th:href="${list.last} ? '#' : @{|/restaurant/category/${category}|(page=${list.number + 2})}">next</a>
         <!-- 마지막 페이지로 이동 -->
 <!--        <a th:href="@{|/restaurant/category/${category}/paging|(page=${list.totalPages})}">Last</a>-->
     </div>
@@ -115,7 +115,7 @@
     }
 
     const category = (cate) => {
-        location.href="/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
+        location.href="/restaurant/category/" + cate.querySelector('p').textContent;
     }
 
     const searchBar = document.querySelector(".search-bar");

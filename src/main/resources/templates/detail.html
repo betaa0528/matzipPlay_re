@@ -138,7 +138,7 @@
                             <div th:text="|등록일 ${review.createdAt}|" class="review-createdAt"></div>
                             <th:block sec:authorize="hasAuthority('ROLE_USER')">
                                 <a th:if="${principal.getUsername() == review.memberId}"
-                                   th:href="@{|/review/update/${review.id}|}">수정</a>
+                                   th:href="@{|/reviews/update/${review.id}|}">수정</a>
                             </th:block>
                         </div>
                         <div th:if="${review.updatedAt != null}" th:text="|수정일 ${review.updatedAt}|"
@@ -201,7 +201,7 @@
     }
 
     const category = (cate) => {
-        location.href = "/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
+        location.href = "/restaurant/category/" + cate.querySelector('p').textContent;
     }
 
 
@@ -235,7 +235,7 @@
     // }
     // window.addEventListener('load', reviewChk);
     const saveReview = () => {
-        location.href = "/review/form/" + id;
+        location.href = "/reviews/create/" + id;
     }
 
     const saveWish = () => {
@@ -244,7 +244,7 @@
 
         $.ajax({
             type: "post",
-            url: "/review/wishList",
+            url: "/reviews/wishlist",
             data: {
                 "id": id,
                 "restaurantId": restaurant_id,
@@ -306,7 +306,7 @@
     const movePage = (page) => {
         $.ajax({
             type: "get",
-            url: "/review/list",
+            url: "/reviews",
             data: {page: page - 1, "id" : id},
             success: function (res) {
                 console.log("요청성공", res);

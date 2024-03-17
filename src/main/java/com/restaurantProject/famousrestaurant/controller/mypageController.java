@@ -71,18 +71,18 @@ public class mypageController {
     }
 
 
-    @PostMapping("/review/{id}")
+    @PostMapping("/reviews/{id}/delete")
     public boolean reviewDelete(@PathVariable Long id, @AuthenticationPrincipal BoardPrincipal principal) {
         myPageService.reviewDelete(id);
         return true;
     }
 
-    @PostMapping("/wish/{id}")
+    @PostMapping("/wishlist/{id}/delete")
     public boolean wishListDelete(@PathVariable Long id, @AuthenticationPrincipal BoardPrincipal principal) {
         return myPageService.wishListDelete(id);
     }
 
-    @PostMapping("/profile")
+    @PostMapping("/profile/upload")
     @ResponseBody
     public boolean profile(@RequestPart("file") MultipartFile file, @AuthenticationPrincipal BoardPrincipal principal) throws IOException {
         return  myPageService.profileUpload(file, principal.getUsername());

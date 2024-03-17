@@ -37,7 +37,7 @@
         <div id="reviewContainer">
             <div id="reviewWrap" th:each="review: ${reviews}">
                 <div id="reviewInfo">
-                    <a th:href="@{|/restaurant/detail/${review.restaurantId}|}" id="reviewRes"
+                    <a th:href="@{|/restaurant/${review.restaurantId}|}" id="reviewRes"
                        th:text="${review.getRestaurantName()}"></a>
                     <span th:text="${review.getCreatedAt()}"></span>
                     <p id="reviewDetails" th:text="${review.getReviewText()}"></p>
@@ -63,7 +63,7 @@
             <div id="wishWrap" th:each="item, itemStat : ${wishList}">
                 <img th:src="${image[itemStat.index]}" width="150px" height="150px">
                 <div id="wishInfo">
-                    <a th:href="@{|/restaurant/detail/${item.restaurantId}|}" id="wishResName"
+                    <a th:href="@{|/restaurant/${item.restaurantId}|}" id="wishResName"
                        th:text="${item.getRestaurantName()}"></a>
                     <span id="category" th:text="${item.getCategory()}"></span><br>
                     <span id="address" th:text="${item.getAddress()}"></span>

@@ -98,6 +98,12 @@ public class MyPageService {
 
     public List<Review> getMyReview(String memberId) {
         List<ReviewEntity> reviewEntities = reviewRepository.findAllByMemberId(memberId);
+        reviewEntities.sort(new Comparator<ReviewEntity>() {
+            @Override
+            public int compare(ReviewEntity o1, ReviewEntity o2) {
+                return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+            }
+        });
         return reviewEntities.stream().map(Review::from).collect(Collectors.toList());
     }
 

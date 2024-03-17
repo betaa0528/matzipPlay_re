@@ -27,7 +27,7 @@ public class HomeController {
     @GetMapping
     public String index(HttpSession session, Model model, @AuthenticationPrincipal BoardPrincipal principal) {
         model.addAttribute("principal", principal);
-        return "index";
+        return "redirect:/restaurant";
     }
 
     @GetMapping("/user")

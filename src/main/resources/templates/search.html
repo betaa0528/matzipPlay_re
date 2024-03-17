@@ -76,9 +76,9 @@
 
     <div class="search-result">
         <div class="restaurant-box" th:each="rest : ${list}">
-            <div class="restaurant-box-div"><a th:href="@{|/restaurant/detail/${rest.id}}"><img th:src="${rest.imgLink}" class="restaurant-box-img"alt=""></a></div>
+            <div class="restaurant-box-div"><a th:href="@{|/restaurant/${rest.id}}"><img th:src="${rest.imgLink}" class="restaurant-box-img"alt=""></a></div>
             <div class="restaurant-box-info">
-                <a class="restaurant-name" th:text="${rest.restaurantName} |  " th:href="@{|/restaurant/detail/${rest.id}}"></a>
+                <a class="restaurant-name" th:text="${rest.restaurantName} |  " th:href="@{|/restaurant/${rest.id}}"></a>
                 <span class="restaurant-category" th:text="${rest.category}"></span><br>
                 <span class="restaurant-distance" th:text="${rest.distance} + km"></span><br>
                 <span class="restaurant-address" th:text="${rest.restaurantAddress}"></span>
@@ -86,13 +86,7 @@
         </div>
     </div>
     <div class="page-div" th:if="${!list.isEmpty()}">
-<!--        <a th:href="@{|/restaurant/search?keyword=${keyword}|(page=1)}">First</a>-->
-        <!-- 이전 링크 활성화 비활성화 -->
-        <!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
         <a th:href="${list.first} ? '#' : @{|/restaurant/search?keyword=${keyword}|(page=${list.number})}">prev</a>
-
-        <!-- 페이지 번호 링크(현재 페이지는 숫자만)
-                for(int page=startPage; page<=endPage; page++)-->
         <span th:each="pageNumber: ${paginationBarNumbers}">
             <!-- 현재페이지는 링크 없이 숫자만 -->
             <span th:if="${pageNumber == list.number + 1}" th:text="${pageNumber}"></span>
@@ -105,23 +99,7 @@
         <!-- 다음 링크 활성화 비활성화
             사용자: 2페이지, getNumber: 1, 3페이지-->
         <a th:href="${list.last} ? '#' : @{|/restaurant/search?keyword=${keyword}|(page=${list.number + 2})}">next</a>
-        <!-- 마지막 페이지로 이동 -->
-<!--        <a th:href="@{|/restaurant/search?keyword=${keyword}|(page=${list.totalPages})}">Last</a>-->
     </div>
-<!--    <table>-->
-<!--        <tr>-->
-<!--            <td>이미지</td>-->
-<!--            <td>음식점명</td>-->
-<!--            <td>카테고리</td>-->
-<!--            <td>나와의 거리</td>-->
-<!--        </tr>-->
-<!--        <tr th:each="rest : ${list}">-->
-<!--            <td><img th:src="${rest.imgLink}" width="200px" height="200px" alt=""></td>-->
-<!--            <td><a th:href="@{|/restaurant/detail/${rest.id}|}" th:text="${rest.restaurantName}"></a></td>-->
-<!--            <td th:text="${rest.category}"></td>-->
-<!--            <td th:text="${rest.distance} + 'km'"></td>-->
-<!--        </tr>-->
-<!--    </table>-->
 </section>
 
 </body>
@@ -131,7 +109,7 @@
     }
 
     const category = (cate) => {
-        location.href="/restaurant/category/" + cate.querySelector('p').textContent + "/paging";
+        location.href="/restaurant/category/" + cate.querySelector('p').textContent;
     }
 
     // search-result 요소와 section 요소를 가져옵니다.

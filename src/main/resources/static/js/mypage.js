@@ -48,7 +48,7 @@ window.addEventListener("DOMContentLoaded", function () {
             formData.append("id", id);
             formData.append("_method", "delete");
 
-            fetch("./mypage/wish/" + id, {
+            fetch("./mypage/wishlist/" + id + "/delete", {
                 method: "POST",
                 body: formData
             }).then(response => response.text())
@@ -74,7 +74,7 @@ window.addEventListener("DOMContentLoaded", function () {
             formData.append("id", id);
             formData.append("_method", "delete");
 
-            fetch("./mypage/review/" + id, {
+            fetch("./mypage/reviews/" + id + "/delete", {
                 method: "POST",
                 body: formData
             }).then(response => response.text())
@@ -105,7 +105,7 @@ window.addEventListener("DOMContentLoaded", function () {
         let formData = new FormData();
         formData.append("file", file);
 
-        fetch("./mypage/profile", {
+        fetch("./mypage/profile/upload", {
             method: "POST",
             body: formData
         }).then(response => {
