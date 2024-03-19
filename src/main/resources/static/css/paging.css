@@ -27,7 +27,7 @@ section {
     width: 40vw;
     height: 200vh;
     margin: 0 auto;
-    padding-top: 20px;
+    padding-top: 10px;
     background-color: white;
 }
 
@@ -118,6 +118,37 @@ section {
     object-fit: cover;
 }
 
+.restaurant-filter-div {
+    position: relative;
+    box-sizing: border-box;
+    width: 90%;
+    height: 25px;
+    margin: 0 auto;
+}
+
+.restaurant-filter-div strong{
+    position: absolute;
+    left: 15px;
+    font-size: 24px;
+}
+
+.restaurant-filter-element {
+    list-style: none;
+    position: absolute;
+    top: 4px;
+    right: 16px;
+}
+
+.restaurant-filter-element li {
+    display: inline;
+}
+
+.restaurant-filter-li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+}
+
 .restaurant-wrap{
     display: flex;
     width: 90%;
@@ -156,11 +187,20 @@ section {
     width: 90%;
     height: 200px;
     margin: 10px auto;
+    overflow: hidden;
 }
 
 .restaurant-div-img{
     width: 100%;
     height: 100%;
+    border-radius: 3px;
+    transition-duration: 0.3s;
+}
+
+.restaurant-div-img:hover{
+    cursor: pointer;
+    transform: scale(1.2, 1.2);
+    transition-duration: 0.5s;
 }
 
 .page-div{

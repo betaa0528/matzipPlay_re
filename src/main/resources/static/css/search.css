@@ -115,6 +115,36 @@ section {
     border-radius: 100%;
     object-fit: cover;
 }
+.restaurant-filter-div {
+    position: relative;
+    box-sizing: border-box;
+    width: 90%;
+    height: 25px;
+    margin: 0 auto;
+}
+
+.restaurant-filter-div strong{
+    position: absolute;
+    left: 15px;
+    font-size: 24px;
+}
+
+.restaurant-filter-element {
+    list-style: none;
+    position: absolute;
+    top: 4px;
+    right: 16px;
+}
+
+.restaurant-filter-element li {
+    display: inline;
+}
+
+.restaurant-filter-li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+}
 
 .search-result-text{
     font-size: 20px;
@@ -163,12 +193,19 @@ section {
     width: 80%;
     height: 200px;
     margin: 5px auto;
+    overflow: hidden;
 }
 
 .restaurant-box-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition-duration: 0.3s;
+}
+
+.restaurant-box-img:hover {
+    transform: scale(1.2, 1.2);
+    transition-duration: 0.5s;
 }
 
 .restaurant-box-info {
