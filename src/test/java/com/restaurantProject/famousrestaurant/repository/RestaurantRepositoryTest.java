@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,12 +18,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 
 @DisplayName("RestaurantRepository 테스트")
@@ -185,5 +188,51 @@ class RestaurantRepositoryTest {
         long count = restaurantRepository.count();
         System.out.println(count);
     }
+
+    @DisplayName("음식점 중복확인")
+    @Test
+    void duplicateCheck() {
+//        List<RestaurantEntity> restaurantEntities = restaurantRepository.findByCategory("분식");
+        Page<RestaurantEntity> find1 = restaurantRepository.findByCategory("분식", PageRequest.of(2, 4));
+        Page<RestaurantEntity> find2 = restaurantRepository.findByCategory("분식", PageRequest.of(3, 4));
+        Page<RestaurantEntity> find3 = restaurantRepository.findByCategory("분식", PageRequest.of(4, 4));
+        Page<RestaurantEntity> find4 = restaurantRepository.findByCategory("분식", PageRequest.of(5, 4));
+        find1.getContent().forEach(System.out::println);
+        System.out.println("--------------------------------------------------");
+        find2.getContent().forEach(System.out::println);
+        System.out.println("--------------------------------------------------");
+        find3.getContent().forEach(System.out::println);
+        System.out.println("--------------------------------------------------");
+        find4.getContent().forEach(System.out::println);
+        System.out.println("--------------------------------------------------");
+        System.out.println("--------------------------------------------------");
+
+
+
+        Page<RestaurantEntity> restaurant1 = restaurantRepository.findByCategoryOrderByReviewDesc("분식", PageRequest.of(2, 4, Sort.by("restaurantName")));
+        Page<RestaurantEntity> restaurant2 = restaurantRepository.findByCategoryOrderByReviewDesc("분식", PageRequest.of(3, 4, Sort.by("restaurantName")));
+        Page<RestaurantEntity> restaurant3 = restaurantRepository.findByCategoryOrderByReviewDesc("분식", PageRequest.of(4, 4, Sort.by("restaurantName")));
+        Page<RestaurantEntity> restaurant4 = restaurantRepository.findByCategoryOrderByReviewDesc("분식", PageRequest.of(5, 4, Sort.by("restaurantName")));
+        restaurant1.getContent().forEach(System.out::println);
+        System.out.println("--------------------------------------------------");
+        restaurant2.getContent().forEach(System.out::println);
+        System.out.println("--------------------------------------------------");
+        restaurant3.getContent().forEach(System.out::println);
+        System.out.println("--------------------------------------------------");
+        restaurant4.getContent().forEach(System.out::println);
+
+
+//        HashMap<String, Integer> hashMap = new HashMap<>();
+//        for(RestaurantEntity restaurant : restaurantEntities) {
+//            hashMap.put(restaurant.getRestaurantName() , hashMap.getOrDefault(restaurant.getRestaurantName(), 0) + 1);
+//        }
+//        for (String s : hashMap.keySet()) {
+//            if(hashMap.get(s) > 1) {
+//                System.out.println(s + " , " + hashMap.get(s));
+//            }
+//        }
+
+    }
+
 
 }

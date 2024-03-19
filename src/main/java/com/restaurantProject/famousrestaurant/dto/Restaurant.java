@@ -15,6 +15,8 @@ public class Restaurant {
     private String restaurantRoadAddress;
     private String imgLink;
     private String category;
+    private int reviewCnt;
+    private int wishCnt;
     private double mapX;
     private double mapY;
     private double distance;
@@ -65,6 +67,8 @@ public class Restaurant {
         restaurant.setImgLink(restaurantEntity.getImgLink());
 //        restaurant.setDistance(restaurantEntity.getDistance());
         restaurant.setDistance(1);
+        restaurant.setReviewCnt(restaurantEntity.getReviewEntity().size());
+        restaurant.setWishCnt(restaurantEntity.getWishListEntity().size());
         restaurant.setMapX(restaurantEntity.getMapX());
         restaurant.setMapY(restaurantEntity.getMapY());
         restaurant.setCategory(restaurantEntity.getCategory());

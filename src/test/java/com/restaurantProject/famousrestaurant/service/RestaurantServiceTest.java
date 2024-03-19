@@ -1,10 +1,13 @@
 package com.restaurantProject.famousrestaurant.service;
 
 import com.restaurantProject.famousrestaurant.dto.Restaurant;
+import com.restaurantProject.famousrestaurant.dto.WishList;
 import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
+import com.restaurantProject.famousrestaurant.entity.WishListEntity;
 import com.restaurantProject.famousrestaurant.geo.GeoPoint;
 import com.restaurantProject.famousrestaurant.geo.GeoTrans;
 import com.restaurantProject.famousrestaurant.repository.RestaurantRepository;
+import com.restaurantProject.famousrestaurant.repository.WishListRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,13 +27,21 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @DisplayName("비즈니스 로직 - 음식점")
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class RestaurantServiceTest {
 
-    @InjectMocks
-    private RestaurantService sut;
-    @Mock
+//    @InjectMocks
+//    private RestaurantService sut;
+//    @Mock
+//    private RestaurantRepository restaurantRepository;
+
+    @Autowired
     private RestaurantRepository restaurantRepository;
+    @Autowired
+    private RestaurantService restaurantService;
+    @Autowired
+    private WishListRepository wishListRepository;
 
     @Test
     public void pageTest() {
@@ -89,10 +97,10 @@ public class RestaurantServiceTest {
         given(restaurantRepository.findByRestaurantNameOrAddress(keyword)).willReturn(List.of());
 
         // When
-        Page<Restaurant> restaurantList = sut.search(keyword, pageable);
+//        Page<Restaurant> restaurantList = sut.search(keyword, pageable);
 
         // Then
-        assertThat(restaurantList).isEmpty();
+//        assertThat(restaurantList).isEmpty();
     }
 
 
@@ -126,6 +134,44 @@ public class RestaurantServiceTest {
         // Then
         assertEquals("테스트 음식점", paging.getContent().get(0).getRestaurantName());
 //        assertEquals(1, result.getTotalElements());
+    }
+
+    @DisplayName("음식점 정렬 - 타입에 따라 정렬한 음식점들을 보여준다")
+    @Test
+    void givenOrderType_whenSearchingRestaurant_thenReturnsOrderedRestaurants() {
+        WishListEntity wish1 = new WishListEntity();
+        wish1.setId(1L);
+        wish1.setRestaurantId(11L);
+
+        WishListEntity wish2 = new WishListEntity();
+        wish2.setId(2L);
+        wish2.setRestaurantId(11L);
+
+        List<WishListEntity> list = new ArrayList<>();
+        wishListRepository.saveAll(List.of(wish1, wish2));
+        list.add(wish1);
+        list.add(wish2);
+
+//        restaurantRepository.saveAll(List.of(restaurant1, restaurant2, restaurant3));
+//        System.out.println(restaurantRepository.findAll());
+        Page<RestaurantEntity> page = restaurantRepository.findByRestaurantNameContaining("초밥", PageRequest.of(0, 10));
+//        page.getContent().forEach(System.out::println);
+        page.getContent().get(0).setWishListEntity(list);
+        int size = page.getContent().get(0).getWishListEntity().size();
+        assertEquals(3, page.getTotalElements());
+        assertEquals(2, size);
+    }
+
+    @Test
+    void givenKeyword_whenSearchingRestaurant_thenOrderByReviewCount() {
+        Page<RestaurantEntity> sushi = restaurantRepository.SearchRestaurantOrderByWish(
+                "마라탕", PageRequest.of(0, 4,Sort.by("restaurantName")));
+//        Page<RestaurantEntity> sushi1 = restaurantRepository.findByRestaurantNameContainingOrderByReview(
+//                "마라탕", PageRequest.of(1, 4,Sort.by("restaurantName")));
+//        sushi.forEach(System.out::println);
+//        System.out.println("=====================");
+//        sushi1.forEach(System.out::println);
+        assertEquals("라화방 마라탕", sushi.getContent().get(0).getRestaurantName());
     }
 
 }

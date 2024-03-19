@@ -38,5 +38,4 @@ public class RestaurantEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "restaurantEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WishListEntity> wishListEntity;
-
 }
