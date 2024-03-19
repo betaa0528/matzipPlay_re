@@ -1,7 +1,11 @@
 package com.restaurantProject.famousrestaurant.repository.querydsl;
 
+import com.querydsl.core.QueryResults;
 import com.restaurantProject.famousrestaurant.entity.QRestaurantEntity;
 import com.restaurantProject.famousrestaurant.entity.RestaurantEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
@@ -26,22 +30,63 @@ public class RestaurantRepositoryCustomImpl extends QuerydslRepositorySupport im
 
     }
 
+    @Override
+    public PageImpl<RestaurantEntity> SearchRestaurantOrderByReview(String keyword, Pageable pageable) {
+        QRestaurantEntity restaurant = QRestaurantEntity.restaurantEntity;
 
-//        return jpaQueryFactory.selectFrom(restaurantEntity)
-//                .where(containName(keyword), containAddress(keyword)).fetch();
+        QueryResults result = from(restaurant).distinct().select(restaurant)
+                .where(restaurant.restaurantName.containsIgnoreCase(keyword))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(restaurant.reviewEntity.size().desc())
+                .orderBy(restaurant.restaurantName.asc())
+                .fetchResults();
 
-//    private BooleanExpression containAddress(String address) {
-//        if (address ==null || address.isEmpty()) {
-//            return null;
-//        }
-//        return restaurantEntity.restaurantAddress.containsIgnoreCase(address);
-//    }
-//
-//    private BooleanExpression containName(String restaurantName) {
-//        if(restaurantName == null || restaurantName.isEmpty()) {
-//            return null;
-//        }
-//
-//        return restaurantEntity.restaurantName.containsIgnoreCase(restaurantName);
-//    }
+        return new PageImpl<>(result.getResults(), pageable, result.getTotal());
+    }
+
+    @Override
+    public PageImpl<RestaurantEntity> SearchRestaurantOrderByWish(String keyword, Pageable pageable) {
+        QRestaurantEntity restaurant = QRestaurantEntity.restaurantEntity;
+
+        QueryResults result = from(restaurant).distinct().select(restaurant)
+                .where(restaurant.restaurantName.containsIgnoreCase(keyword))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(restaurant.wishListEntity.size().desc())
+                .orderBy(restaurant.restaurantName.asc())
+                .fetchResults();
+
+        return new PageImpl<>(result.getResults(), pageable, result.getTotal());
+    }
+
+    @Override
+    public PageImpl<RestaurantEntity> SearchAddressOrderByReview(String keyword, Pageable pageable) {
+        QRestaurantEntity restaurant = QRestaurantEntity.restaurantEntity;
+
+        QueryResults result = from(restaurant).distinct().select(restaurant)
+                .where(restaurant.restaurantAddress.containsIgnoreCase(keyword))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(restaurant.reviewEntity.size().desc())
+                .orderBy(restaurant.restaurantName.asc())
+                .fetchResults();
+
+        return new PageImpl<>(result.getResults(), pageable, result.getTotal());
+    }
+
+    @Override
+    public PageImpl<RestaurantEntity> SearchAddressOrderByWish(String keyword, Pageable pageable) {
+        QRestaurantEntity restaurant = QRestaurantEntity.restaurantEntity;
+
+        QueryResults result = from(restaurant).distinct().select(restaurant)
+                .where(restaurant.restaurantAddress.containsIgnoreCase(keyword))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(restaurant.wishListEntity.size().desc())
+                .orderBy(restaurant.restaurantName.asc())
+                .fetchResults();
+
+        return new PageImpl<>(result.getResults(), pageable, result.getTotal());
+    }
 }

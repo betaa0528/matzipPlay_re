@@ -10,9 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,12 @@ public interface RestaurantRepository extends
         QuerydslBinderCustomizer<QRestaurantEntity> {
     Page<RestaurantEntity> findByRestaurantNameContaining(String keyword, Pageable pageable);
     Page<RestaurantEntity> findByRestaurantAddressContaining(String keyword, Pageable pageable);
+
+    @Query("select r from RestaurantEntity r where r.category = :category order by size(r.reviewEntity) desc")
+    Page<RestaurantEntity> findByCategoryOrderByReviewDesc(@Param("category") String category, Pageable pageable);
+
+    @Query("select r from RestaurantEntity r where r.category = :category order by size(r.wishListEntity) desc")
+    Page<RestaurantEntity> findByCategoryOrderByWishDesc(@Param("category") String category, Pageable pageable);
 
     List<RestaurantEntity> findByCategory(String category);
 
