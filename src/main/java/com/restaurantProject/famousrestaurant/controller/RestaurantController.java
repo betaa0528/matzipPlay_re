@@ -44,14 +44,16 @@ public class RestaurantController {
 
     @GetMapping("/search")
     public String searchRestaurant(
+            @AuthenticationPrincipal BoardPrincipal principal,
             @RequestParam("keyword") String keyword,
+            @RequestParam(required = false, value = "order", defaultValue = "review") String order,
             @PageableDefault(page = 1) Pageable pageable,
             Model model) {
-        Page<Restaurant> restaurantList = restaurantService.search(keyword, pageable);
+        Page<Restaurant> restaurantList = restaurantService.search(keyword, pageable, order);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(
                 pageable.getPageNumber(), restaurantList.getTotalPages());
-        log.info("number : " + restaurantList.getNumber());
-        log.info("page : " + pageable.getPageNumber());
+        model.addAttribute("principal", principal);
+        model.addAttribute("order", order);
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", restaurantList);
         model.addAttribute("paginationBarNumbers", barNumbers);
@@ -62,11 +64,13 @@ public class RestaurantController {
     public String restaurantCategory(
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC, page = 1)
             Pageable pageable,
+            @RequestParam(required = false, value = "order", defaultValue = "review") String order,
             @PathVariable(name = "category") String category, Model model,
             @AuthenticationPrincipal BoardPrincipal principal) {
-        Page<Restaurant> restaurantPage = restaurantService.categoryPaging(category, pageable);
+        Page<Restaurant> restaurantPage = restaurantService.categoryPaging(category, pageable, order);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(
                 pageable.getPageNumber(), restaurantPage.getTotalPages());
+        model.addAttribute("order", order);
         model.addAttribute("principal", principal);
         model.addAttribute("paginationBarNumbers", barNumbers);
         model.addAttribute("category", category);
@@ -75,17 +79,18 @@ public class RestaurantController {
     }
 
 
+
     @GetMapping("/{id}")
     public String RestaurantDetail(
             @PathVariable Long id,
-            @AuthenticationPrincipal BoardPrincipal principal
-            , Model model) {
+            @AuthenticationPrincipal BoardPrincipal principal,
+            Model model) {
         Restaurant restaurant = restaurantService.findById(id); // 해당 {id} 음식점 정보를 가져옴
         if (principal != null) {
             int wishListChk = wishListService.wishListCheck(principal.getUsername(), restaurant.getId());
             model.addAttribute("wishListChk", wishListChk);
         }
-        Page<Review> reviewPages = reviewService.findByRestaurantId(id, PageRequest.of(0,4, Sort.by(Sort.Direction.DESC,"createdAt"))); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
+        Page<Review> reviewPages = reviewService.findByRestaurantId(id, PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "createdAt"))); // 해당 {id} 음식점의 리뷰 객체를 모두 가져옴
         HashMap<Long, List<String>> recommend = reviewService.changeRecommend(id); // 리뷰의 추천 버튼들을 가져옴
         HashMap<String, Member> members = memberService.getByMemberIdList(id);
         if (!recommend.isEmpty()) {
