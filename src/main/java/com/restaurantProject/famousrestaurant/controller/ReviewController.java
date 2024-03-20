@@ -6,7 +6,6 @@ import com.restaurantProject.famousrestaurant.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -50,7 +49,7 @@ public class ReviewController {
         model.addAttribute("members", members);
         model.addAttribute("principal", principal);
         model.addAttribute("paginationBarNumbers", barNumbers);
-        return "detail :: #review-div";
+        return "restaurant/detail :: #review-div";
     }
 
     @GetMapping("/create/{id}")
@@ -58,7 +57,7 @@ public class ReviewController {
         Restaurant restaurant = restaurantService.findById(id);
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("principal", principal);
-        return "reviewForm";
+        return "restaurant/reviewForm";
     }
 
     @PostMapping("/create")
@@ -68,10 +67,8 @@ public class ReviewController {
     }
 
     @PostMapping("/wishlist")
-    public ResponseEntity<WishList> getWishList(WishList wishList) {
-        int wishListChk = wishListService.updateWishList(wishList);
-        ResponseEntity response = ResponseEntity.status(HttpStatus.OK).body("checked");
-        return response;
+    public int clickWishList(WishList wishList) {
+        return wishListService.updateWishList(wishList);
     }
 
     @GetMapping("/update/{id}")
@@ -80,7 +77,7 @@ public class ReviewController {
         Restaurant restaurant = restaurantService.findById(review.getRestaurantId());
         model.addAttribute("review", review);
         model.addAttribute("restaurant", restaurant);
-        return "reviewUpdate";
+        return "restaurant/reviewUpdate";
     }
 
     @PostMapping("/update")
