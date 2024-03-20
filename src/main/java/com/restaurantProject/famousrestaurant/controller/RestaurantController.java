@@ -18,8 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class RestaurantController {
     @GetMapping
     public String index(@AuthenticationPrincipal BoardPrincipal principal, Model model) {
         model.addAttribute("principal", principal);
-        return "index";
+        return "restaurant/index";
     }
 
     @GetMapping("/search")
@@ -57,7 +55,7 @@ public class RestaurantController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", restaurantList);
         model.addAttribute("paginationBarNumbers", barNumbers);
-        return "search";
+        return "restaurant/search";
     }
 
     @GetMapping("/category/{category}")
@@ -75,7 +73,7 @@ public class RestaurantController {
         model.addAttribute("paginationBarNumbers", barNumbers);
         model.addAttribute("category", category);
         model.addAttribute("list", restaurantPage);
-        return "paging";
+        return "restaurant/paging";
     }
 
 
@@ -104,7 +102,7 @@ public class RestaurantController {
         model.addAttribute("principal", principal);
         model.addAttribute("members", members);
         model.addAttribute("paginationBarNumbers", barNumbers);
-        return "detail";
+        return "restaurant/detail";
     }
 
 }
