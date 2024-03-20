@@ -17,6 +17,11 @@ public class WishList {
     private String category;
     private String address;
 
+    public WishList(Long restaurantId, String memberWishId) {
+        this.restaurantId = restaurantId;
+        this.memberWishId = memberWishId;
+    }
+
     public static WishList from(WishListEntity entity) {
         return WishList.builder()
                 .id(entity.getId())
