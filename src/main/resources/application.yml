@@ -17,10 +17,8 @@ naver-cloud-sms:
   senderPhone: 01048232132
 
 spring:
-  security:
-    user:
-      name: user
-      password: 1111
+  thymeleaf3:
+    decoupled-logic: true
   sql:
     init:
       mode: always # spring.sql.init.mode = always로 줘야 data.sql이 실행됨

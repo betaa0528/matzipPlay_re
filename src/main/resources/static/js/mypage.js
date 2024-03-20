@@ -124,22 +124,3 @@ window.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
-const movePage = (page) => {
-    $.ajax({
-        type: "get",
-        url: "/mypage/review/list",
-        data: {page: page - 1},
-        success: function (res) {
-            console.log("요청성공", res);
-            $('#reviewContainer').replaceWith(res);
-            var targetElement = document.getElementsByClassName("page-div");
-            if (targetElement) {
-                targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-            }
-        },
-        error: function (err) {
-            console.log("요청실패", err);
-        }
-    });
-}

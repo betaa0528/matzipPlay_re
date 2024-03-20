@@ -74,7 +74,7 @@ public class ReviewService {
 //        int page = pageable.getPageNumber() - 1;
 //        int pageLimit = 4;
         RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId).get();
-        Page<ReviewEntity> reviewEntities = reviewRepository.findAllByRestaurantEntityOrderByIdDesc(restaurantEntity, pageable);
+        Page<ReviewEntity> reviewEntities = reviewRepository.findAllByRestaurantEntityOrderByCreatedAtDesc(restaurantEntity, pageable);
 
         return reviewEntities.map(entity -> Review.toReview(entity, restaurantId));
     }
