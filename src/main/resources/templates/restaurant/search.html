@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="/js/search.js" th:inline="javascript" defer></script>
+    <script src="/js/header.js" th:inline="javascript"></script>
+    <script src="/js/nav.js" th:inline="javascript"></script>
+    <link rel="stylesheet" th:href="@{/css/search.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
+</head>
+<body>
+<header id="header">
+    헤더 삽입부
+</header>
+<nav id="nav">
+    nav 삽입부
+    <hr>
+</nav>
+<section>
+    <div class="result-header">
+        <div class="search-result-text-box">
+            <span th:text="${keyword}" class="search-result-text"></span>
+            <span class="search-result-text"> 인기 검색 결과</span>
+        </div>
+        <div class="restaurant-filter-div">
+            <ul class="restaurant-filter-element">
+                <li class="restaurant-filter-li">
+                    <svg th:if="${order.equals('review')}" xmlns="http://www.w3.org/2000/svg" width="11" height="12">
+                        <path d="M8.786 3.062a1 1 0 011.497 1.32l-.083.095-6.579 6.578L.774 8.207a.999.999 0 011.32-1.497l.094.083L3.62 8.226l5.165-5.164z"
+                              fill="currentColor" fill-rule="evenodd"></path>
+                    </svg>
+                    <a th:style="${order.equals('review') ? 'font-weight: bold; color: blue' : ''}"
+                       th:href="@{|/restaurant/search?keyword=${keyword}|(order=review)}">리뷰순</a>
+                </li>
+                <li class="restaurant-filter-li">
+                    <svg th:if="${order.equals('wish')}" xmlns="http://www.w3.org/2000/svg" width="11" height="12">
+                        <path d="M8.786 3.062a1 1 0 011.497 1.32l-.083.095-6.579 6.578L.774 8.207a.999.999 0 011.32-1.497l.094.083L3.62 8.226l5.165-5.164z"
+                              fill="currentColor" fill-rule="evenodd"></path>
+                    </svg>
+                    <a th:style="${order.equals('wish') ? 'font-weight: bold; color: blue' : ''}"
+                       th:href="@{|/restaurant/search?keyword=${keyword}|(order=wish)}">찜순</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="search-result">
+        <div class="restaurant-box" th:each="rest : ${list}">
+            <div class="restaurant-box-div"><a th:href="@{|/restaurant/${rest.id}}">
+                <img th:src="${rest.imgLink}" class="restaurant-box-img" alt=""></a></div>
+            <div class="restaurant-box-info">
+                <a class="restaurant-name" th:text="${rest.restaurantName} |  "
+                   th:href="@{|/restaurant/${rest.id}}"></a>
+                <span class="restaurant-category" th:text="${rest.category}"></span><br>
+                <span class="restaurant-distance" th:text="${rest.distance} + km"></span><br>
+                <span class="restaurant-address" th:text="${rest.restaurantAddress}"></span><br>
+                리뷰수 <span th:text="${rest.reviewCnt}"></span> / 찜 수 <span th:text="${rest.wishCnt}"></span>
+            </div>
+        </div>
+    </div>
+    <div class="page-div" th:if="${!list.isEmpty()}">
+        <a th:href="${list.first} ? '#' : @{|/restaurant/search?keyword=${keyword}|(order=${order}, page=${list.number})}">prev</a>
+        <span th:each="pageNumber: ${paginationBarNumbers}">
+            <!-- 현재페이지는 링크 없이 숫자만 -->
+            <span th:if="${pageNumber == list.number + 1}" th:text="${pageNumber}"></span>
+            <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+            <span th:unless="${pageNumber == list.number + 1}">
+                <a th:href="@{|/restaurant/search?keyword=${keyword}|(order=${order}, page=${pageNumber})}"
+                   th:text="${pageNumber}"></a>
+            </span>
+        </span>
+
+        <!-- 다음 링크 활성화 비활성화
+            사용자: 2페이지, getNumber: 1, 3페이지-->
+        <a th:href="${list.last} ? '#' : @{|/restaurant/search?keyword=${keyword}|(order=${order}, page=${list.number + 2})}">next</a>
+    </div>
+</section>
+
+</body>
+</html>

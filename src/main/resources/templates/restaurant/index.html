@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>index</title>
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="/js/header.js"></script>
+    <script src="/js/index.js"></script>
     <link rel="stylesheet" th:href="@{/css/index.css}"/>
     <link rel="stylesheet" th:href="@{/css/font.css}"/>
 </head>
 <body>
-<header>
-    <img src="/img/logo_text.png" id="logo" onclick="goIndex()" alt=""><br>
-    <span sec:authorize="!isAuthenticated()" class="session-chk"><a th:href="@{/login}">로그인</a></span>
-    <span sec:authorize="isAuthenticated()" class="session-chk">
-        <span th:text="|${principal.getUsername()} 님 반갑습니다.!!|"></span>
-            <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
+<header id="header">
+    헤더 삽입부
 </header>
 <section>
     <form action="/restaurant/search" method="get" onsubmit="return search()" name="searchForm">
@@ -76,26 +75,4 @@
 </section>
 
 </body>
-<script th:inline="javascript">
-    const goIndex = () => {
-        location.href= "/restaurant";
-    }
-    const category = (cate) => {
-        location.href="/restaurant/category/" + cate.querySelector('p').textContent;
-    }
-
-
-    const searchBar = document.querySelector(".search-bar");
-    const search = () => {
-        console.log("클릭됨");
-        if(searchBar.value === ""){
-            alert("검색어를 입력해주세요");
-            searchBar.focus();
-            return false;
-        } else {
-            return true;
-            // document.searchForm.submit();
-        }
-    }
-</script>
 </html>

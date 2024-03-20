@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+
+    <link rel="stylesheet" th:href="@{/css/detail.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
+</head>
+<body>
+<header id="header">
+    헤더 삽입부
+    <hr>
+</header>
+<nav id="nav">
+    nav 삽입부
+    <hr>
+</nav>
+<section>
+    <div class="restaurant-info-wrap">
+        <div class="restaurant-info-img-box">
+            <img th:src="${restaurant.imgLink}" alt="" class="restaurant-info-img">
+        </div>
+        <div class="restaurant-info-box">
+            <span class="restaurant-name" th:text="${restaurant.restaurantName}"></span>
+            <div class="restaurant-info-box-first">
+                <div sec:authorize="isAuthenticated()" class="review-icon-box"
+                     th:onclick="|location.href='@{|/reviews/create/${restaurant.id}|}'|">
+                    <img src="/img/reviewIcon.png" class="review-icon" alt=""><br>
+                    <span class="review-icon-text">리뷰쓰기</span>
+                </div>
+                <div sec:authorize="isAuthenticated()" class="wish-icon-box" onclick="save()">
+                    <img src="/img/wishIcon.png" class="wish-icon" alt=""><br>
+                    <span class="wish-icon-text" onclick="wishKeepCss()"
+                          th:text="${wishListChk == 0 ? '찜하기' : '찜!!'}"></span>
+                </div>
+            </div>
+            <table class="restaurant-info-tbl">
+                <tr>
+                    <td>주소</td>
+                    <td><span class="restaurant-road-addr" th:text="${restaurant.restaurantRoadAddress}"></span><br>
+                        <span class="restaurant-addr" th:text="${restaurant.restaurantAddress}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>가게종류</td>
+                    <td>
+                        <span class="restaurant-category" th:text="${restaurant.category}"></span><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>리뷰 수</td>
+                    <td th:text="${reviews.getTotalElements()}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <hr/>
+    <div th:if="${overall != null}" class="overall-div">
+        <div th:each="rec : ${overall.list}" th:text="|${overall.codeAndStr.get(rec)} : ${overall.hashMap.get(rec)}| "
+             class="review-recommend-div"></div>
+    </div>
+    <div id="review-div" class="review-div">
+        <div th:if="${reviews.isEmpty()}" class="review-empty-div">
+            <span>작성된 리뷰가 없습니다.</span><br>
+            <span>해당 식당의 첫 번째 리뷰를 작성해주시겠어요?</span>
+        </div>
+
+        <div th:if="${!reviews.isEmpty()}" class="review-present-div">
+            <div th:each="review : ${reviews}" class="review-content">
+                <div class="review-text-div">
+                    <div class="review-text-div-userInfo">
+                        <img th:src="@{|/profile/${members.get(review.getMemberId()).getMemberProfile()}|}"
+                             class="review-text-div-img">
+                        <div th:text="${review.memberId}" class="review-text-div-memberID"></div>
+                    </div>
+                    <div class="review-text-content">
+                        <div class="date-div">
+                            <div th:text="|등록일 ${review.createdAt}|" class="review-createdAt"></div>
+                            <th:block sec:authorize="hasAuthority('ROLE_USER')">
+                                <a th:if="${principal.getUsername() == review.memberId}"
+                                   th:href="@{|/reviews/update/${review.id}|}">수정</a>
+                            </th:block>
+                        </div>
+                        <div th:if="${review.updatedAt != null}" th:text="|수정일 ${review.updatedAt}|"
+                             class="review-updateAt"></div>
+                        <div th:text="${review.reviewText}" class="review-text-div-reviewText"></div>
+                    </div>
+                </div>
+                <div th:if="${review.fileAttached == 1}" class="review-file">
+                    <div class="review-file-div" onclick="modalStart(this)">
+                        <img th:src="@{|/upload/${review.storedName.get(0)}|}" class="review-file-div-img" alt="">
+                        <img th:src="@{|${members.get(review.getMemberId()).getMemberProfile()}|}"
+                             style="display: none"
+                             class="hidden-review-text-div-img" alt="">
+                        <span th:text="${review.storedName.size()}" class="review-file-size"></span>
+                        <input type="hidden" th:value="${review.memberId}" class="hidden-review-memberId">
+                        <input type="hidden" th:value="${review.createdAt}" class="hidden-review-createAt">
+                        <input type="hidden" th:value="${review.reviewText}" class="hidden-review-reviewText">
+                        <input type="hidden" th:each="value : ${review.storedName}" th:value="${value}"
+                               class="stored-name">
+                    </div>
+                </div>
+                <div th:if="${recommend.size() != 0}" class="review-recommend-wrap">
+                    <div th:each="value : ${recommend.get(review.id)}" th:text="${value}"
+                         class="review-recommend-div"></div>
+                </div>
+            </div>
+        </div>
+        <div class="page-div" th:if="${paginationBarNumbers.size() > 1}">
+            <a href="javascript:void(0);" th:onclick="move([[${reviews.number}]])">prev</a>
+            <span th:each="pageNumber: ${paginationBarNumbers}">
+                <span th:if="${pageNumber == reviews.number + 1}" th:text="${pageNumber}"></span>
+                <span th:unless="${pageNumber == reviews.number + 1}">
+                    <a href="javascript:void(0);" th:onclick="move([[${pageNumber}]])" th:text="${pageNumber}"></a>
+                </span>
+            </span>
+            <a href="javascript:void(0);" th:onclick="move([[${reviews.number + 2}]])">next</a>
+        </div>
+    </div>
+
+    <div class="modal">
+        <span class="modal-close">X</span>
+        <span class="modal-before-btn">&lt;</span>
+        <img src="" class="modal-img" alt=""><br>
+        <div class="modal-user-info">
+            <img src="" alt="" class="modal-member-img">
+            <span class="modal-review-user-id"></span><br>
+            <span class="modal-review-createAt"></span><br>
+            <span class="modal-review-text"></span>
+        </div>
+        <span class="modal-after-btn">&gt;</span>
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="/js/detail.js" th:inline="javascript"></script>
+<script src="/js/header.js"></script>
+<script src="/js/nav.js"></script>
+<script th:inline="javascript">
+    const userName = [[${principal.username}]];
+    const restaurantId = [[${restaurant.id}]];
+
+    function save() {
+        saveWish(userName, restaurantId);
+    }
+    function move(num) {
+        movePage(restaurantId, num);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="/js/paging.js" th:inline="javascript" defer></script>
+    <script src="/js/header.js"></script>
+    <script src="/js/nav.js" th:inline="javascript"></script>
+    <link rel="stylesheet" th:href="@{/css/paging.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
+</head>
+<body>
+<header id="header">
+    헤더 삽입부
+</header>
+<nav id="nav">
+    nav 삽입부
+</nav>
+<section>
+    <div class="restaurant-filter-div">
+        <strong th:text="${category}"></strong>
+        <ul class="restaurant-filter-element">
+            <li class="restaurant-filter-li">
+                <svg th:if="${order.equals('review')}" xmlns="http://www.w3.org/2000/svg" width="11" height="12"><path d="M8.786 3.062a1 1 0 011.497 1.32l-.083.095-6.579 6.578L.774 8.207a.999.999 0 011.32-1.497l.094.083L3.62 8.226l5.165-5.164z" fill="currentColor" fill-rule="evenodd"></path></svg>
+                <a th:style="${order.equals('review') ? 'font-weight: bold; color: blue' : ''}" th:href="@{|/restaurant/category/${category}|(order=review)}">리뷰순</a>
+            </li>
+            <li class="restaurant-filter-li">
+                <svg th:if="${order.equals('wish')}" xmlns="http://www.w3.org/2000/svg" width="11" height="12"><path d="M8.786 3.062a1 1 0 011.497 1.32l-.083.095-6.579 6.578L.774 8.207a.999.999 0 011.32-1.497l.094.083L3.62 8.226l5.165-5.164z" fill="currentColor" fill-rule="evenodd"></path></svg>
+                <a th:style="${order.equals('wish') ? 'font-weight: bold; color: blue' : ''}" th:href="@{|/restaurant/category/${category}|(order=wish)}">찜순</a>
+            </li>
+        </ul>
+    </div>
+    <div class="restaurant-wrap">
+        <div th:each="restaurant : ${list}" class="restaurant-div">
+            <a th:href="@{|/restaurant/${restaurant.id}|}">
+                <div class="restaurant-div-imgBOX">
+                    <img th:src="${restaurant.imgLink}" alt="" class="restaurant-div-img">
+                </div>
+            </a>
+            <div class="restaurant-div-textBOX">
+                <a th:href="@{|/restaurant/${restaurant.id}|}" th:text="${restaurant.restaurantName}"></a>
+                <span th:text="${restaurant.restaurantRoadAddress}"></span><br>
+                리뷰수 <span th:text="${restaurant.reviewCnt}"></span> / 찜수 <span th:text="${restaurant.wishCnt}"></span>
+            </div>
+        </div>
+    </div>
+    <!-- 첫번째 페이지로 이동 -->
+    <!-- /restaurant/category//paging?page=1 -->
+    <div class="page-div">
+        <!--        <a th:href="@{|/restaurant/category/${category}/paging|(page=1)}">First</a>-->
+        <!-- 이전 링크 활성화 비활성화 -->
+        <!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
+        <a th:href="${list.first} ? '#' : @{|/restaurant/category/${category}|(order=${order}, page=${list.number})}">prev</a>
+
+        <!-- 페이지 번호 링크(현재 페이지는 숫자만)
+                for(int page=startPage; page<=endPage; page++)-->
+        <span th:each="pageNumber: ${paginationBarNumbers}">
+            <!-- 현재페이지는 링크 없이 숫자만 -->
+            <span th:if="${pageNumber == list.number + 1}" th:text="${pageNumber}"></span>
+            <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+            <span th:unless="${pageNumber == list.number + 1}">
+                <a th:href="@{|/restaurant/category/${category}|(order=${order}, page=${pageNumber})}" th:text="${pageNumber}"></a>
+            </span>
+        </span>
+        <!-- 다음 링크 활성화 비활성화
+            사용자: 2페이지, getNumber: 1, 3페이지-->
+        <a th:href="${list.last} ? '#' : @{|/restaurant/category/${category}|(order=${order}, page=${list.number + 2})}">next</a>
+        <!-- 마지막 페이지로 이동 -->
+        <!--        <a th:href="@{|/restaurant/category/${category}/paging|(page=${list.totalPages})}">Last</a>-->
+    </div>
+</section>
+</body>
+</html>
