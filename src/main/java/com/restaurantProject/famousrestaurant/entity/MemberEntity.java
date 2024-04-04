@@ -11,8 +11,8 @@ import java.util.Set;
 @Setter
 @ToString(callSuper = true)
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "member_table")
 public class MemberEntity extends BaseEntity{
 
@@ -40,5 +40,13 @@ public class MemberEntity extends BaseEntity{
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     private Set<Authority> authorities;
 
+    private MemberEntity(String memberId, String memberPass) {
+        this.memberId = memberId;
+        this.memberPass = memberPass;
+        this.role = "USER";
+    }
 
+    public static MemberEntity of(String memberId, String memberPass) {
+        return new MemberEntity(memberId, memberPass);
+    }
 }
