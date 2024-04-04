@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((request) -> request
                         .antMatchers("/review", "/mypage").authenticated()
-                        .antMatchers("/restaurant", "/").permitAll()
+                        .antMatchers("/restaurant", "/articles","/").permitAll()
                         .antMatchers("/admin").hasRole("ADMIN")
                         .antMatchers("/review/form").hasRole("USER")
 //                        .requestMatchers(PathRequest.toH2Console()).permitAll()

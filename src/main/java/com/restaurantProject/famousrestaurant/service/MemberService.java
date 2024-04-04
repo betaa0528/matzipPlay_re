@@ -37,7 +37,7 @@ public class MemberService {
         List<Member> members = new ArrayList<>();
         for (Review review : reviews) {
             MemberEntity memberEntity = memberRepository.getByMemberId(review.getMemberId());
-            members.add(Member.toMember(memberEntity));
+            members.add(Member.from(memberEntity));
         }
 
         return getMemberOfReviewList(members, reviews);
