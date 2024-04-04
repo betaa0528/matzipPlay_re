@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/article.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
+</head>
+<body>
+<header id="header">
+    헤더삽입
+</header>
+<nav id="nav">
+    nav 삽입부
+</nav>
+<section>
+    <div id="wrap">
+        <div id="article-title">제목</div>
+        <div id="article-nav">
+            <span class="member-id">작성자</span>
+            <span class="created-at">작성일</span>
+            <span class="views">조회수</span>
+        </div>
+        <div id="article-section">내용</div>
+    </div>
+</section>
+<script src="/js/header.js"></script>
+<script src="/js/article.js"></script>
+<script src="/js/nav.js"></script>
+</body>
+</html>

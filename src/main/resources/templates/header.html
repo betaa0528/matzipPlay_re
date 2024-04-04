@@ -11,6 +11,10 @@
     <span id="logout" class="session-chk">
         <span id="user-name" th:text="|${principal.username} 님 반갑습니다.!!|"></span>
             <a href="/logout">로그아웃</a> / <a th:href="@{/mypage}">마이페이지</a></span>
+    <br><br><br>
+    <div>
+        <a href="/articles">게시판 보러가기</a>
+    </div>
 </header>
 </body>
 </html>

@@ -1,0 +1,29 @@
+section {
+    width: 40vw;
+    height: 200vh;
+    margin: 0 auto;
+    padding-top: 20px;
+    background-color: white;
+}
+
+.article-div {
+    border: 1px solid blue;
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+}
+
+#article-table {
+    margin: 0 auto;
+}
+
+.page-div{
+    /*border: 1px solid black;*/
+    text-align: center;
+    margin-top: 15px;
+}
+
+.page-div a{
+    color: black;
+    /*text-decoration: none;*/
+}
