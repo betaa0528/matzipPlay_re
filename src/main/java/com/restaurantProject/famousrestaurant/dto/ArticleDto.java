@@ -25,7 +25,11 @@ public class ArticleDto {
     LocalDateTime updatedAt;
     int views;
 
-    public ArticleDto of(Long id, String title, String content, Member member, ArticleType articleType, LocalDateTime createdAt, LocalDateTime updatedAt, int views) {
+    public static ArticleDto of(Member member, String title, String content, ArticleType articleType) {
+        return new ArticleDto(null, title, content, member, articleType, null, null, 0);
+    }
+
+    public static ArticleDto of(Long id, String title, String content, Member member, ArticleType articleType, LocalDateTime createdAt, LocalDateTime updatedAt, int views) {
         return new ArticleDto(id, title, content, member, articleType, createdAt, updatedAt, views);
     }
 
@@ -48,7 +52,15 @@ public class ArticleDto {
                 entity.getViews()
         );
     }
+
     public Article toEntity(MemberEntity member) {
-        return Article.of(member, title, content, articleType);
+        switch (articleType) {
+            case FREE:
+                return Article.of(member, title, content, ArticleType.FREE);
+            case REQUEST:
+                return Article.of(member, title, content, ArticleType.REQUEST);
+            default:
+                return null;
+        }
     }
 }

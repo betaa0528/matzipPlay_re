@@ -17,9 +17,9 @@ public class BoardPrincipal implements UserDetails {
         this.authorities = authorities;
     }
 
-//    public Member toDto() {
-//        return new Member.of(username, password, )
-//    }
+    public Member toDto() {
+        return Member.of(username, password);
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
