@@ -2,18 +2,6 @@ body {
     background-color: whitesmoke;
 }
 
-header {
-    width: 40vw;
-    margin: 0 auto;
-    background-color: white;
-    position: relative;
-}
-
-header a {
-    color: #007bff;
-    border-style: none;
-}
-
 nav {
     width: 40vw;
     margin: 0 auto;
@@ -26,14 +14,6 @@ section {
     margin: 0 auto;
     padding-top: 20px;
     background-color: white;
-}
-
-#logo {
-    width: 100%;
-}
-
-#logo:hover {
-    cursor: pointer;
 }
 
 table {
@@ -155,13 +135,4 @@ input[type=file]::file-selector-button:hover, input[type=file]:hover, #cancel-bt
     font-family: 'BMHannah'; /*font 이름*/
     font-weight: normal; /* font 굵기 정의 */
     src: url("/static/font/BMHANNAAir_ttf.ttf") format("truetype");
-}
-
-.session-chk {
-    position: absolute;
-    right: 5%;
-}
-
-.session-chk a {
-    text-decoration: none;
 }

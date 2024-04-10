@@ -3,19 +3,6 @@ body {
     background-color: whitesmoke;
 }
 
-header {
-    width: 40vw;
-    margin: 0 auto;
-    background-color: white;
-    text-align: center;
-    position: relative;
-}
-
-header a {
-    color: #007bff;
-    border-style: none;
-}
-
 section {
     width: 40vw;
     height: 68vh;
@@ -24,14 +11,6 @@ section {
     background-color: white;
 }
 
-#logo {
-    width: 80%;
-    height: 100%;
-}
-
-#logo:hover {
-    cursor: pointer;
-}
 
 .search-box{
     border: 2px solid #5fc37c;
@@ -116,13 +95,4 @@ section {
     width: 80px;
     height: 80px;
     object-fit: cover;
-}
-
-.session-chk{
-    position: absolute;
-    right: 5%;
-}
-
-.session-chk a{
-    text-decoration: none;
 }

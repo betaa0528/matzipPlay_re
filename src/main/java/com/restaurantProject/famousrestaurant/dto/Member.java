@@ -2,6 +2,7 @@ package com.restaurantProject.famousrestaurant.dto;
 
 import com.restaurantProject.famousrestaurant.entity.MemberEntity;
 import lombok.*;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -36,11 +37,12 @@ public class Member {
     private String mapX;
     private String mapY;
 
-//    public static Member of() {
-//
-//    }
 
-    public static Member toMember(MemberEntity entity) {
+    public static Member of(String memberId, String memberPass) {
+        return new Member(memberId, null, memberPass, null, null, null, null, null, null);
+    }
+
+    public static Member from(MemberEntity entity) {
         Member member = new Member();
         member.setMemberId(entity.getMemberId());
 //        member.setMemberNaverId(entity.getMemberNaverId());
@@ -53,5 +55,9 @@ public class Member {
 //        member.setMapY(entity.getMapY());
 
         return member;
+    }
+
+    public static MemberEntity toEntity(Member member) {
+        return MemberEntity.of(member.getMemberId(), member.getMemberPass());
     }
 }

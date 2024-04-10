@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>review</title>
+    <script src="/js/header.js"></script>
+    <link rel="stylesheet" th:href="@{/css/articles/articleForm.css}"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
+</head>
+<body>
+<header id="header">
+    헤더삽입부
+</header>
+<section>
+    <form name="articleForm" id="articleForm">
+        <table>
+            <tr>
+                <td>
+                    <div class="text-area-div">
+                        <select name="articleType" id="articleType" required>
+                            <option th:each="opt : ${T(com.restaurantProject.famousrestaurant.entity.constant.ArticleType).values()}"
+                                    th:value="${opt}" th:text="${opt.description}" th:selected="${article?.articleType == opt}"></option>
+                        </select><br>
+                        제목 <br>
+                        <input type="text" name="title" id="title"><br>
+                        내용 <br>
+                        <textarea name="content" id="content"></textarea>
+                        <p id="char-count">글자 수: <span id="charCount">0</span>/1000</p>
+                    </div>
+                </td>
+            </tr>
+<!--            <tr>-->
+<!--                <td>-->
+<!--                    <input type="file" name="fileList" id="file-btn" multiple>-->
+<!--                </td>-->
+<!--            </tr>-->
+            <tr>
+                <td>
+<!--                    <input type="button" onclick="articleSave()"  id="submit-btn" value="리뷰 저장">-->
+                    <button type="submit" id="submit-btn">게시물 저장</button>
+                    <button type="button" id="cancel-btn" th:onclick="'history.back()'">작성 취소</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</section>
+
+<script th:inline="javascript">
+
+    // textarea 요소와 글자 수를 표시할 요소를 가져옵니다.
+    const textArea = document.querySelector("#content");
+    const charCount = document.getElementById('charCount');
+
+    // textarea의 input 이벤트에 대한 이벤트 리스너를 추가합니다.
+    textArea.addEventListener('input', () => {
+        // textarea에 입력된 글자 수를 세어 charCount 요소에 업데이트합니다.
+        charCount.textContent = textArea.value.length;
+        if (textArea.value.length > 1000) {
+            alert("255자 이내로 작성해주세요");
+            textArea.value = textArea.value.substring(0, 999); // 255자까지만 허용
+        }
+    });
+
+    const articleSave = () => {
+        document.articleForm.submit();
+    }
+    const reviewSave = () => {
+        let fileSize = document.querySelector("#file-btn");
+        let fileList = fileSize.files;
+        let fileOver = 0;
+
+        for (let i = 0; i < fileList.length; i++) {
+            console.log(fileList[i].size);
+            if (fileList[i].size >= 1048576) {
+                fileOver = 1;
+                console.log("fileOver : " + fileOver);
+            }
+        }
+        if (textArea.value === "") {
+            alert("리뷰내용을 입력해주세요");
+            textArea.focus();
+        } else if(fileOver === 1) {
+            alert("사진 한 장의 최대 첨부용량은 1MB입니다");
+        } else if(fileList.length > 5) {
+            alert("사진은 최대 5장까지 첨부 가능합니다.");
+        } else {
+            document.reviewForm.submit();
+        }
+    }
+
+
+    // 리뷰 작성화면 높이조절하기 위함
+    const reviewForm = document.querySelector(".reviewForm");
+    const section = document.querySelector('section');
+
+    // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.
+    function adjustSectionHeight() {
+        const reviewFormHeight = reviewForm.clientHeight;
+        section.style.height = `${reviewFormHeight + 100}px`;
+    }
+
+    // 페이지 로드 시와 review-empty-div, review-present-div의 가시성 변경 시 높이를 조절합니다.
+    window.addEventListener('load', adjustSectionHeight);
+    window.addEventListener('resize', adjustSectionHeight);
+</script>
+</body>
+</html>

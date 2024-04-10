@@ -9,6 +9,7 @@
     <script src="/js/header.js"></script>
     <script src="/js/nav.js" th:inline="javascript"></script>
     <link rel="stylesheet" th:href="@{/css/paging.css}"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
     <link rel="stylesheet" th:href="@{/css/nav.css}"/>
     <link rel="stylesheet" th:href="@{/css/font.css}"/>
 </head>
@@ -47,29 +48,15 @@
             </div>
         </div>
     </div>
-    <!-- 첫번째 페이지로 이동 -->
-    <!-- /restaurant/category//paging?page=1 -->
     <div class="page-div">
-        <!--        <a th:href="@{|/restaurant/category/${category}/paging|(page=1)}">First</a>-->
-        <!-- 이전 링크 활성화 비활성화 -->
-        <!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
         <a th:href="${list.first} ? '#' : @{|/restaurant/category/${category}|(order=${order}, page=${list.number})}">prev</a>
-
-        <!-- 페이지 번호 링크(현재 페이지는 숫자만)
-                for(int page=startPage; page<=endPage; page++)-->
         <span th:each="pageNumber: ${paginationBarNumbers}">
-            <!-- 현재페이지는 링크 없이 숫자만 -->
             <span th:if="${pageNumber == list.number + 1}" th:text="${pageNumber}"></span>
-            <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
             <span th:unless="${pageNumber == list.number + 1}">
                 <a th:href="@{|/restaurant/category/${category}|(order=${order}, page=${pageNumber})}" th:text="${pageNumber}"></a>
             </span>
         </span>
-        <!-- 다음 링크 활성화 비활성화
-            사용자: 2페이지, getNumber: 1, 3페이지-->
-        <a th:href="${list.last} ? '#' : @{|/restaurant/category/${category}|(order=${order}, page=${list.number + 2})}">next</a>
-        <!-- 마지막 페이지로 이동 -->
-        <!--        <a th:href="@{|/restaurant/category/${category}/paging|(page=${list.totalPages})}">Last</a>-->
+        <a th:href="${list.last} ? '#' : @{|/restaurant/category/${category}|(order=${order}, page=${list.number + 1})}">next</a>
     </div>
 </section>
 </body>

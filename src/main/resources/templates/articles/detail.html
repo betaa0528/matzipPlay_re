@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/articles/detali.css}"/>
+    <link rel="stylesheet" th:href="@{/css/nav.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font.css}"/>
+</head>
+<body>
+<header id="header">
+    헤더삽입
+</header>
+<nav id="nav">
+    nav 삽입부
+</nav>
+<main id="article-main" class="container">
+    <header id="article-header">
+        <div id="article-title">제목</div>
+    </header>
+    <div class="article-content">
+        <div id="article-info">
+            <div id="article-nav">
+                <span class="member-id">작성자</span>
+                <span class="created-at">작성일</span>
+                <span class="views">조회수</span>
+            </div>
+            <div id="article-section">내용</div>
+        </div>
+    </div>
+
+    <div id="article-buttons">
+        <form id="article-delete-form">
+            <a id="update-article">수정</a>
+            <button type="submit" id="delete-article">삭제</button>
+        </form>
+    </div>
+    <div id="article-comments-div">
+        <div class="article-comments">
+            <ul>
+                <li>
+                    <strong>minjoo1</strong>
+                    <small>
+                        <time>2024-04-09</time>
+                    </small>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
+                        Lorem ipsum dolor sit amet
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <div id="comment-form-div">
+            <form action="" id="comment-form">
+                <textarea name="" id="" cols="30" rows="10" placeholder="댓글쓰기"></textarea>
+                <div id="comment-button">
+                    <button type="submit">쓰기</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</main>
+<script src="/js/header.js"></script>
+<script src="/js/articles/detail.js"></script>
+<script src="/js/nav.js"></script>
+</body>
+</html>

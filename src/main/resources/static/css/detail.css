@@ -2,35 +2,12 @@ body {
     background-color: whitesmoke;
 }
 
-header {
-    width: 40vw;
-    margin: 0 auto;
-    background-color: white;
-    text-align: center;
-    position: relative;
-}
-
-header a {
-    color: #007bff;
-    border-style: none;
-}
-
 section {
     width: 40vw;
     height: 200vh;
     margin: 0 auto;
     padding-top: 20px;
     background-color: white;
-}
-
-#logo {
-    width: 80%;
-    height: 100%;
-    margin-bottom: 10px;
-}
-
-#logo:hover {
-    cursor: pointer;
 }
 
 .restaurant-info-wrap {
@@ -306,14 +283,7 @@ hr {
     background-color: whitesmoke;
 }
 
-.session-chk {
-    position: absolute;
-    right: 5%;
-}
 
-.session-chk a {
-    text-decoration: none;
-}
 
 .hidden-review-text-div-img{
     display: none;
