@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/header.css}"/>
-    <link rel="stylesheet" th:href="@{/css/article.css}"/>
+    <link rel="stylesheet" th:href="@{/css/articles/article.css}"/>
     <link rel="stylesheet" th:href="@{/css/nav.css}"/>
     <link rel="stylesheet" th:href="@{/css/font.css}"/>
 </head>
@@ -15,14 +15,21 @@
 <nav id="nav">
     nav 삽입부
 </nav>
-<section>
+<main id="article-main">
     <div class="article-div">
+        <div class="article-nav">
+            <span><strong>게시판</strong></span>
+            <div class="write-button" id="write-button">
+                <a href="/articles/form" class="btn">글쓰기</a>
+            </div>
+        </div>
         <table class="table" id="article-table">
             <thead>
             <tr>
                 <th><a>분류</a></th>
                 <th><a>제목</a></th>
                 <th><a>작성자</a></th>
+                <th><a>조회수</a></th>
                 <th><a>작성일</a></th>
             </tr>
             </thead>
@@ -31,6 +38,7 @@
                 <td class="classification">자유게시판</td>
                 <td class="title"><a>취직하고싶다</a></td>
                 <td class="member-id">minjoo1</td>
+                <td class="views">조회수</td>
                 <td class="created-at">
                     <time>2024-04-04</time>
                 </td>
@@ -38,20 +46,21 @@
             </tbody>
         </table>
     </div>
+
     <div class="page-div">
         <a th:href="${articles.first} ? '#none' : @{|/articles|(page=${articles.number})}">prev</a>
         <span th:each="pageNumber: ${barNumbers}">
             <span th:if="${pageNumber == articles.number + 1}" th:text="${pageNumber}"></span>
             <span th:unless="${pageNumber == articles.number + 1}">
-                <a th:href="@{|/templates/articles|(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                <a th:href="@{|/articles|(page=${pageNumber})}" th:text="${pageNumber}"></a>
             </span>
         </span>
-        <a th:href="${articles.last} ? '#none' : @{|/articles|(page=${articles.number + 1})}">next</a>
+        <a th:href="${articles.last} ? '#none' : @{|/articles|(page=${articles.number + 2})}">next</a>
     </div>
 
-</section>
+</main>
 <script src="/js/header.js"></script>
-<script src="/js/article.js"></script>
+<script src="/js/articles/article.js"></script>
 <script src="/js/nav.js"></script>
 </body>
 </html>

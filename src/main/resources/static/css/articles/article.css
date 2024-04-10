@@ -1,0 +1,107 @@
+main {
+    width: 40vw;
+    height: 200vh;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+}
+
+.article-div {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.article-nav {
+    position: relative;
+    /*border: 1px solid red;*/
+    height: 40px;
+    margin-bottom: 20px;
+}
+
+.article-nav span {
+    position: absolute;
+    top: 40%;
+    font-size: 26px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+/* 링크 스타일 */
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+a:hover {
+    color: #555;
+}
+
+/* 페이지 네비게이션 스타일 */
+.page-div {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.page-div a {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    color: #333;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.page-div a:hover {
+    background-color: #ddd;
+}
+
+.page-div a.disabled {
+    pointer-events: none;
+    color: #999;
+}
+
+.page-div a.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* 버튼 스타일 */
+.write-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    /*text-align: right;*/
+    /*margin-bottom: 20px;*/
+}
+
+.write-button .btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.write-button .btn:hover {
+    background-color: #0056b3;
+}

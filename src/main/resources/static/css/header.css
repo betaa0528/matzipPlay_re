@@ -2,15 +2,16 @@ body {
     background-color: whitesmoke;
 }
 
-header {
-    width: 40vw;
+#header {
+    max-width: 40vw;
+    padding: 20px;
     margin: 0 auto;
     background-color: white;
     text-align: center;
     position: relative;
 }
 
-header a {
+#header a {
     color: #007bff;
     border-style: none;
 }
