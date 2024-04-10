@@ -28,7 +28,7 @@ public class ArticleComment extends BaseEntity {
     @Column(nullable = false, length = 500)
     private String content;
 
-    protected ArticleComment(){}
+    protected ArticleComment() {}
 
     private ArticleComment(Article article, MemberEntity member, String content) {
         this.article = article;

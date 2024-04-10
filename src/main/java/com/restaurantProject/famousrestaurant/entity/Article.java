@@ -16,16 +16,25 @@ public class Article extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Setter
     private String title;
+
+    @Setter
     @Column(length = 1000)
     private String content;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "memberId")
     @ToString.Exclude
     private MemberEntity member;
+
+    @Setter
     @Enumerated(EnumType.STRING)
     private ArticleType articleType;
-    @ColumnDefault("0") @Setter
+
+    @ColumnDefault("0")
+    @Setter
     private int views;
 
     @OrderBy("createdAt DESC")
