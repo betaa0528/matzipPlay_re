@@ -25,16 +25,16 @@ class ArticleRepositoryTest {
         MemberEntity member = memberRepository.findById(1L).get();
         Member memberDto = Member.from(member);
 
-        ArticleDto dto = new ArticleDto("title1", "content1", memberDto, ArticleType.FREE_BOARD);
-//        System.out.println(dto);
-        Article article = Article.of(
-                member,
-                dto.getTitle(),
-                dto.getContent(),
-                dto.getArticleType());
-        articleRepository.save(article);
-        List<Article> all = articleRepository.findAll();
-        all.forEach(System.out::println);
+//        ArticleDto dto = new ArticleDto("title1", "content1", memberDto, "FREE");
+////        System.out.println(dto);
+//        Article article = Article.of(
+//                member,
+//                dto.getTitle(),
+//                dto.getContent(),
+//                ArticleType.FREE);
+//        articleRepository.save(article);
+//        List<Article> all = articleRepository.findAll();
+//        all.forEach(System.out::println);
 
 //        Article article = new Article() ;
     }
