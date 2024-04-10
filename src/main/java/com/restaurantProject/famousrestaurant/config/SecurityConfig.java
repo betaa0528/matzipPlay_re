@@ -26,12 +26,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((request) -> request
-                        .antMatchers("/review", "/mypage").authenticated()
-                        .antMatchers("/restaurant", "/articles","/").permitAll()
-                        .antMatchers("/admin").hasRole("ADMIN")
-                        .antMatchers("/review/form").hasRole("USER")
-//                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                                .antMatchers("/review", "/mypage").authenticated()
+                                .antMatchers("/restaurant", "/articles", "/").permitAll()
+                                .antMatchers("/admin").hasRole("ADMIN")
+                                .antMatchers("/review/form").hasRole("USER")
+                                .antMatchers("/articles/**/form").hasRole("USER")
+                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 )
                 .headers().frameOptions().sameOrigin().and()
                 .formLogin(Customizer.withDefaults())
